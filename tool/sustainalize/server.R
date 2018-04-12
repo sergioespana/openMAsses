@@ -13,7 +13,6 @@ library(shinythemes)
 library(shinydashboard)
 library(shinyBS)
 
-library(Rcampdf) # PDF tools
 library(xlsx) # Write to excel
 library(readxl) # Read from excel
 library(tm) # Text Mining
