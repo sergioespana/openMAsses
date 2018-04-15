@@ -1,0 +1,6 @@
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]1  [OCCURRENCES]3
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]8  [OCCURRENCES]9
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]9  [OCCURRENCES]8
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]11  [OCCURRENCES]3
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]12  [OCCURRENCES]2
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]12  [OCCURRENCES]1
