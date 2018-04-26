@@ -1,0 +1,32 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\hornr\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js start
+
+PATH: 
+  C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Program Files\Microsoft MPI\Bin\;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Git\cmd;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Skype\Phone\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\ManagementStudio\;C:\Program Files\nodejs\;C:\Users\hornr\AppData\Local\Microsoft\WindowsApps;C:\Users\hornr\AppData\Local\GitHubDesktop\bin;C:\Users\hornr\AppData\Local\atom\bin;C:\Program Files\Microsoft VS Code\bin;C:\Users\hornr\AppData\Roaming\npm
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.10.0
+
+Platform: 
+  win32 x64
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Couldn't find a package.json file in "D:\\Ralph\\Documents\\Github\\openmasses"
+      at new MessageError (C:\Users\hornr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:186:110)
+      at C:\Users\hornr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:40048:15
+      at Generator.next (<anonymous>)
+      at step (C:\Users\hornr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:98:30)
+      at C:\Users\hornr\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:109:13
+      at <anonymous>
