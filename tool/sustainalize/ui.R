@@ -252,7 +252,7 @@ dashboardPage(title="Sustainalize",
                                         align = "center",
                                         h1(span(shiny::icon("file-pdf-o"), id = "pdf1", class = "missing")),
                                         disabled(
-                                          actionButton("wordCloudButtonPDF", "Create PDF Word Cloud", icon("cloud"), status = "primary", class="blue")
+                                          actionButton("wordCloudButtonPDF", "Create PDF Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
                                         ),
                                         br(),
                                         br(),

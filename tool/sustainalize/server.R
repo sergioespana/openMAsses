@@ -24,6 +24,7 @@ library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 
+
 shinyServer(function(input, output) {
   
   output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
@@ -40,7 +41,7 @@ shinyServer(function(input, output) {
       removeClass("pdf3", "missing")
       removeClass("pdf4", "missing")
       removeClass("pdf5", "missing")
-      if(!is.null(input$longlists)){
+      if (!is.null(input$longlists)) {
         enable("tdmButton")
         enable("tdmDownload")
         enable("plotButton")
@@ -186,7 +187,7 @@ shinyServer(function(input, output) {
     })
   })
   
-  readDocuments <- reactive({
+    readDocuments <- reactive({
     documentsLoad(input$pdfs)
   })
   
@@ -209,8 +210,9 @@ shinyServer(function(input, output) {
   printWordCloudLonglist <- reactive({
     generateWordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
   })
-  
-  getTDM <- reactive({
+
+    # aanmaken term document matrix # ralph
+    getTDM <- reactive({
     createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold)
   })
   
@@ -567,8 +569,8 @@ shinyServer(function(input, output) {
   documentsLoad <- function(files){
     withProgress(message = 'Reading documents', value = 0, {
       
-      pdfs <- c()
-      categories <- c()
+      pdfs <- c() # create vector
+      categories <- c() #create vector
       
       # Iterate over all the uploaded files
       number.files <- length(files[,1])
@@ -577,22 +579,25 @@ shinyServer(function(input, output) {
         incProgress(0, detail = "Scanning documents")
         
         # If the file is a .zip, unzip it
-        if(grepl(".zip", fileName, fixed=TRUE)){
+        if (grepl(".zip", fileName, fixed = TRUE)) {
+
           zipFiles <- unzip(files[[i, 'datapath']], list = TRUE)
-          
+
+
           # Iterate over each file in the zip
           for(n in 1:nrow(zipFiles)){
-            zipContent <- zipFiles[n,"Name"]
+            zipContent <- zipFiles[n, "Name"]
+            #observe(print(zipContent))
             zipName <- gsub('.zip','',fileName)
             mainFolder <- paste(zipName,"/",sep="")
             
             # Only check the file in the zip if it is valid
             if(str_count(zipContent, "__MACOSX") == 0 && str_count(zipContent, ".DS_Store")== 0 && mainFolder != zipContent){
               
-              # If the file is a pdf, read the pdf
+              # If the file is a pdf, read the pdf #bad comment
               if(grepl(".pdf", zipContent)){
-                if(str_count(zipContent, "/") == 1){
-                  categories[length(categories) + 1] <- zipContent
+                if(str_count(zipContent, "/") == 1){ # possible category stuff # oftewel er is een folder structure aanwezig # >=1
+                  categories[length(categories) + 1] <- zipContent # insert value into vector.
                 }
                 pdfs[length(pdfs) + 1] <- zipContent
               }
@@ -618,6 +623,8 @@ shinyServer(function(input, output) {
       }
       
       allpdfs.text = NULL
+
+      #observe(print(typeof(categories)))
       
       # Iterate over each category
       for(number in 1:length(categories)) {
@@ -625,11 +632,10 @@ shinyServer(function(input, output) {
         pdfs.text <- NULL
         
         incProgress(1/length(categories), detail = category)
-        
         # If it is a pdf that is directly uploaded
         if(str_count(category, "/") == 0  && str_count(category, ".pdf") == 1) {
           path <- files[[which(grepl(category, files$name, fixed=TRUE)),'datapath']]
-          pdfs.text[[category]] <- pdf_text(path)
+          pdfs.text[[category]] <- pdf_text(path) # wordt hier de pdf ingelezen in r? #ralph
           
           # Clean text
           pdfs.text <- cleanText(pdfs.text)
