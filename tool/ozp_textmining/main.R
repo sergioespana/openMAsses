@@ -15,7 +15,7 @@ library(tm) # general text mining functions, making document term matrixes
 library(SnowballC) # for stemming
 
 
-filepath = 'D:/Ralph/Documents/Github/openmasses/tool/ozp_textmining/input_pdf/2016 Bath.pdf'
+filepath = "test_files/2016 Bath.pdf"
 # read pdf
 
 # get raw text from pdf at the file location
