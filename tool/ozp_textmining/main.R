@@ -15,7 +15,7 @@ library(tm) # general text mining functions, making document term matrixes
 library(SnowballC) # for stemming
 
 
-filepath = "test_files/2016 Bath.pdf"
+filepath = "C:/Users/hornr/Documents/GitHub/openmasses/tool/ozp_textmining/test_files/2016 Bath.pdf"
 # read pdf
 
 # get raw text from pdf at the file location
@@ -43,9 +43,7 @@ termdocumentmatrix = TermDocumentMatrix(corpus)
 # sort topics with the use of tfidf
 tdm.tfidf = weightTfIdf(termdocumentmatrix)
 
-
 tdm.binary = weightBin(termdocumentmatrix) # binary weighting.
-
 
 # stem the input
 # to do: filter whitespace convert to lower and stopwords.
