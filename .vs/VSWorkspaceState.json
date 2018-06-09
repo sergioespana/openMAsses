@@ -4,8 +4,7 @@
     "\\tool",
     "\\tool\\ozp",
     "\\tool\\ozp\\helperfunctions",
-    "\\tool\\ozp\\reports",
-    "\\tool\\ozp_textmining\\input_pdf"
+    "\\tool\\ozp\\reports"
   ],
   "SelectedNode": "\\tool\\ozp\\reports",
   "PreviewInSolutionExplorer": false
