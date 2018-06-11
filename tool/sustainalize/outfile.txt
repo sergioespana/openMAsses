@@ -4,52 +4,30 @@
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]11  [OCCURRENCES]3
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]12  [OCCURRENCES]2
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]12  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]8  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] climate change risk   [PAGE]15  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]3  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]4  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]6  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]7  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]9  [OCCURRENCES]9
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]10  [OCCURRENCES]15
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]11  [OCCURRENCES]11
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]12  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]13  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]15  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]19  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]21  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]27  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]31  [OCCURRENCES]4
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]33  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]36  [OCCURRENCES]7
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]37  [OCCURRENCES]13
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]38  [OCCURRENCES]18
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]39  [OCCURRENCES]7
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emission   [PAGE]38  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] emission   [PAGE]39  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]3  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]4  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]6  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]16  [OCCURRENCES]5
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]26  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]27  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]36  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]3  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]6  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]19  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]20  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]22  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] energy management   [PAGE]13  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] energy management   [PAGE]32  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]19  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]21  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]25  [OCCURRENCES]3
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]27  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]30  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]35  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] material   [PAGE]4  [OCCURRENCES]4
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] material   [PAGE]18  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] material   [PAGE]19  [OCCURRENCES]2
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] material   [PAGE]25  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] material   [PAGE]28  [OCCURRENCES]1
-[PDF]2016 Cambridge.pdf  [LANGUAGE]english  [TERM] packaging   [PAGE]21  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]10  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]15  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]16  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]20  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]21  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]52  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] innovation   [PAGE]53  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]3  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]6  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]23  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]27  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]34  [OCCURRENCES]5
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emission   [PAGE]28  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] emission   [PAGE]34  [OCCURRENCES]4
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] biodiversity   [PAGE]7  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] waste management   [PAGE]53  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]7  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]19  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]21  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]35  [OCCURRENCES]4
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]36  [OCCURRENCES]2
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]37  [OCCURRENCES]2
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] materials   [PAGE]62  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] material   [PAGE]35  [OCCURRENCES]2
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] material   [PAGE]36  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] packaging   [PAGE]35  [OCCURRENCES]1
+[PDF]2016 Ghent.pdf  [LANGUAGE]english  [TERM] packaging   [PAGE]36  [OCCURRENCES]1

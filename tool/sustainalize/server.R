@@ -280,8 +280,6 @@ shinyServer(function(input, output) {
     return(frequency)
   }
   
-  
-  
   # 
   # >> generateWordCloud <<
   # Input: term / word frequency list and number of term / words to display
@@ -301,9 +299,7 @@ shinyServer(function(input, output) {
     words <- names(frequency)
     return(wordcloud(words[1:number], frequency[1:number], min.freq = 1, random.order=FALSE, rot.per=0.35, use.r.layout = FALSE, colors=brewer.pal(4, "Paired")))
   }
-  
-  
-  
+    
   # 
   # >> createTDM <<
   # Input: text from pdf(s), longlist terms, scoring scheme and threshold

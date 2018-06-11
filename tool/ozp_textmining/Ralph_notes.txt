@@ -1,0 +1,3 @@
+﻿Corpus(VectorSource(
+  mapply(function(x, y) paste(content(x), content(y)), corpus1, corpus2)
+))
