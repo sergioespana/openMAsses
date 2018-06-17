@@ -26,6 +26,8 @@ library(plotly) # Interactive plots
 
 
 shinyServer(function(input, output) {
+
+
   
   output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
     table <- data.frame(matrix(ncol = 1, nrow = 0))
@@ -86,7 +88,9 @@ shinyServer(function(input, output) {
       return(table)
     }
   })
-  
+
+    output$exampleLongListDownload <- downloadHandler("examplelonglist.xlsx", content = function(path) { file.copy("examplelonglist.xlsx", path) })
+
   output$tdmDownload <- downloadHandler(
     filename = function() {
       score <- ""

@@ -372,8 +372,13 @@ dashboardPage(title="Openmasses",
                                  )
                              )
                            )
-                  )
-                ),
+                  ),
+                  tabPanel("Manual",
+
+                  p("an example longlist can be downloaded here"),
+                  downloadButton("exampleLongListDownload", "Download Example Longlist", class = "btn-success", icon = "cloud"))
+                  ),
+
                 
                 # Set tooltips
                 bsTooltip(id = "pdf1", title = "PDF file(s) required", placement = "top", trigger = "hover"),
