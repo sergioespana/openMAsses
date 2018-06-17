@@ -32,7 +32,7 @@ options(shiny.maxRequestSize = 800*1024^2)
 dashboardPage(title="Sustainalize", 
               
               dashboardHeader(
-                titleWidth = 350,
+                titleWidth = 300,
                 title = div(img(src="uu.png", height = 40)),
                 dropdownMenuOutput("messageMenu")
               ),
