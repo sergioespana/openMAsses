@@ -29,7 +29,7 @@ library(plotly) # Interactive plots
 
 options(shiny.maxRequestSize = 800*1024^2)
 
-dashboardPage(title="Sustainalize", 
+dashboardPage(title="Openmasses", 
               
               dashboardHeader(
                 titleWidth = 200,
