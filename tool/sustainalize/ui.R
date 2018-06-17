@@ -33,7 +33,7 @@ dashboardPage(title="Sustainalize",
               
               dashboardHeader(
                 titleWidth = 350,
-                title = div(img(src="sustainalize.png", height = 40),img(src="uu.png", height = 40)),
+                title = div(img(src="uu.png", height = 40)),
                 dropdownMenuOutput("messageMenu")
               ),
               dashboardSidebar(
