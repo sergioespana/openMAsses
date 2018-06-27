@@ -2,9 +2,10 @@
   "ExpandedNodes": [
     "",
     "\\ozp_textmining",
-    "\\ozp_textmining\\test_files",
+    "\\ozp_textmining\\development notes",
+    "\\ozp_textmining\\helperfunctions\\Checked",
     "\\sustainalize"
   ],
-  "SelectedNode": "\\ozp_textmining\\ozp_textmining.rxproj",
+  "SelectedNode": "\\ozp_textmining\\main.R",
   "PreviewInSolutionExplorer": false
 }

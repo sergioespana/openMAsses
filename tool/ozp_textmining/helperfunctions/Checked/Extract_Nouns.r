@@ -18,3 +18,5 @@ extract_nouns <- function(description) {
 
     return(output)
 }
+
+
