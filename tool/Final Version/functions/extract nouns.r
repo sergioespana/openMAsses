@@ -8,7 +8,7 @@ library(tidyverse)
 # Output: all the nouns in the string
 #
 
-extract_nouns <- function(description) {
+ozp_extract_nouns <- function(description) {
     output =  POS_tag_documents(description)
 
     output = as.data.frame(output$Document_1)
