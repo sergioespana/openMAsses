@@ -13,8 +13,8 @@ require(tidyverse)
 #' @examples
 ozp_parse_longlist <- function(input) {
 
-
-    excel = read_xlsx("C:/Users/hornr/Source/Repos/openmasses/tool/Final Version/v1.xlsx")
+    
+   # excel = read_xlsx("C:/Users/hornr/Source/Repos/openmasses/tool/Final Version/v1.xlsx")
     input = excel
     data = as.tibble(input)
 
@@ -40,11 +40,6 @@ ozp_parse_longlist <- function(input) {
 
     return(output)
 }
-
-
-
-
-
 
 
 test_frame<- sapply(test_frame,
