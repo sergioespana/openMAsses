@@ -40,10 +40,3 @@ ozp_parse_longlist <- function(input) {
 
     return(output)
 }
-
-
-test_frame<- sapply(test_frame,
-                        function(x) {
-                            gsub(pattern = ";$",
-                        replacement = "", x)
-                        })
