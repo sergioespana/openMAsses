@@ -4,10 +4,12 @@
     "\\tool",
     "\\tool\\Final Version",
     "\\tool\\Final Version\\functions",
-    "\\tool\\Final Version\\longlists",
-    "\\tool\\Final Version\\longlists\\development",
-    "\\tool\\sustainalize"
+    "\\tool\\ozp_textmining",
+    "\\tool\\ozp_textmining\\input_pdf",
+    "\\tool\\sustainalize",
+    "\\tool\\sustainalize\\cas_functions",
+    "\\tool\\sustainalize\\functions"
   ],
-  "SelectedNode": "\\tool\\Final Version\\v1.xlsx",
+  "SelectedNode": "\\tool\\sustainalize\\sustainalize.sln",
   "PreviewInSolutionExplorer": false
 }

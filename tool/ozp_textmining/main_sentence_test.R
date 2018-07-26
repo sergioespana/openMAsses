@@ -72,7 +72,27 @@ description_tdm = TermDocumentMatrix(description_corpus)
 
 
 
+
+# dit kan weg? dit is puur voor inspection purposes
 description_matrix = tidy(description_tdm)
+
+
+
+#use later
+
+# sort topics with the use of tfidf
+tdm.tfidf = weightTfIdf(termdocumentmatrix)
+
+tdm.binary = weightBin(termdocumentmatrix) # binary weighting.
+
+# stem the input
+# to do: filter whitespace convert to lower and stopwords.
+steminput <- function(input) {
+
+    output = stemDocument(input)
+
+    return(output)
+}
 
 
 

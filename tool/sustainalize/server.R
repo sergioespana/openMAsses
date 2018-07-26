@@ -24,6 +24,9 @@ library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 
+source("functions/parse longlist.R")
+
+
 
 shinyServer(function(input, output) {
 
@@ -50,12 +53,14 @@ shinyServer(function(input, output) {
         removeClass("not-allowed", "not-allowed")
         enable("wordCloudButtonLonglist")
       }
+      # set Header name for uploaded documents based on if 1 or n documents
       if(length(input$pdfs$name) == 1){
         colnames(table) <- "Uploaded document"
       }
       else{
         colnames(table) <- "Uploaded documents"
       }
+      # list document names in the documents section of the HTML.
       for(pdf in 1:length(input$pdfs$name)){
         table[pdf,1] <- input$pdfs$name[pdf]
       }
@@ -89,7 +94,7 @@ shinyServer(function(input, output) {
     }
   })
 
-    output$exampleLongListDownload <- downloadHandler("examplelonglist.xlsx", content = function(path) { file.copy("examplelonglist.xlsx", path) })
+  output$exampleLongListDownload <- downloadHandler("examplelonglist.xlsx", content = function(path) { file.copy("examplelonglist.xlsx", path) })
 
   output$tdmDownload <- downloadHandler(
     filename = function() {
@@ -308,11 +313,25 @@ shinyServer(function(input, output) {
   # >> createTDM <<
   # Input: text from pdf(s), longlist terms, scoring scheme and threshold
   # Output: term document matrix
-  # 
-  
+    # 
+
+
+
+    #createTDM <- function(allpdfs.text, longlist, scheme, threshold) {
+        #return(as.data.frame(allpdfs.text))
+    #}
+
+
+
+
+
+
   createTDM <- function(allpdfs.text, longlist, scheme, threshold){
     withProgress(message = 'Generating Table', value = 0, {
-      
+
+        topic_col_nr = 1
+        description_col_nr=2
+
       columns <- NULL
       
       # Iterate over all categories
@@ -339,7 +358,7 @@ shinyServer(function(input, output) {
       
       # Store the longlist topics in the first column
       for(row in 1:nrow(longlist)){
-        terms <- toString(longlist[row,2])
+        terms <- toString(longlist[row,topic_col_nr])
         tdm[row,1] <- terms
       }
       
@@ -363,15 +382,15 @@ shinyServer(function(input, output) {
           pdfName <- pdfNames[pdf]
           pdfPages <- pdfs.text[[pdf]]
           
-          # Determine langauge for the pdf by scanning the first 10 words of each page.
+          ## Determine langauge for the pdf by scanning the first 10 words of each page.
           languages <- textcat(pdfPages[1:10])
           language <- names(which.max(table(languages)))
-          language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
+          #language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
           
-          # If the detected language is not found in the longlist it will use the first row
-          if(length(language.column) == 0){
-            language.column <- 2
-          }
+          ## If the detected language is not found in the longlist it will use the first row
+          #if(length(language.column) == 0){
+            language.column <- topic_col_nr
+          #}
           
           # Iterate over every row in the longlist
           for(row in 1:nrow(longlist)){
@@ -383,7 +402,7 @@ shinyServer(function(input, output) {
             # Check if row is not empty
             if(terms != "NA"){
               # Extract the synonyms per row
-              terms.list <- strsplit(tolower(terms), " / ")
+              terms.list <- strsplit(tolower(terms), ";")
               
               # Iterate over the synonyms
               for(synonym in 1:length(terms.list[[1]])){
@@ -698,9 +717,10 @@ shinyServer(function(input, output) {
       for(i in 1:number.files){
         incProgress(1/number.files, detail = paste(files[[i, 'name']]))
         file <- paste(files[[i, 'datapath']], sep = ".", "xlsx")
-        longlist <- rbind(longlist.data, read_excel(file))
+        longlist <- rbind(longlist.data, ozp_parse_longlist(file))
       }
     })
+
     return(longlist)
   }
   

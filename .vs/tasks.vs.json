@@ -5,6 +5,11 @@
       "taskName": "task-server",
       "appliesTo": "tool/sustainalize/server.R",
       "type": "launch"
+    },
+    {
+      "taskName": "task-server",
+      "appliesTo": "tool/sustainalize/server.R",
+      "type": "launch"
     }
   ]
 }
