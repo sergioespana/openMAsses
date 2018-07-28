@@ -1,32 +1,5 @@
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] sustainability research   [PAGE]15  [OCCURRENCES]2
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] volunteers   [PAGE]15  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] environment   [PAGE]1  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] environment   [PAGE]11  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] environment   [PAGE]15  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]1  [OCCURRENCES]3
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]8  [OCCURRENCES]9
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]9  [OCCURRENCES]8
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]11  [OCCURRENCES]3
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] emissions   [PAGE]12  [OCCURRENCES]2
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] carbon emissions   [PAGE]1  [OCCURRENCES]2
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] carbon emissions   [PAGE]8  [OCCURRENCES]5
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] carbon emissions   [PAGE]9  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] carbon emissions   [PAGE]11  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] carbon emissions   [PAGE]12  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]1  [OCCURRENCES]3
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]3  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]5  [OCCURRENCES]3
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]6  [OCCURRENCES]5
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]7  [OCCURRENCES]6
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]8  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]9  [OCCURRENCES]4
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]10  [OCCURRENCES]2
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]13  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] energy   [PAGE]15  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] public transport   [PAGE]11  [OCCURRENCES]2
+[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] electric vehicles   [PAGE]12  [OCCURRENCES]1
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] recycling   [PAGE]1  [OCCURRENCES]1
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] recycling   [PAGE]10  [OCCURRENCES]6
 [PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] recycling   [PAGE]11  [OCCURRENCES]5
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] paper   [PAGE]10  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] food waste   [PAGE]11  [OCCURRENCES]1
-[PDF]2016 Bath.pdf  [LANGUAGE]english  [TERM] social   [PAGE]13  [OCCURRENCES]1

@@ -25,6 +25,7 @@ library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 
 source("functions/parse longlist.R")
+source("C:/Users/hornr/source/repos/openmasses/tool/sustainalize/functions/keyword_generation.R")
 
 
 
@@ -395,10 +396,13 @@ shinyServer(function(input, output) {
           
           # Iterate over every row in the longlist
           for(row in 1:nrow(longlist)){
-    
+
+
+
             # New extraction
             current_topic_name_unfiltered = toString(longlist[row, language.column])
 
+            # get the current topic
             current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
 
 
@@ -412,7 +416,7 @@ shinyServer(function(input, output) {
             terms.frequency <- 0
             
             # Check if row is not empty
-            if(terms != "NA"){
+            if(terms != ""){
               # Extract the synonyms per row
               terms.list <- strsplit(tolower(terms), ";")
               
