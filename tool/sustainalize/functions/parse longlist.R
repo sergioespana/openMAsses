@@ -14,9 +14,9 @@ require(tidyverse)
 ozp_parse_longlist <- function(input) {
 
     
-    #excel = read_xlsx("C:/Users/hornr/source/repos/openmasses/tool/sustainalize/Longlist V2.xlsx")
+    excel = read_xlsx("C:/Users/hornr/source/repos/openmasses/tool/sustainalize/Longlist V2.xlsx")
     input = read_xlsx(input)
-    #input = excel
+    input = excel
     data = as.tibble(input)
 
     # filter out columns that have all NA values

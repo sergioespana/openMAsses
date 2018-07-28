@@ -1,11 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\ozp_textmining",
-    "\\ozp_textmining\\development notes",
-    "\\ozp_textmining\\helperfunctions\\Checked",
-    "\\sustainalize"
+    "\\Final Version",
+    "\\Final Version\\development notes",
+    "\\Final Version\\functions",
+    "\\Final Version\\longlists",
+    "\\Final Version\\ozp_textmining",
+    "\\sustainalize",
+    "\\sustainalize\\cas_functions",
+    "\\sustainalize\\functions"
   ],
-  "SelectedNode": "\\ozp_textmining\\main.R",
+  "SelectedNode": "\\Final Version\\ozp_textmining\\helperfunctions",
   "PreviewInSolutionExplorer": false
 }

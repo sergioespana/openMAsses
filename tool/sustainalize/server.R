@@ -358,7 +358,8 @@ shinyServer(function(input, output) {
       
       # Store the longlist topics in the first column
       for(row in 1:nrow(longlist)){
-        terms <- toString(longlist[row,topic_col_nr])
+        terms <- toString(longlist[row, topic_col_nr])
+        #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
         tdm[row,1] <- terms
       }
       
@@ -394,9 +395,20 @@ shinyServer(function(input, output) {
           
           # Iterate over every row in the longlist
           for(row in 1:nrow(longlist)){
-            
+    
+            # New extraction
+            current_topic_name_unfiltered = toString(longlist[row, language.column])
+
+            current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+
+
+
+            # Old extraction shit below
             # Extract the row
-            terms <- toString(longlist[row,language.column])
+
+
+            # change dit terug later.
+            terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
             terms.frequency <- 0
             
             # Check if row is not empty
