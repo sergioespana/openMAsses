@@ -6,7 +6,7 @@
 # 
 #    http://shiny.rstudio.com/
 #
-
+options(java.parameters = "-Xmx8000m")
 library(shiny)
 library(shinyjs)
 library(shinythemes)
@@ -27,7 +27,9 @@ library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 
-options(shiny.maxRequestSize = 800*1024^5)
+options(shiny.maxRequestSize = 800 * 1024 ^ 5)
+
+
 
 dashboardPage(title="Openmasses", 
               

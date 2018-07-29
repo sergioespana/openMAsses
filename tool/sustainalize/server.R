@@ -6,7 +6,7 @@
 # 
 #    http://shiny.rstudio.com/
 #
-
+options(java.parameters = "-Xmx8000m")
 library(shiny)
 library(shinyjs)
 library(shinythemes)
@@ -333,7 +333,9 @@ shinyServer(function(input, output) {
         topic_col_nr = 1
         description_col_nr=2
 
-      columns <- NULL
+        columns <- NULL
+      # make temp variable for copora to be used later
+      corpora.list <-NULL
       
       # Iterate over all categories
       for (cat in 1:length(names(allpdfs.text))) {
@@ -369,7 +371,8 @@ shinyServer(function(input, output) {
       
       # Iterate over every category 
       for(l in 1:length(columns)){
-        
+
+        # introduce loop here
         pdfs.text <- allpdfs.text[[l]]
         categoryName <- columns[l]
         incProgress(1/length(columns), detail = paste("Scanning: ", categoryName))
@@ -432,10 +435,10 @@ shinyServer(function(input, output) {
                 # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
            # terms.list <- ozp_generate_keywords("this is a description")
               # Iterate over the synonyms
-              for(synonym in 1:length(terms.list[[1]])){
+              for(synonym in 1:length(terms.list)){
                 
                 # Get the frequency of the synonym
-                term <- terms.list[[1]][synonym]
+                term <- terms.list[[synonym]]
                 term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
                 terms.frequency <- terms.frequency + term.frequency
               }
@@ -681,12 +684,18 @@ shinyServer(function(input, output) {
         # If it is a pdf that is directly uploaded
         if(str_count(category, "/") == 0  && str_count(category, ".pdf") == 1) {
           path <- files[[which(grepl(category, files$name, fixed=TRUE)),'datapath']]
-          pdfs.text[[category]] <- pdf_text(path) # wordt hier de pdf ingelezen in r? #ralph
-          
+          #pdfs.text[[category]] <- pdf_text(path) # wordt hier de pdf ingelezen in r? #ralph
+
+          # new stemming method
+
+          pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
+
           # Clean text
-          pdfs.text <- cleanText(pdfs.text)
-          
+          #pdfs.text <- cleanText(pdfs.text)
+         # test.pdfs<- cleanText(pdfs.text)
           # Save pdf text as category
+          #pdfs.text = ozp_pdf_stemming(pdfs.text)
+        #  lengte=length(pdfs.text)
           allpdfs.text[[category]] <- pdfs.text
         }
         # If it is a pdf that is uploaded in a zip
@@ -698,7 +707,9 @@ shinyServer(function(input, output) {
           
           # Clean text
           pdfs.text <- cleanText(pdfs.text)
-          
+
+          # New stemming here:
+          pdfs.text <- ozp_pdf_stemming(pdfs.text)
           # Save pdf text as category
           allpdfs.text[[category]] <- pdfs.text
         }
@@ -718,7 +729,7 @@ shinyServer(function(input, output) {
           
           # Clean text
           pdfs.text <- cleanText(pdfs.text)
-          
+          pdfs.text<-ozp_pdf_stemming(pdfs.text)
           # Save text of all pdfs to category
           allpdfs.text[[category]] <- pdfs.text
         }
@@ -821,7 +832,7 @@ shinyServer(function(input, output) {
         }
         
         # Log every match that is found in the PDFs 
-        cat(log)
+          cat(log)
       }
     }
     
@@ -1077,4 +1088,35 @@ shinyServer(function(input, output) {
     
     return(tdm)
   }
+    #' Title
+    #'
+    #' @param input.pdf in list format
+    #'
+    #' @return a stemmed pdf in list format
+    #' @export
+    #'
+    #' @examples
+    ozp_pdf_stemming <- function(input.pdf) {
+        # set to output object
+        output.pdf = input.pdf
+        #make a vectorsource for the input pdf
+        output.pdf.vector.source = VectorSource(output.pdf)
+        #make a corpus using the vector
+        output.pdf.corpus = tm::Corpus(output.pdf.vector.source)
+
+        # clean and stem the text using tm_map this removes whitespace punctuation and stopwords.
+        output.pdf.corpus <- tm_map(output.pdf.corpus, content_transformer(tolower))
+        output.pdf.corpus <- tm_map(output.pdf.corpus, removePunctuation)
+        output.pdf.corpus <- tm_map(output.pdf.corpus, stripWhitespace)
+        output.pdf.corpus <- tm_map(output.pdf.corpus, removeWords, stopwords("english")) # remove stopwords
+        output.pdf.corpus <- tm_map(output.pdf.corpus, stemDocument)
+
+        # convert the corpus back to a list.
+        # this is done to avoid problems with the existing code. 
+        # Use a true term document matrix in the future.
+        output.text = get("content", output.pdf.corpus)
+
+        return(output.text)
+    }
+
 })

@@ -15,7 +15,9 @@ require(SnowballC)
 
 ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj) {
     #input.noun.adj = "sustainability research"
-   # input = test_input
+    # input = test_input
+
+    
     input.noun.adj <- as.String(input.noun.adj)
     # Before POS tagging, we need to do Sentence annotation followed by word annotation
     wordAnnotation.noun.adj <- NLP::annotate(input.noun.adj, list(Maxent_Sent_Token_Annotator(), Maxent_Word_Token_Annotator()))

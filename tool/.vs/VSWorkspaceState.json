@@ -1,14 +1,14 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Final Version",
     "\\Final Version\\development notes",
     "\\Final Version\\functions",
     "\\Final Version\\longlists",
     "\\Final Version\\ozp_textmining",
-    "\\sustainalize",
-    "\\sustainalize\\cas_functions",
-    "\\sustainalize\\functions"
+    "\\Final Version\\ozp_textmining\\helperfunctions",
+    "\\sustainalize\\cas_functions"
   ],
-  "SelectedNode": "\\sustainalize\\sustainalize.rxproj",
+  "SelectedNode": "\\Final Version\\ozp_textmining\\helperfunctions\\inputcleanhelper.R",
   "PreviewInSolutionExplorer": false
 }
