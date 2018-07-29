@@ -14,7 +14,7 @@ require(SnowballC)
 # output: a list with keywords that uses nouns and adjectives tuple
 
 ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj) {
-   # input.noun.adj = "new  fancy knowledge creation"
+    #input.noun.adj = "sustainability research"
    # input = test_input
     input.noun.adj <- as.String(input.noun.adj)
     # Before POS tagging, we need to do Sentence annotation followed by word annotation
@@ -81,20 +81,24 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj) {
     # start building the result
     result.noun.adj = list()
 
-    for (nounadj in 1:length(outputs.noun.adj)) {
-        # retrieve the keyword pair
-        keyword.noun.adj = outputs.noun.adj[nounadj]
-        # collapse the keyword strings into one
-        keyword.noun.adj = paste(keyword.noun.adj[[1]],collapse = " ")
+    if (length(outputs.noun.adj) > 0) {
 
-        ## stem the keyword pair
-        # split the words and stem those words individually to avoid stemming errors.
-        keyword.noun.adj.splitted = str_split(keyword.noun.adj," ")
-        # stem the  splitted words and combine them into one string
-        keyword.noun.adj.stemmed = paste(SnowballC::wordStem(keyword.noun.adj.splitted[[1]], language = "english"),collapse = " ")
+        for (nounadj in 1:length(outputs.noun.adj)) {
+            # retrieve the keyword pair
+            keyword.noun.adj = outputs.noun.adj[nounadj]
 
-        # append to the result list
-        result.noun.adj[nounadj]=keyword.noun.adj.stemmed
+            # collapse the keyword strings into one
+            keyword.noun.adj = paste(keyword.noun.adj[[1]], collapse = " ")
+
+            ## stem the keyword pair
+            # split the words and stem those words individually to avoid stemming errors.
+            keyword.noun.adj.splitted = str_split(keyword.noun.adj, " ")
+            # stem the  splitted words and combine them into one string
+            keyword.noun.adj.stemmed = paste(SnowballC::wordStem(keyword.noun.adj.splitted[[1]], language = "english"), collapse = " ")
+
+            # append to the result list
+            result.noun.adj[nounadj] = keyword.noun.adj.stemmed
+        }
     }
 
     return(result.noun.adj)
@@ -107,8 +111,10 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj) {
 # Input: a description string
 # Output: all the nouns in the string
 #
-ozp_extract_nouns <- function(description) {
-    output = POS_tag_documents(description)
+ozp_extract_nouns <- function(input.noun) {
+
+    input.noun = input.noun
+    output = POS_tag_documents(input.noun)
 
     output = as.data.frame(output$Document_1)
 
@@ -122,7 +128,7 @@ ozp_generate_keywords <- function(input) {
     output.ozp.generate.keywords <- list()
 
     # split the descriptions on ';'
-    #input=test_input
+   # input=test_input
     input.list = strsplit(tolower(input), ";")
 
     # unlist it because lists are hard to work with
@@ -151,8 +157,10 @@ ozp_generate_keywords <- function(input) {
         # extract all the noun adjectives from the description 
         extracted.adjective.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]]))
         # for each noun ajdective pair in the list extract the value and append it to the result list
-        for (noun.adj.pair in 1:length(extracted.adjective.nouns.list)) {
-            output.ozp.generate.keywords = c(output.ozp.generate.keywords,extracted.adjective.nouns.list[[noun.adj.pair]])
+        if (length(extracted.adjective.nouns.list) > 0) {
+            for (noun.adj.pair in 1:length(extracted.adjective.nouns.list)) {
+                output.ozp.generate.keywords = c(output.ozp.generate.keywords, extracted.adjective.nouns.list[[noun.adj.pair]])
+            }
         }
 
     }

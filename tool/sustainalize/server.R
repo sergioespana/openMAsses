@@ -396,30 +396,41 @@ shinyServer(function(input, output) {
           
           # Iterate over every row in the longlist
           for(row in 1:nrow(longlist)){
+                      
+            #current_topic_name_unfiltered = toString(longlist[row, language.column])
+
+            ## get the current topic
+            #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
 
 
+              # New extraction
 
-            # New extraction
-            current_topic_name_unfiltered = toString(longlist[row, language.column])
-
-            # get the current topic
-            current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
-
+             extracted.description <- longlist[[row,description_col_nr]]
+            #ozp_generate_keywords(longlist[row,description_col_nr])
 
 
             # Old extraction shit below
             # Extract the row
 
 
-            # change dit terug later.
-            terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+            # hier worden momenteel de descriptions geretrieved.
+           # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
             terms.frequency <- 0
             
             # Check if row is not empty
-            if(terms != ""){
+            if(extracted.description != ""){
               # Extract the synonyms per row
-              terms.list <- strsplit(tolower(terms), ";")
-              
+              # old term list generation
+            # terms.list <- strsplit(tolower(terms), ";")
+               # extracted.terms.list <- strsplit(tolower(terms))
+                # new term list generation
+               test_input = longlist[row, description_col_nr]
+
+
+                terms.list <- ozp_generate_keywords(longlist[row,description_col_nr])
+
+                # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+           # terms.list <- ozp_generate_keywords("this is a description")
               # Iterate over the synonyms
               for(synonym in 1:length(terms.list[[1]])){
                 

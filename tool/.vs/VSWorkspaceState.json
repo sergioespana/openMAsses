@@ -1,7 +1,6 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Final Version",
     "\\Final Version\\development notes",
     "\\Final Version\\functions",
     "\\Final Version\\longlists",
@@ -10,6 +9,6 @@
     "\\sustainalize\\cas_functions",
     "\\sustainalize\\functions"
   ],
-  "SelectedNode": "\\Final Version\\ozp_textmining\\helperfunctions",
+  "SelectedNode": "\\sustainalize\\sustainalize.rxproj",
   "PreviewInSolutionExplorer": false
 }
