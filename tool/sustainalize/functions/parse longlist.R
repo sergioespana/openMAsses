@@ -48,3 +48,7 @@ cas_parse_longlist <- function() {
     testdata = read_excel("C:/Users/hornr/source/repos/openmasses/tool/sustainalize/long-listV1.xlsx")
     
 }
+
+test_longlist <- function() {
+    longlist.input=ozp_parse_longlist("Longlist V2_environment.xlsx")
+}

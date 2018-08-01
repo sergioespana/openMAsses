@@ -327,122 +327,124 @@ shinyServer(function(input, output) {
 
 
 
-  createTDM <- function(allpdfs.text, longlist, scheme, threshold){
-    withProgress(message = 'Generating Table', value = 0, {
+    createTDM <- function(allpdfs.text, longlist, scheme, threshold) {
+        withProgress(message = 'Generating Table', value = 0, {
 
-        topic_col_nr = 1
-        description_col_nr=2
+            topic_col_nr = 1
+        description_col_nr = 2
 
-        columns <- NULL
-      # make temp variable for copora to be used later
-      corpora.list <-NULL
-      
-      # Iterate over all categories
-      for (cat in 1:length(names(allpdfs.text))) {
-        
-        catName <- names(allpdfs.text)[cat]
-        
-        # If it is a category with PDFs underneath it add [Category] to the name
-        if(!grepl('.pdf', catName, fixed=TRUE)){
-          catName <- paste("[Category]", catName, sep=" ")
-        }
-        
-        # Remove '.pdf', dashes and hyphens from pdf name
-        catName <- gsub(".pdf", "", catName)
-        catName <- gsub("_"," ", catName)
-        catName <- gsub("-"," ", catName)
-        columns[cat] <- catName
-      }
-      
-      # Create empty TermDocumentMatrix
-      tdm <- data.frame(matrix(ncol = length(columns)+1, nrow = 0), stringsAsFactors=FALSE)
-      colnames(tdm) <- c("Longlist", columns)
-      
-      
-      # Store the longlist topics in the first column
-      for(row in 1:nrow(longlist)){
-        terms <- toString(longlist[row, topic_col_nr])
-        #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
-        tdm[row,1] <- terms
-      }
-      
-      # Create an empty log file
-      sink("outfile.txt")
-      
-      # Iterate over every category 
-      for(l in 1:length(columns)){
+            columns <- NULL
+        # make temp variable for copora to be used later
+        corpora.list <- NULL
 
-        # introduce loop here
-        pdfs.text <- allpdfs.text[[l]]
-        categoryName <- columns[l]
-        incProgress(1/length(columns), detail = paste("Scanning: ", categoryName))
-        
-        # Create category table
-        pdfNames <- names(pdfs.text)
-        catTDM <- data.frame(matrix(ncol = length(pdfNames)+1, nrow = 0), stringsAsFactors=FALSE)
-        colnames(catTDM) <- c("Longlist", pdfNames)
-        
-        # Iterate over every pdf in the category
-        for(pdf in 1:length(pdfs.text)){
-          pdfName <- pdfNames[pdf]
-          pdfPages <- pdfs.text[[pdf]]
-          
-          ## Determine langauge for the pdf by scanning the first 10 words of each page.
-          languages <- textcat(pdfPages[1:10])
-          language <- names(which.max(table(languages)))
-          #language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
-          
-          ## If the detected language is not found in the longlist it will use the first row
-          #if(length(language.column) == 0){
-            language.column <- topic_col_nr
-          #}
-          
-          # Iterate over every row in the longlist
-          for(row in 1:nrow(longlist)){
-                      
-            #current_topic_name_unfiltered = toString(longlist[row, language.column])
+            # Iterate over all categories
+        for (cat in 1:length(names(allpdfs.text))) {
 
-            ## get the current topic
-            #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+            catName <- names(allpdfs.text)[cat]
 
-
-              # New extraction
-
-             extracted.description <- longlist[[row,description_col_nr]]
-            #ozp_generate_keywords(longlist[row,description_col_nr])
-
-
-            # Old extraction shit below
-            # Extract the row
-
-
-            # hier worden momenteel de descriptions geretrieved.
-           # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
-            terms.frequency <- 0
-            
-            # Check if row is not empty
-            if(extracted.description != ""){
-              # Extract the synonyms per row
-              # old term list generation
-            # terms.list <- strsplit(tolower(terms), ";")
-               # extracted.terms.list <- strsplit(tolower(terms))
-                # new term list generation
-               test_input = longlist[row, description_col_nr]
-
-
-                terms.list <- ozp_generate_keywords(longlist[row,description_col_nr])
-
-                # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
-           # terms.list <- ozp_generate_keywords("this is a description")
-              # Iterate over the synonyms
-              for(synonym in 1:length(terms.list)){
-                
-                # Get the frequency of the synonym
-                term <- terms.list[[synonym]]
-                term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
-                terms.frequency <- terms.frequency + term.frequency
-              }
+            # If it is a category with PDFs underneath it add [Category] to the name
+            if (!grepl('.pdf', catName, fixed = TRUE)) {
+                catName <- paste("[Category]", catName, sep = " ")
             }
+
+            # Remove '.pdf', dashes and hyphens from pdf name
+            catName <- gsub(".pdf", "", catName)
+            catName <- gsub("_", " ", catName)
+            catName <- gsub("-", " ", catName)
+            columns[cat] <- catName
+        }
+
+            # Create empty TermDocumentMatrix
+        tdm <- data.frame(matrix(ncol = length(columns) + 1, nrow = 0), stringsAsFactors = FALSE)
+        colnames(tdm) <- c("Longlist", columns)
+
+
+            # Store the longlist topics in the first column
+        for (row in 1:nrow(longlist)) {
+            terms <- toString(longlist[row, topic_col_nr])
+            #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
+            tdm[row, 1] <- terms
+        }
+
+            # Create an empty log file
+        sink("outfile.txt")
+
+            # Iterate over every category 
+        for (l in 1:length(columns)) {
+
+            # introduce loop here
+            pdfs.text <- allpdfs.text[[l]]
+            categoryName <- columns[l]
+            incProgress(1 / length(columns), detail = paste("Scanning: ", categoryName))
+
+            # Create category table
+            pdfNames <- names(pdfs.text)
+            catTDM <- data.frame(matrix(ncol = length(pdfNames) + 1, nrow = 0), stringsAsFactors = FALSE)
+            colnames(catTDM) <- c("Longlist", pdfNames)
+
+            # Iterate over every pdf in the category
+            for (pdf in 1:length(pdfs.text)) {
+                pdfName <- pdfNames[pdf]
+                pdfPages <- pdfs.text[[pdf]]
+
+                ## Determine langauge for the pdf by scanning the first 10 words of each page.
+                languages <- textcat(pdfPages[1:10])
+                language <- names(which.max(table(languages)))
+                #language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
+
+                ## If the detected language is not found in the longlist it will use the first row
+                #if(length(language.column) == 0){
+                language.column <- topic_col_nr
+                #}
+
+                # Iterate over every row in the longlist
+                for (row in 1:nrow(longlist)) {
+
+                    #current_topic_name_unfiltered = toString(longlist[row, language.column])
+
+                    ## get the current topic
+                    #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+
+
+                    # New extraction
+
+                    extracted.description <- longlist[[row, description_col_nr]]
+                    #ozp_generate_keywords(longlist[row,description_col_nr])
+
+
+                    # Old extraction shit below
+                    # Extract the row
+
+
+                    # hier worden momenteel de descriptions geretrieved.
+                    # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+                    terms.frequency <- 0
+
+                    # Check if row is not empty
+                    if (extracted.description != "") {
+                        # Extract the synonyms per row
+                        # old term list generation
+                        # terms.list <- strsplit(tolower(terms), ";")
+                        # extracted.terms.list <- strsplit(tolower(terms))
+                        # new term list generation
+                        test_input = longlist[row, description_col_nr]
+
+
+                        terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+
+                        # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+                        # terms.list <- ozp_generate_keywords("this is a description")
+                        # Iterate over the synonyms
+                        if (length(terms.list) > 0) {
+                            for (synonym in 1:length(terms.list)) {
+
+                                # Get the frequency of the synonym
+                                term <- terms.list[[synonym]]
+                                term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
+                                terms.frequency <- terms.frequency + term.frequency
+                            }
+                        }
+                    }
             
             # If the scoring scheme is 'relative', we use the frequency divided by pages
             if(scheme == 3){
@@ -800,7 +802,6 @@ shinyServer(function(input, output) {
     
     return(pdfs.text)
   }
-  
   
   
   #
