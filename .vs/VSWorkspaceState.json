@@ -4,12 +4,10 @@
     "\\tool",
     "\\tool\\Final Version",
     "\\tool\\Final Version\\functions",
-    "\\tool\\ozp_textmining",
-    "\\tool\\ozp_textmining\\input_pdf",
+    "\\tool\\Final Version\\ozp_textmining",
     "\\tool\\sustainalize",
-    "\\tool\\sustainalize\\cas_functions",
     "\\tool\\sustainalize\\functions"
   ],
-  "SelectedNode": "\\tool\\sustainalize\\sustainalize.sln",
+  "SelectedNode": "\\tool\\Final Version\\ozp_textmining\\ozp_textmining.rxproj",
   "PreviewInSolutionExplorer": false
 }
