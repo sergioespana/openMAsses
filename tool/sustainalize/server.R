@@ -223,7 +223,7 @@ shinyServer(function(input, output) {
 
     # aanmaken term document matrix # ralph
     getTDM <- reactive({
-    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold)
+    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
   
   getPlotTDM <- reactive({
@@ -233,15 +233,13 @@ shinyServer(function(input, output) {
   printPlot <- reactive({
     generatePlot(input$table.plot, 20)
   })
-  
-  
+    
   
   # 
   # >> prepareWordCloudPDF <<
   # Input: text from pdf(s)
   # Output: word frequency list
-  # 
-  
+  #  
   prepareWordCloudPDF <- function(pdfs.text){
     
     withProgress(message = 'Generating Word Cloud', value = 0, {
@@ -274,7 +272,6 @@ shinyServer(function(input, output) {
   # Input: term document matrix
   # Output: term frequency list
   # 
-  
   prepareWordCloudLonglist <- function(tdm){
     frequency <- c(tdm[,2])
     synonym = list()
@@ -315,29 +312,17 @@ shinyServer(function(input, output) {
   # Input: text from pdf(s), longlist terms, scoring scheme and threshold
   # Output: term document matrix
     # 
-
-
-
-    #createTDM <- function(allpdfs.text, longlist, scheme, threshold) {
-        #return(as.data.frame(allpdfs.text))
-    #}
-
-
-
-
-
-
-    createTDM <- function(allpdfs.text, longlist, scheme, threshold) {
+    createTDM <- function(allpdfs.text, longlist, scheme, threshold,longlist.mode) {
         withProgress(message = 'Generating Table', value = 0, {
-
-            topic_col_nr = 1
+longlist.mode
+        # set topic and description column number.
+        # this was done to increase the readability of the code
+        topic_col_nr = 1
         description_col_nr = 2
 
-            columns <- NULL
-        # make temp variable for copora to be used later
-        corpora.list <- NULL
+        columns <- NULL
 
-            # Iterate over all categories
+        # Iterate over all categories
         for (cat in 1:length(names(allpdfs.text))) {
 
             catName <- names(allpdfs.text)[cat]
@@ -354,12 +339,12 @@ shinyServer(function(input, output) {
             columns[cat] <- catName
         }
 
-            # Create empty TermDocumentMatrix
+        # Create empty TermDocumentMatrix
         tdm <- data.frame(matrix(ncol = length(columns) + 1, nrow = 0), stringsAsFactors = FALSE)
         colnames(tdm) <- c("Longlist", columns)
 
 
-            # Store the longlist topics in the first column
+         # Store the longlist topics in the first column
         for (row in 1:nrow(longlist)) {
             terms <- toString(longlist[row, topic_col_nr])
             #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
@@ -445,42 +430,40 @@ shinyServer(function(input, output) {
                             }
                         }
                     }
-            
-            # If the scoring scheme is 'relative', we use the frequency divided by pages
-            if(scheme == 3){
-              npages <- length(pdfPages)
-              score <- terms.frequency / npages
-              score <- round(score,digits=3)
-              catTDM[row,pdf+1] <- score
+
+                    # If the scoring scheme is 'relative', we use the frequency divided by pages
+                    if (scheme == 3) {
+                        npages <- length(pdfPages)
+                        score <- terms.frequency / npages
+                        score <- round(score, digits = 3)
+                        catTDM[row, pdf + 1] <- score
+                    }
+
+                    # If the scoring scheme is not 'relative', we can use the frequency
+                    else {
+
+                        # Save frequency of synonyms to dataframe
+                        catTDM[row, pdf + 1] <- terms.frequency
+                    }
+                }
             }
-            
-            # If the scoring scheme is not 'relative', we can use the frequency
-            else{
-              
-              # Save frequency of synonyms to dataframe
-              catTDM[row,pdf+1] <- terms.frequency
-            }
-          }
+
+            # After a category table is created (containing all the pdfs of that category), add the score column to it
+            catTDM <- addScore(catTDM, scheme, threshold, TRUE)
+
+            # Add the score column of the category table to the main table
+            tdm[1:nrow(tdm), l + 1] <- catTDM[1:nrow(catTDM), 2]
         }
-        
-        # After a category table is created (containing all the pdfs of that category), add the score column to it
-        catTDM <- addScore(catTDM, scheme, threshold, TRUE)
-        
-        # Add the score column of the category table to the main table
-        tdm[1:nrow(tdm),l+1] <- catTDM[1:nrow(catTDM),2]
-      }
-      
-      # After all the categories columns are added, add the score column to the main tdm
-      tdm <- addScore(tdm, scheme, threshold, FALSE)
-      
-      # Set the correct names again
-      colnames(tdm) <- c("Longlist", "Score", columns)
-      
-    })
-    return(tdm)
-  }
-  
-  
+
+            # After all the categories columns are added, add the score column to the main tdm
+        tdm <- addScore(tdm, scheme, threshold, FALSE)
+
+            # Set the correct names again
+        colnames(tdm) <- c("Longlist", "Score", columns)
+
+        })
+        return(tdm)
+    }
   
   # 
   # >> addScore <<

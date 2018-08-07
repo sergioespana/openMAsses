@@ -212,7 +212,7 @@ shinyServer(function(input, output) {
   })
   
   getTDM <- reactive({
-    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold)
+    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold,input$longlistoption)
   })
   
   getPlotTDM <- reactive({
