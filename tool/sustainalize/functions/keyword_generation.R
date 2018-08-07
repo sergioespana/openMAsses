@@ -15,13 +15,13 @@ require(SnowballC)
 
 
 
-ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
+ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
     #input.noun.adj = "sustainability research"
     # input = test_input
-   # input.noun.adj=test.noun
-    
+    # input.noun.adj=test.noun
+
     input.noun.adj <- as.String(input.noun.adj)
-    # Before POS tagging, we need to do Sentence annotation followed by word annotation
+    # Before PoS tagging,  do Sentence annotation followed by word annotation
     wordAnnotation.noun.adj <- NLP::annotate(input.noun.adj, list(Maxent_Sent_Token_Annotator(), Maxent_Word_Token_Annotator()))
 
     # POS tag the words & extract the "words" from the output
@@ -38,10 +38,10 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
     # Define a flag(tags_mod) for pos tags - Flag set to 1 if it contains the POS tag we are interested in else 0
     # In this case we only want Noun and Adjective tags (NN, JJ)
     # Note that this will also capture variations such as NNP, NNPS etc
-    if (mode == 1){
+    if (mode == 1) {
         tokenizedAndTagged.noun.adj$Tags_mod = grepl("NN|JJ", tokenizedAndTagged.noun.adj$Tags)
     }
-    else if(mode==2){
+    else if (mode == 2) {
 
         tokenizedAndTagged.noun.adj$Tags_mod = grepl("NN|NN", tokenizedAndTagged.noun.adj$Tags)
     }
@@ -67,7 +67,7 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
 
         }
     } else {
-        chunk.noun.adj[1]=1
+        chunk.noun.adj[1] = 1
     }
 
     # Split and chunk words
@@ -83,7 +83,7 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
     } else {
         result.noun.adj = text_chunk.noun.adj[grepl("NN|NN", names(text_chunk.noun.adj))]
     }
-    
+
 
     outputs.noun.adj = list()
 
@@ -92,8 +92,8 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
     j = length(result.noun.adj)
     while (i <= j) {
 
-        outputs.noun.adj[i] = paste(result.noun.adj[[i]],collapse= " ")
-       
+        outputs.noun.adj[i] = paste(result.noun.adj[[i]], collapse = " ")
+
         i = i + 1
 
     }
@@ -126,22 +126,6 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj,mode) {
 
 # load standford coreNLP package
 
-#
-# >> extract_nouns <<
-# Input: a description string
-# Output: all the nouns in the string
-#
-ozp_extract_nouns <- function(input.noun) {
-
-    input.noun = input.noun
-    output = POS_tag_documents(input.noun)
-
-    output = as.data.frame(output$Document_1)
-
-    output = filter(output, tags == "NN" | tags == "NNP" | tags =="NNS")
-
-    return(output)
-}
 
 ozp_generate_keywords <- function(input) {
 
@@ -158,61 +142,81 @@ ozp_generate_keywords <- function(input) {
 
     # do a for loop over the unlisted input to generate  noun keywords
     #for (description in 1:length(unlisted.input.list)) {
-        ## extract all nouns from the description
+    ## extract all nouns from the description
 
-            #extracted.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]],2))    
+    #extracted.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]],2))    
     #}
-            ## the text tokens are always stored in the first list element so unlist that element
-            #extracted.nouns.unlisted = unlist(extracted.nouns.list[[1]])
+    ## the text tokens are always stored in the first list element so unlist that element
+    #extracted.nouns.unlisted = unlist(extracted.nouns.list[[1]])
 
-            ## use a for loop to add each noun to the output list
-            #for (noun in 1:length(extracted.nouns.unlisted)) {
-                ## make a char from the extracted keyword using paste
-                #keyword = paste(extracted.nouns.unlisted[noun])
-                ## stem the keyword
-                #keyword = text_tokens(keyword, stemmer = "en")[[1]]
+    ## use a for loop to add each noun to the output list
+    #for (noun in 1:length(extracted.nouns.unlisted)) {
+    ## make a char from the extracted keyword using paste
+    #keyword = paste(extracted.nouns.unlisted[noun])
+    ## stem the keyword
+    #keyword = text_tokens(keyword, stemmer = "en")[[1]]
 
-                ## add the noun to the list, duplicates are added aswell so we need to remove those later
-                #output.ozp.generate.keywords = c(output.ozp.generate.keywords, keyword)
-            #}
-        # do a for loop over the unlisted input to generate noun keywords
-        for (description in 1:length(unlisted.input.list)) {
-            # extract all the noun adjectives from the description 
-            extracted.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]],2))
-            # for each noun ajdective pair in the list extract the value and append it to the result list
-            if (length(extracted.nouns.list) > 0) {
-                for (noun.adj.pair in 1:length(extracted.nouns.list)) {
-                    output.ozp.generate.keywords = c(output.ozp.generate.keywords, extracted.nouns.list[[noun.adj.pair]])
-                }
+    ## add the noun to the list, duplicates are added aswell so we need to remove those later
+    #output.ozp.generate.keywords = c(output.ozp.generate.keywords, keyword)
+    #}
+    # do a for loop over the unlisted input to generate noun keywords
+    for (description in 1:length(unlisted.input.list)) {
+        # extract all the noun adjectives from the description 
+        extracted.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]], 2))
+        # for each noun ajdective pair in the list extract the value and append it to the result list
+        if (length(extracted.nouns.list) > 0) {
+            for (noun.adj.pair in 1:length(extracted.nouns.list)) {
+                output.ozp.generate.keywords = c(output.ozp.generate.keywords, extracted.nouns.list[[noun.adj.pair]])
             }
-
         }
 
+    }
 
-        # do a for loop over the unlisted input to generate noun adjective keywords
-        for (description in 1:length(unlisted.input.list)) {
-            # extract all the noun adjectives from the description 
-            extracted.adjective.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]],1))
-            # for each noun ajdective pair in the list extract the value and append it to the result list
-            if (length(extracted.adjective.nouns.list) > 0) {
-                for (noun.adj.pair in 1:length(extracted.adjective.nouns.list)) {
-                    output.ozp.generate.keywords = c(output.ozp.generate.keywords, extracted.adjective.nouns.list[[noun.adj.pair]])
-                }
+
+    # do a for loop over the unlisted input to generate noun adjective keywords
+    for (description in 1:length(unlisted.input.list)) {
+        # extract all the noun adjectives from the description 
+        extracted.adjective.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]], 1))
+        # for each noun ajdective pair in the list extract the value and append it to the result list
+        if (length(extracted.adjective.nouns.list) > 0) {
+            for (noun.adj.pair in 1:length(extracted.adjective.nouns.list)) {
+                output.ozp.generate.keywords = c(output.ozp.generate.keywords, extracted.adjective.nouns.list[[noun.adj.pair]])
             }
-
         }
 
-        # remove all double values using dplyr distinct. Use a tempoary value to improve readability
-        output.ozp.generate.keywords.distinct = distinct(as.data.frame(unlist(output.ozp.generate.keywords)))
-        # get all the unique values from the distinct output.
-        output.ozp.generate.keywords = paste(output.ozp.generate.keywords.distinct$`unlist(output.ozp.generate.keywords)`)
+    }
+
+    # remove all double values using dplyr distinct. Use a tempoary value to improve readability
+    output.ozp.generate.keywords.distinct = distinct(as.data.frame(unlist(output.ozp.generate.keywords)))
+    # get all the unique values from the distinct output.
+    output.ozp.generate.keywords = paste(output.ozp.generate.keywords.distinct$`unlist(output.ozp.generate.keywords)`)
 
     return(output.ozp.generate.keywords)
-    }
-    
+}
+
 
 ##test.input=longlist.input[4,2]
 #test.output=ozp_generate_keywords(test.input)
 
 #test.input = longlist.input[26, 2]
 ##input=test.input
+
+ozp_test_total_keywords<- function(longlist){
+    result=list()
+    for (row in 1:nrow(longlist)) {
+        extracted.description <- longlist[[row, 2]]
+
+        if (extracted.description != "") {
+
+            current.descriptions = ozp_generate_keywords(longlist[row, 2])
+            result = c(result, list(current.descriptions))
+        }
+
+    }
+    return(result)
+}
+
+paper_keyword_generator <- function() {
+    keywords.v1.prime = ozp_test_total_keywords(longlist.v1.prime)
+    keywords.v2=ozp_test_total_keywords(longlist.v2)
+}
