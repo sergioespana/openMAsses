@@ -50,5 +50,10 @@ cas_parse_longlist <- function() {
 }
 
 test_longlist <- function() {
-    longlist.input=ozp_parse_longlist("Longlist V2_environment.xlsx")
+    longlist.input = ozp_parse_longlist("Longlist V2_environment.xlsx")
+    longlist.v1.prime = ozp_parse_longlist("long-list V1 Prime.xlsx")
+    longlist.v2 = ozp_parse_longlist("Longlist V2.xlsx")
+
+    # export to csv
+    lapply(keywords.v2, function(x) write.table(data.frame(x), 'longlist V2 Keywords.csv', append = T, sep = ','))
 }
