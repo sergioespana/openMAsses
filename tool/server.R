@@ -312,7 +312,7 @@ shinyServer(function(input, output) {
   # Input: text from pdf(s), longlist terms, scoring scheme and threshold
   # Output: term document matrix
     # 
-    createTDM <- function(allpdfs.text, longlist, scheme, threshold,longlist.mode) {
+    createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
         withProgress(message = 'Generating Table', value = 0, {
         longlist.mode
         # set topic and description column number.
@@ -320,8 +320,48 @@ shinyServer(function(input, output) {
         topic_col_nr = 1
         description_col_nr = 2
 
-        columns <- NULL
+            columns <- NULL
 
+
+
+        # test optimalization effort
+        optimized_descriptions = list()
+
+        for (row in 1:nrow(longlist)) {
+
+            #current_topic_name_unfiltered = toString(longlist[row, language.column])
+
+            ## get the current topic
+            #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+
+
+            # New extraction
+
+            extracted.description <- longlist[[row, description_col_nr]]
+            if (extracted.description != "") {
+            # Extract the synonyms per row
+            # old term list generation
+            # terms.list <- strsplit(tolower(terms), ";")
+            # extracted.terms.list <- strsplit(tolower(terms))
+
+
+                # debug statement
+            test_input = longlist[row, description_col_nr]
+
+                # new term list generation
+            terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+            if (length(optimized_descriptions) == 0) {
+                optimized_descriptions=list(terms.list)
+            }else   
+             optimized_descriptions= c(optimized_descriptions,list(terms.list))
+            }
+            else {
+            if (length(optimized_descriptions) == 0) {
+            optimized_descriptions=list("")} else {
+            optimized_descriptions = c(optimized_descriptions, "")
+            }
+            }
+        }
             
         # Iterate over all categories
         for (cat in 1:length(names(allpdfs.text))) {
@@ -416,7 +456,10 @@ shinyServer(function(input, output) {
                         test_input = longlist[row, description_col_nr]
 
                         # new term list generation
-                        terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+                        #terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+
+                        # optimization test
+                        terms.list <- optimized_descriptions[[row]]
 
                         # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
                         # terms.list <- ozp_generate_keywords("this is a description")
@@ -657,7 +700,7 @@ shinyServer(function(input, output) {
         # Documents other than pdf or zip are ignored
       }
       
-      allpdfs.text = NULL
+      allpdfs.text = list()
 
       #observe(print(typeof(categories)))
       
@@ -685,7 +728,7 @@ shinyServer(function(input, output) {
           path <- paste("unzip/",category,sep="")
           pos = regexpr('/', category)
           category <- substr(category, pos+1, nchar(category))
-          pdfs.text[[category]] <- pdf_text(path)
+          pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
           
           # Clean text
           pdfs.text <- cleanText(pdfs.text)
@@ -709,8 +752,9 @@ shinyServer(function(input, output) {
             pdfs.text[[category.pdf]] <- pdf_text(path)
           }
           
-          # Clean text
+          # Clean text old version
           pdfs.text <- cleanText(pdfs.text)
+          # stemming
           pdfs.text<-ozp_pdf_stemming(pdfs.text)
           # Save text of all pdfs to category
           allpdfs.text[[category]] <- pdfs.text
