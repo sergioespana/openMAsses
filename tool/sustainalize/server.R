@@ -6,7 +6,7 @@
 # 
 #    http://shiny.rstudio.com/
 #
-options(java.parameters = "-Xmx8000m")
+options(java.parameters = "-Xmx2000m")
 library(shiny)
 library(shinyjs)
 library(shinythemes)
