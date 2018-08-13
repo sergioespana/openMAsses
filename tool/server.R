@@ -314,7 +314,7 @@ shinyServer(function(input, output) {
     # 
     createTDM <- function(allpdfs.text, longlist, scheme, threshold,longlist.mode) {
         withProgress(message = 'Generating Table', value = 0, {
-longlist.mode
+        longlist.mode
         # set topic and description column number.
         # this was done to increase the readability of the code
         topic_col_nr = 1
@@ -322,6 +322,7 @@ longlist.mode
 
         columns <- NULL
 
+            
         # Iterate over all categories
         for (cat in 1:length(names(allpdfs.text))) {
 
@@ -342,7 +343,6 @@ longlist.mode
         # Create empty TermDocumentMatrix
         tdm <- data.frame(matrix(ncol = length(columns) + 1, nrow = 0), stringsAsFactors = FALSE)
         colnames(tdm) <- c("Longlist", columns)
-
 
          # Store the longlist topics in the first column
         for (row in 1:nrow(longlist)) {
@@ -397,7 +397,6 @@ longlist.mode
                     #ozp_generate_keywords(longlist[row,description_col_nr])
 
 
-                    # Old extraction shit below
                     # Extract the row
 
 
@@ -411,10 +410,12 @@ longlist.mode
                         # old term list generation
                         # terms.list <- strsplit(tolower(terms), ";")
                         # extracted.terms.list <- strsplit(tolower(terms))
-                        # new term list generation
+
+
+                        # debug statement
                         test_input = longlist[row, description_col_nr]
 
-
+                        # new term list generation
                         terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
 
                         # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
@@ -669,22 +670,18 @@ longlist.mode
         # If it is a pdf that is directly uploaded
         if(str_count(category, "/") == 0  && str_count(category, ".pdf") == 1) {
           path <- files[[which(grepl(category, files$name, fixed=TRUE)),'datapath']]
-          #pdfs.text[[category]] <- pdf_text(path) # wordt hier de pdf ingelezen in r? #ralph
 
-          # new stemming method
-
+          # stem the PDF
           pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
 
           # Clean text
-          #pdfs.text <- cleanText(pdfs.text)
-         # test.pdfs<- cleanText(pdfs.text)
           # Save pdf text as category
-          #pdfs.text = ozp_pdf_stemming(pdfs.text)
-        #  lengte=length(pdfs.text)
           allpdfs.text[[category]] <- pdfs.text
         }
         # If it is a pdf that is uploaded in a zip
-        else if(str_count(category, "/") == 1 ) {
+        else if (str_count(category, "/") == 1) {
+
+          # update this stuff.
           path <- paste("unzip/",category,sep="")
           pos = regexpr('/', category)
           category <- substr(category, pos+1, nchar(category))
