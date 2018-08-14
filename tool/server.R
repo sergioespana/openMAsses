@@ -327,40 +327,84 @@ shinyServer(function(input, output) {
         # test optimalization effort
         optimized_descriptions = list()
 
-        for (row in 1:nrow(longlist)) {
+            for (row in 1:nrow(longlist)) {
 
-            #current_topic_name_unfiltered = toString(longlist[row, language.column])
+                if (longlist.mode == 1) {
+        #current_topic_name_unfiltered = toString(longlist[row, language.column])
 
-            ## get the current topic
-            #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+                    ## get the current topic
+        #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
 
 
-            # New extraction
+                    # New extraction
 
-            extracted.description <- longlist[[row, description_col_nr]]
-            if (extracted.description != "") {
+         extracted.description <- longlist[[row, description_col_nr]]
+        if (extracted.description != "") {
             # Extract the synonyms per row
             # old term list generation
             # terms.list <- strsplit(tolower(terms), ";")
             # extracted.terms.list <- strsplit(tolower(terms))
 
 
-                # debug statement
+            # debug statement
             test_input = longlist[row, description_col_nr]
 
-                # new term list generation
+            # new term list generation
             terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
             if (length(optimized_descriptions) == 0) {
-                optimized_descriptions=list(terms.list)
-            }else   
-             optimized_descriptions= c(optimized_descriptions,list(terms.list))
-            }
-            else {
+                optimized_descriptions = list(terms.list)
+            } else
+                optimized_descriptions = c(optimized_descriptions, list(terms.list))
+        }
+        else {
             if (length(optimized_descriptions) == 0) {
-            optimized_descriptions=list("")} else {
-            optimized_descriptions = c(optimized_descriptions, "")
+                optimized_descriptions = list("")
+            } else {
+                optimized_descriptions = c(optimized_descriptions, "")
             }
-            }
+        }
+        } else {
+             extracted.description <- longlist[[row, description_col_nr]]
+        if (extracted.description != "") {
+        # Extract the synonyms per row
+        # old term list generation
+        splitted.descriptions = str_split(extracted.description, ';')
+
+
+
+
+
+
+            # new term list generation
+        terms.list <- splitted.descriptions[[1]]
+        stemmed.list <- list()
+        # apply stemming to each keyword in the list
+        for (keyword in 1:length(terms.list)) {
+            stemmed.keyword = paste(SnowballC::wordStem(terms.list, language = "english"))
+            stemmed.list=c(stemmed.list,stemmed.keyword)
+        }
+
+            #for (keyword in 1:length(splitted.string.list)) {
+            #stemmed.keyword = paste(SnowballC::wordStem(splitted.string.list[[keyword]], language = "english"))
+            #stemmed.list=c(stemmed.list,stemmed.keyword)
+
+                ##stemmed.list=c(stemmed.list,paste(SnowballC::wordStem(splitted.string.list[[keyword]],language = "english")))
+            #}
+
+         terms.list=stemmed.list   
+        if (length(optimized_descriptions) == 0) {
+        optimized_descriptions = list(terms.list)
+        } else
+        optimized_descriptions = c(optimized_descriptions, list(terms.list))
+        }
+        else {
+        if (length(optimized_descriptions) == 0) {
+        optimized_descriptions = list("")
+        } else {
+        optimized_descriptions = c(optimized_descriptions, "")
+        }
+        }
+        }
         }
             
         # Iterate over all categories
