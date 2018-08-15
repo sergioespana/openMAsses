@@ -221,7 +221,6 @@ shinyServer(function(input, output) {
     generateWordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
   })
 
-    # aanmaken term document matrix # ralph
     getTDM <- reactive({
     createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
@@ -311,43 +310,28 @@ shinyServer(function(input, output) {
   # >> createTDM <<
   # Input: text from pdf(s), longlist terms, scoring scheme and threshold
   # Output: term document matrix
-    # 
+  # 
     createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
         withProgress(message = 'Generating Table', value = 0, {
         longlist.mode
         # set topic and description column number.
-        # this was done to increase the readability of the code
         topic_col_nr = 1
         description_col_nr = 2
 
-            columns <- NULL
+        columns <- NULL
 
-
-
-        # test optimalization effort
+        # optimalization to only generate the list once
         optimized_descriptions = list()
 
             for (row in 1:nrow(longlist)) {
 
                 if (longlist.mode == 1) {
-        #current_topic_name_unfiltered = toString(longlist[row, language.column])
-
-                    ## get the current topic
-        #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
-
-
-                    # New extraction
 
          extracted.description <- longlist[[row, description_col_nr]]
         if (extracted.description != "") {
-            # Extract the synonyms per row
-            # old term list generation
-            # terms.list <- strsplit(tolower(terms), ";")
-            # extracted.terms.list <- strsplit(tolower(terms))
-
 
             # debug statement
-            test_input = longlist[row, description_col_nr]
+           # test_input = longlist[row, description_col_nr]
 
             # new term list generation
             terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
@@ -367,29 +351,18 @@ shinyServer(function(input, output) {
              extracted.description <- longlist[[row, description_col_nr]]
         if (extracted.description != "") {
         # Extract the synonyms per row
-        # old term list generation
         splitted.descriptions = str_split(extracted.description, ';')
 
 
-
-
-
-
-            # new term list generation
+        # Term list generation
         terms.list <- splitted.descriptions[[1]]
         stemmed.list <- list()
-        # apply stemming to each keyword in the list
+        # Apply stemming to each keyword in the list
         for (keyword in 1:length(terms.list)) {
             stemmed.keyword = paste(SnowballC::wordStem(terms.list, language = "english"))
             stemmed.list=c(stemmed.list,stemmed.keyword)
         }
 
-            #for (keyword in 1:length(splitted.string.list)) {
-            #stemmed.keyword = paste(SnowballC::wordStem(splitted.string.list[[keyword]], language = "english"))
-            #stemmed.list=c(stemmed.list,stemmed.keyword)
-
-                ##stemmed.list=c(stemmed.list,paste(SnowballC::wordStem(splitted.string.list[[keyword]],language = "english")))
-            #}
 
          terms.list=stemmed.list   
         if (length(optimized_descriptions) == 0) {
@@ -469,44 +442,23 @@ shinyServer(function(input, output) {
                 # Iterate over every row in the longlist
                 for (row in 1:nrow(longlist)) {
 
-                    #current_topic_name_unfiltered = toString(longlist[row, language.column])
-
-                    ## get the current topic
-                    #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
-
-
-                    # New extraction
-
+                    # extract the description.
                     extracted.description <- longlist[[row, description_col_nr]]
-                    #ozp_generate_keywords(longlist[row,description_col_nr])
 
-
-                    # Extract the row
-
-
-                    # hier worden momenteel de descriptions geretrieved.
                     # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
                     terms.frequency <- 0
 
                     # Check if row is not empty
                     if (extracted.description != "") {
                         # Extract the synonyms per row
-                        # old term list generation
-                        # terms.list <- strsplit(tolower(terms), ";")
-                        # extracted.terms.list <- strsplit(tolower(terms))
 
+                        ## debug statement
+                        #test_input = longlist[row, description_col_nr]
 
-                        # debug statement
-                        test_input = longlist[row, description_col_nr]
-
-                        # new term list generation
-                        #terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
-
-                        # optimization test
+                        # optimization
                         terms.list <- optimized_descriptions[[row]]
 
-                        # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
-                        # terms.list <- ozp_generate_keywords("this is a description")
+
                         # Iterate over the synonyms
                         if (length(terms.list) > 0) {
                             for (synonym in 1:length(terms.list)) {
@@ -775,7 +727,7 @@ shinyServer(function(input, output) {
           pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
           
           # Clean text
-          pdfs.text <- cleanText(pdfs.text)
+          #pdfs.text <- cleanText(pdfs.text)
 
           # New stemming here:
           pdfs.text <- ozp_pdf_stemming(pdfs.text)

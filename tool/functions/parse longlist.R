@@ -41,19 +41,3 @@ ozp_parse_longlist <- function(input) {
 
     return(output)
 }
-
-
-cas_parse_longlist <- function() {
-
-    testdata = read_excel("C:/Users/hornr/source/repos/openmasses/tool/sustainalize/long-listV1.xlsx")
-    
-}
-
-test_longlist <- function() {
-    longlist.input = ozp_parse_longlist("Longlist V2_environment.xlsx")
-    longlist.v1.prime = ozp_parse_longlist("long-list V1 Prime.xlsx")
-    longlist.v2 = ozp_parse_longlist("Longlist V2.xlsx")
-
-    # export to csv
-    lapply(keywords.v2, function(x) write.table(data.frame(x), 'longlist V2 Keywords.csv', append = T, sep = ','))
-}

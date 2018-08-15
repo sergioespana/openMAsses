@@ -11,7 +11,7 @@ require(SnowballC)
 
 
 # input: a sentence string that describes a topic
-# output: a list with keywords that uses nouns and adjectives tuple
+# output: a list with keywords
 
 ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
     #input.noun.adj = "sustainability research"
@@ -120,7 +120,8 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
 }
 
 
-
+# input: a list of descriptions
+# output: a list of keywords
 ozp_generate_keywords <- function(input) {
 
     output.ozp.generate.keywords <- list()
@@ -132,27 +133,6 @@ ozp_generate_keywords <- function(input) {
     # unlist it because lists are hard to work with
     unlisted.input.list = unlist(input.list)
 
-    # check if the input is not of length 1 to avoid problems with the POS tagging function
-
-    # do a for loop over the unlisted input to generate  noun keywords
-    #for (description in 1:length(unlisted.input.list)) {
-    ## extract all nouns from the description
-
-    #extracted.nouns.list = (ozp_generate_keywords_nouns_adjectives(unlisted.input.list[[description]],2))    
-    #}
-    ## the text tokens are always stored in the first list element so unlist that element
-    #extracted.nouns.unlisted = unlist(extracted.nouns.list[[1]])
-
-    ## use a for loop to add each noun to the output list
-    #for (noun in 1:length(extracted.nouns.unlisted)) {
-    ## make a char from the extracted keyword using paste
-    #keyword = paste(extracted.nouns.unlisted[noun])
-    ## stem the keyword
-    #keyword = text_tokens(keyword, stemmer = "en")[[1]]
-
-    ## add the noun to the list, duplicates are added aswell so we need to remove those later
-    #output.ozp.generate.keywords = c(output.ozp.generate.keywords, keyword)
-    #}
     # do a for loop over the unlisted input to generate noun keywords
     for (description in 1:length(unlisted.input.list)) {
         # extract all the noun adjectives from the description 
@@ -165,7 +145,6 @@ ozp_generate_keywords <- function(input) {
         }
 
     }
-
 
     # do a for loop over the unlisted input to generate noun adjective keywords
     for (description in 1:length(unlisted.input.list)) {
@@ -186,31 +165,4 @@ ozp_generate_keywords <- function(input) {
     output.ozp.generate.keywords = paste(output.ozp.generate.keywords.distinct$`unlist(output.ozp.generate.keywords)`)
 
     return(output.ozp.generate.keywords)
-}
-
-
-##test.input=longlist.input[4,2]
-#test.output=ozp_generate_keywords(test.input)
-
-#test.input = longlist.input[26, 2]
-##input=test.input
-
-ozp_test_total_keywords<- function(longlist){
-    result=list()
-    for (row in 1:nrow(longlist)) {
-        extracted.description <- longlist[[row, 2]]
-
-        if (extracted.description != "") {
-
-            current.descriptions = ozp_generate_keywords(longlist[row, 2])
-            result = c(result, list(current.descriptions))
-        }
-
-    }
-    return(result)
-}
-
-paper_keyword_generator <- function() {
-    keywords.v1.prime = ozp_test_total_keywords(longlist.v1.prime)
-    keywords.v2=ozp_test_total_keywords(longlist.v2)
 }
