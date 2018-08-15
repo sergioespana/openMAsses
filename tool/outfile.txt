@@ -4744,3 +4744,102 @@
 [PDF]2017 Richmond.pdf  [LANGUAGE]english  [TERM] polici   [PAGE]23  [OCCURRENCES]1
 [PDF]2017 Richmond.pdf  [LANGUAGE]english  [TERM] food wast   [PAGE]18  [OCCURRENCES]2
 [PDF]2017 Richmond.pdf  [LANGUAGE]english  [TERM] food wast   [PAGE]18  [OCCURRENCES]2
+Called from: eval(expr, p)
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1198: tdm <- hot_to_r(tdm)
+attr(,"rtvs::at_breakpoint")
+[1] TRUE
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1201: tdm$Synonym <- NULL
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1204: for (row in 1:nrow(tdm)) {
+    {
+        .doTrace(if (rtvs:::is_breakpoint("server.R", 1206)) 
+            browser())
+        split <- strsplit(toString(tdm[row, 1]), " / ")
+    }
+    split = sapply(strsplit(split[[1]], ";", fixed = TRUE), tail, 
+        1)
+    tdm[row, 5] <- split
+}
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: {
+    .doTrace(if (rtvs:::is_breakpoint("server.R", 1206)) 
+        browser())
+    split <- strsplit(toString(tdm[row, 1]), " / ")
+}
+attr(,"rtvs::original_expr")
+split <- strsplit(toString(tdm[row, 1]), " / ")
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: .doTrace(if (rtvs:::is_breakpoint("server.R", 1206)) browser())
+attr(,"rtvs::is_breakpoint")
+[1] TRUE
+debug: browser()
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: split <- strsplit(toString(tdm[row, 1]), " / ")
+attr(,"rtvs::at_breakpoint")
+[1] TRUE
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1207: split = sapply(strsplit(split[[1]], ";", fixed = TRUE), tail, 
+    1)
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1208: tdm[row, 5] <- split
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: {
+    .doTrace(if (rtvs:::is_breakpoint("server.R", 1206)) 
+        browser())
+    split <- strsplit(toString(tdm[row, 1]), " / ")
+}
+attr(,"rtvs::original_expr")
+split <- strsplit(toString(tdm[row, 1]), " / ")
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: .doTrace(if (rtvs:::is_breakpoint("server.R", 1206)) browser())
+attr(,"rtvs::is_breakpoint")
+[1] TRUE
+debug: browser()
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1206: split <- strsplit(toString(tdm[row, 1]), " / ")
+attr(,"rtvs::at_breakpoint")
+[1] TRUE
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1213: {
+    .doTrace(if (rtvs:::is_breakpoint("server.R", 1213)) 
+        browser())
+    plot <- plot_ly(x = tdm[tdm[, 4] == TRUE, 3], y = tdm[tdm[, 
+        4] == TRUE, 2], type = "scatter", mode = "markers", text = tdm[tdm[, 
+        4] == TRUE, 5], hovertext = tdm[tdm[, 4] == TRUE, 1], 
+        hoverinfo = "x+y+text", showlegend = FALSE, marker = list(size = 10, 
+            color = "rgba(184, 230, 255, .9)", line = list(color = "rgba(0, 77, 153, .8)", 
+                width = 2))) %>% add_text(textfont = list(family = "sans serif", 
+        size = 14, color = toRGB("grey50")), textposition = "bottom center") %>% 
+        layout(title = "Materiality Matrix", xaxis = list(nticks = 10, 
+            range = c(-1, 11), title = "Importance internal stakeholders", 
+            titlefont = list(family = "Arial, sans-serif", size = 15, 
+                color = "black"), showexponent = "All"), yaxis = list(nticks = 10, 
+            range = c(-1, 11), title = "Importance external stakeholders", 
+            titlefont = list(family = "Arial, sans-serif", size = 15, 
+                color = "black"), showexponent = "All"))
+}
+attr(,"rtvs::original_expr")
+plot <- plot_ly(x = tdm[tdm[, 4] == TRUE, 3], y = tdm[tdm[, 4] == 
+    TRUE, 2], type = "scatter", mode = "markers", text = tdm[tdm[, 
+    4] == TRUE, 5], hovertext = tdm[tdm[, 4] == TRUE, 1], hoverinfo = "x+y+text", 
+    showlegend = FALSE, marker = list(size = 10, color = "rgba(184, 230, 255, .9)", 
+        line = list(color = "rgba(0, 77, 153, .8)", width = 2))) %>% 
+    add_text(textfont = list(family = "sans serif", size = 14, 
+        color = toRGB("grey50")), textposition = "bottom center") %>% 
+    layout(title = "Materiality Matrix", xaxis = list(nticks = 10, 
+        range = c(-1, 11), title = "Importance internal stakeholders", 
+        titlefont = list(family = "Arial, sans-serif", size = 15, 
+            color = "black"), showexponent = "All"), yaxis = list(nticks = 10, 
+        range = c(-1, 11), title = "Importance external stakeholders", 
+        titlefont = list(family = "Arial, sans-serif", size = 15, 
+            color = "black"), showexponent = "All"))
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1213: .doTrace(if (rtvs:::is_breakpoint("server.R", 1213)) browser())
+attr(,"rtvs::is_breakpoint")
+[1] TRUE
+debug: browser()
+debug at C:\Users\hornr\source\repos\openmasses\tool/server.R#1213: plot <- plot_ly(x = tdm[tdm[, 4] == TRUE, 3], y = tdm[tdm[, 4] == 
+    TRUE, 2], type = "scatter", mode = "markers", text = tdm[tdm[, 
+    4] == TRUE, 5], hovertext = tdm[tdm[, 4] == TRUE, 1], hoverinfo = "x+y+text", 
+    showlegend = FALSE, marker = list(size = 10, color = "rgba(184, 230, 255, .9)", 
+        line = list(color = "rgba(0, 77, 153, .8)", width = 2))) %>% 
+    add_text(textfont = list(family = "sans serif", size = 14, 
+        color = toRGB("grey50")), textposition = "bottom center") %>% 
+    layout(title = "Materiality Matrix", xaxis = list(nticks = 10, 
+        range = c(-1, 11), title = "Importance internal stakeholders", 
+        titlefont = list(family = "Arial, sans-serif", size = 15, 
+            color = "black"), showexponent = "All"), yaxis = list(nticks = 10, 
+        range = c(-1, 11), title = "Importance external stakeholders", 
+        titlefont = list(family = "Arial, sans-serif", size = 15, 
+            color = "black"), showexponent = "All"))
+attr(,"rtvs::at_breakpoint")
+[1] TRUE
