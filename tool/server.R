@@ -365,6 +365,7 @@ shinyServer(function(input, output) {
         }
         } else {
              extracted.description <- longlist[[row, description_col_nr]]
+            extracted.description <- tolower(extracted.description)
         if (extracted.description != "") {
         # Extract the synonyms per row
         # old term list generation
@@ -498,6 +499,7 @@ shinyServer(function(input, output) {
 
                         # debug statement
                         test_input = longlist[row, description_col_nr]
+
 
                         # new term list generation
                         #terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
