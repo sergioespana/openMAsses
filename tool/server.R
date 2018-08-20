@@ -32,152 +32,152 @@ source("functions/keyword_generation.R")
 shinyServer(function(input, output) {
 
 
-  
-  output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
-    table <- data.frame(matrix(ncol = 1, nrow = 0))
-    colnames(table) <- "No document(s) uploaded yet"
-    
-    if (is.null(input$pdfs)){
-      return(table)
-    }
-    else{
-      enable("wordCloudButtonPDF")
-      removeClass("pdf1", "missing")
-      removeClass("pdf2", "missing")
-      removeClass("pdf3", "missing")
-      removeClass("pdf4", "missing")
-      removeClass("pdf5", "missing")
-      if (!is.null(input$longlists)) {
-        enable("tdmButton")
-        enable("tdmDownload")
-        enable("plotButton")
-        removeClass("not-allowed", "not-allowed")
-        enable("wordCloudButtonLonglist")
-      }
-      # set Header name for uploaded documents based on if 1 or n documents
-      if(length(input$pdfs$name) == 1){
-        colnames(table) <- "Uploaded document"
-      }
-      else{
-        colnames(table) <- "Uploaded documents"
-      }
-      # list document names in the documents section of the HTML.
-      for(pdf in 1:length(input$pdfs$name)){
-        table[pdf,1] <- input$pdfs$name[pdf]
-      }
-      return(table)
-    }
-  })
-  
-  output$table.longlists <- renderTable(width = "100%", hover = TRUE, {
-    table <- data.frame(matrix(ncol = 1, nrow = 0))
-    colnames(table) <- "No Longlist file(s) uploaded yet"
-    
-    if (is.null(input$longlists)){
-      return(table)
-    }
-    else{
-      file.rename(input$longlists$datapath, paste(input$longlists$datapath, ".xlsx", sep=""))
-      removeClass("excel1", "missing")
-      removeClass("excel2", "missing")
-      removeClass("excel3", "missing")
-      removeClass("excel4", "missing")
-      if(length(input$longlists$name) == 1){
-        colnames(table) <- "Uploaded longlist file"
-      }
-      else{
-        colnames(table) <- "Uploaded longlist files"
-      }
-      for(longlist in 1:length(input$longlists$name)){
-        table[longlist,1] <- input$longlists$name[longlist]
-      }
-      return(table)
-    }
-  })
 
-  output$exampleLongListDownload <- downloadHandler("examplelonglist.xlsx", content = function(path) { file.copy("examplelonglist.xlsx", path) })
+    output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
+        table <- data.frame(matrix(ncol = 1, nrow = 0))
+        colnames(table) <- "No document(s) uploaded yet"
 
-  output$tdmDownload <- downloadHandler(
+        if (is.null(input$pdfs)) {
+            return(table)
+        }
+        else {
+            enable("wordCloudButtonPDF")
+            removeClass("pdf1", "missing")
+            removeClass("pdf2", "missing")
+            removeClass("pdf3", "missing")
+            removeClass("pdf4", "missing")
+            removeClass("pdf5", "missing")
+            if (!is.null(input$longlists)) {
+                enable("tdmButton")
+                enable("tdmDownload")
+                enable("plotButton")
+                removeClass("not-allowed", "not-allowed")
+                enable("wordCloudButtonLonglist")
+            }
+            # set Header name for uploaded documents based on if 1 or n documents
+            if (length(input$pdfs$name) == 1) {
+                colnames(table) <- "Uploaded document"
+            }
+            else {
+                colnames(table) <- "Uploaded documents"
+            }
+            # list document names in the documents section of the HTML.
+            for (pdf in 1:length(input$pdfs$name)) {
+                table[pdf, 1] <- input$pdfs$name[pdf]
+            }
+            return(table)
+        }
+    })
+
+    output$table.longlists <- renderTable(width = "100%", hover = TRUE, {
+        table <- data.frame(matrix(ncol = 1, nrow = 0))
+        colnames(table) <- "No Longlist file(s) uploaded yet"
+
+        if (is.null(input$longlists)) {
+            return(table)
+        }
+        else {
+            file.rename(input$longlists$datapath, paste(input$longlists$datapath, ".xlsx", sep = ""))
+            removeClass("excel1", "missing")
+            removeClass("excel2", "missing")
+            removeClass("excel3", "missing")
+            removeClass("excel4", "missing")
+            if (length(input$longlists$name) == 1) {
+                colnames(table) <- "Uploaded longlist file"
+            }
+            else {
+                colnames(table) <- "Uploaded longlist files"
+            }
+            for (longlist in 1:length(input$longlists$name)) {
+                table[longlist, 1] <- input$longlists$name[longlist]
+            }
+            return(table)
+        }
+    })
+
+    output$exampleLongListDownload <- downloadHandler("examplelonglist.xlsx", content = function(path) { file.copy("examplelonglist.xlsx", path) })
+
+    output$tdmDownload <- downloadHandler(
     filename = function() {
-      score <- ""
-      if(input$scoring == 1){
-        score <- "[Count]"
-      }
-      else if(input$scoring == 2){
-        score <- "[Frequency]"
-      }
-      else if(input$scoring == 3){
-        score <- paste("[Relative - ", input$threshold, "]", sep="")
-      }
-      else {
-        score <- "[Weighted]"
-      }
-      prefix <- ""
-      if(input$title != ""){
-        prefix <- paste(input$title," - ", sep="")
-      }
-      exportName <- paste(prefix,"Matrix ", score ,".xlsx",sep="")
-      paste(exportName, sep='')
+        score <- ""
+        if (input$scoring == 1) {
+            score <- "[Count]"
+        }
+        else if (input$scoring == 2) {
+            score <- "[Frequency]"
+        }
+        else if (input$scoring == 3) {
+            score <- paste("[Relative - ", input$threshold, "]", sep = "")
+        }
+        else {
+            score <- "[Weighted]"
+        }
+        prefix <- ""
+        if (input$title != "") {
+            prefix <- paste(input$title, " - ", sep = "")
+        }
+        exportName <- paste(prefix, "Matrix ", score, ".xlsx", sep = "")
+        paste(exportName, sep = '')
     },
     content = function(path) {
-      saveTDM(getTDM(), path, readLonglists())
+        saveTDM(getTDM(), path, readLonglists())
     }
   )
-  
-  output$logDownload <- downloadHandler(
+
+    output$logDownload <- downloadHandler(
     filename = function() {
-      prefix <- ""
-      if(input$title != ""){
-        prefix <- paste(input$title," - ", sep="")
-      }
-      exportName <- paste(prefix,"Log",".txt",sep="")
-      paste(exportName, sep='')
+        prefix <- ""
+        if (input$title != "") {
+            prefix <- paste(input$title, " - ", sep = "")
+        }
+        exportName <- paste(prefix, "Log", ".txt", sep = "")
+        paste(exportName, sep = '')
     },
     content = function(path) {
-      file.copy("outfile.txt", path)
+        file.copy("outfile.txt", path)
     }
   )
-  
-  observeEvent(input$wordCloudButtonPDF, {
-    shinyjs::hide("iconWordCloudPDFEmpty")
-    shinyjs::show("iconWordCloudPDFLoad")
-    output$wordCloudPlotPDF <- renderPlot({
-      printWordCloudPDF()
-      shinyjs::hide("placeholderWordCloudPDF")
+
+    observeEvent(input$wordCloudButtonPDF, {
+        shinyjs::hide("iconWordCloudPDFEmpty")
+        shinyjs::show("iconWordCloudPDFLoad")
+        output$wordCloudPlotPDF <- renderPlot({
+            printWordCloudPDF()
+            shinyjs::hide("placeholderWordCloudPDF")
+        })
+        shinyjs::show("wordCloudPlotPDF")
     })
-    shinyjs::show("wordCloudPlotPDF")
-  })
-  
-  observeEvent(input$wordCloudButtonLonglist, {
-    shinyjs::hide("iconWordCloudLonglistEmpty")
-    shinyjs::show("iconWordCloudLonglistLoad")
-    output$wordCloudPlotLonglist <- renderPlot({
-      printWordCloudLonglist()
-      shinyjs::hide("placeholderWordCloudLonglist")
+
+    observeEvent(input$wordCloudButtonLonglist, {
+        shinyjs::hide("iconWordCloudLonglistEmpty")
+        shinyjs::show("iconWordCloudLonglistLoad")
+        output$wordCloudPlotLonglist <- renderPlot({
+            printWordCloudLonglist()
+            shinyjs::hide("placeholderWordCloudLonglist")
+        })
+        shinyjs::show("wordCloudPlotLonglist")
+        shinyjs::show("logDownload")
     })
-    shinyjs::show("wordCloudPlotLonglist")
-    shinyjs::show("logDownload")
-  })
-  
-  observeEvent(input$tdmButton, {
-    shinyjs::hide("iconTDMEmpty")
-    shinyjs::show("iconTDMLoad")
-    output$tdm <- renderDataTable({
-      getTDM()
-    }, options = list(pageLength = 10, scrollX = TRUE), 
+
+    observeEvent(input$tdmButton, {
+        shinyjs::hide("iconTDMEmpty")
+        shinyjs::show("iconTDMLoad")
+        output$tdm <- renderDataTable({
+            getTDM()
+        }, options = list(pageLength = 10, scrollX = TRUE),
     list(shinyjs::hide("placeholderTDM")
     ))
-    shinyjs::show("tdm")
-    shinyjs::show("logDownload")
-  })
-  
-  observeEvent(input$plotButton, {
-    shinyjs::show("plot")
-    shinyjs::hide("iconPlotEmpty")
-    shinyjs::show("iconPlotLoad")
-    shinyjs::show("scoreBox")
-    output$table.plot <- renderRHandsontable({
-      rhandsontable(getPlotTDM(), rowHeaders = TRUE) %>%
+        shinyjs::show("tdm")
+        shinyjs::show("logDownload")
+    })
+
+    observeEvent(input$plotButton, {
+        shinyjs::show("plot")
+        shinyjs::hide("iconPlotEmpty")
+        shinyjs::show("iconPlotLoad")
+        shinyjs::show("scoreBox")
+        output$table.plot <- renderRHandsontable({
+            rhandsontable(getPlotTDM(), rowHeaders = TRUE) %>%
         hot_validate_numeric(col = 2, min = 0, max = 10, allowInvalid = TRUE) %>%
         hot_validate_numeric(col = 3, min = 0, max = 10, allowInvalid = TRUE) %>%
         hot_col(col = 1, readOnly = TRUE, colWidths = 600) %>%
@@ -185,582 +185,759 @@ shinyServer(function(input, output) {
         hot_col(col = 3, halign = "htCenter", format = "0.0") %>%
         hot_col(col = 4, halign = "htCenter") %>%
         hot_cols(columnSorting = TRUE)
+        })
+        shinyjs::show("logDownload")
     })
-    shinyjs::show("logDownload")
-  })
-  
-  observeEvent(input$table.plot, {
-    shinyjs::show("plot")
-    shinyjs::hide("placeholderPlot")
-    output$plot <- renderPlotly({
-      generatePlot(input$table.plot, 20)
-    })
-  })
-  
-    readDocuments <- reactive({
-    documentsLoad(input$pdfs)
-  })
-  
-  readLonglists <- reactive({
-    longlistLoad(input$longlists)
-  })
-  
-  wordCloudPDF <- reactive({
-    prepareWordCloudPDF(readDocuments())
-  })
-  
-  wordCloudLonglist <- reactive({
-    prepareWordCloudLonglist(getTDM())
-  })
-  
-  printWordCloudPDF <- reactive({
-    generateWordCloud(wordCloudPDF(), input$wordCloudPDFNumber)
-  })
-  
-  printWordCloudLonglist <- reactive({
-    generateWordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
-  })
 
+    observeEvent(input$table.plot, {
+        shinyjs::show("plot")
+        shinyjs::hide("placeholderPlot")
+        output$plot <- renderPlotly({
+            generatePlot(input$table.plot, 20)
+        })
+    })
+
+    readDocuments <- reactive({
+        documentsLoad(input$pdfs)
+    })
+    readDocumentscloud <- reactive({
+        documentsLoadwordcloud(input$pdfs)
+    })
+
+    readLonglists <- reactive({
+        longlistLoad(input$longlists)
+    })
+
+    wordCloudPDF <- reactive({
+        prepareWordCloudPDF(readDocumentscloud())
+    })
+
+    wordCloudLonglist <- reactive({
+        prepareWordCloudLonglist(getTDM())
+    })
+
+    printWordCloudPDF <- reactive({
+        generateWordCloud(wordCloudPDF(), input$wordCloudPDFNumber)
+    })
+
+    printWordCloudLonglist <- reactive({
+        generateWordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
+    })
+
+    # aanmaken term document matrix # ralph
     getTDM <- reactive({
-    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
-  })
-  
-  getPlotTDM <- reactive({
-    preparePlotTDM(getTDM())
-  })
-  
-  printPlot <- reactive({
-    generatePlot(input$table.plot, 20)
-  })
-    
-  
-  # 
-  # >> prepareWordCloudPDF <<
-  # Input: text from pdf(s)
-  # Output: word frequency list
-  #  
-  prepareWordCloudPDF <- function(pdfs.text){
-    
-    withProgress(message = 'Generating Word Cloud', value = 0, {
-      
-      # Create corpus
-      corpus <- Corpus(VectorSource(pdfs.text))
-      incProgress(1/2)
-      
-      # Create TermDocumentMatrix
-      tdm <- TermDocumentMatrix(corpus, control = list(removePunctuation = TRUE,
+        createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
+    })
+
+    getPlotTDM <- reactive({
+        preparePlotTDM(getTDM())
+    })
+
+    printPlot <- reactive({
+        generatePlot(input$table.plot, 20)
+    })
+
+
+    # 
+    # >> prepareWordCloudPDF <<
+    # Input: text from pdf(s)
+    # Output: word frequency list
+    #  
+    prepareWordCloudPDF <- function(pdfs.text) {
+
+        withProgress(message = 'Generating Word Cloud', value = 0, {
+
+            # Create corpus
+            corpus <- Corpus(VectorSource(pdfs.text))
+            incProgress(1 / 2)
+
+            # Create TermDocumentMatrix
+            tdm <- TermDocumentMatrix(corpus, control = list(removePunctuation = TRUE,
                                                        stopwords = TRUE,
                                                        tolower = TRUE,
                                                        stemming = FALSE,
                                                        removeNumbers = TRUE,
                                                        bounds = list(global = c(1, Inf))))
-      
-      incProgress(1/2)
-      
-      # Create the table with the correct names
-      result <- as.matrix(tdm)
-      result <- rowSums(result)
-    })
-    return(result)
-  }
-  
-  
-  
-  # 
-  # >> prepareWordCloudLonglist <<
-  # Input: term document matrix
-  # Output: term frequency list
-  # 
-  prepareWordCloudLonglist <- function(tdm){
-    frequency <- c(tdm[,2])
-    synonym = list()
-    
-    for(i in 1:nrow(tdm)){
-      split <- strsplit(toString(tdm[i,1]), " / ")
-      split <- split[[1]][1]
-      synonym <- c(synonym, split)
-    }
-    
-    names(frequency) <- synonym
 
-    return(frequency)
-  }
-  
-  # 
-  # >> generateWordCloud <<
-  # Input: term / word frequency list and number of term / words to display
-  # Output: word cloud
-  #
-  
-  generateWordCloud <- function(frequency, number){
-    
-    # Check if the number of terms to show in the word cloud is not bigger than the number of words to show
-    if(number > length(frequency)){
-      number <- length(frequency)
+            incProgress(1 / 2)
+
+            # Create the table with the correct names
+            result <- as.matrix(tdm)
+            result <- rowSums(result)
+        })
+        return(result)
     }
-    
-    # Sort the frequencies
-    frequency <- sort(frequency, decreasing = TRUE)
-    
-    words <- names(frequency)
-    return(wordcloud(words[1:number], frequency[1:number], min.freq = 1, random.order=FALSE, rot.per=0.35, use.r.layout = FALSE, colors=brewer.pal(4, "Paired")))
-  }
-    
-  # 
-  # >> createTDM <<
-  # Input: text from pdf(s), longlist terms, scoring scheme and threshold
-  # Output: term document matrix
-  # 
+
+
+
+    # 
+    # >> prepareWordCloudLonglist <<
+    # Input: term document matrix
+    # Output: term frequency list
+    # 
+    prepareWordCloudLonglist <- function(tdm) {
+        frequency <- c(tdm[, 2])
+        synonym = list()
+
+        for (i in 1:nrow(tdm)) {
+            split <- strsplit(toString(tdm[i, 1]), " / ")
+            split <- split[[1]][1]
+            synonym <- c(synonym, split)
+        }
+
+        # only take the leaf element to display in the word cloud
+        for (element in 1:length(synonym)) {
+            value=synonym[[element]]
+            synonym[[element]] = sapply(strsplit(value, ";", fixed = TRUE), tail, 1)
+        }
+
+        names(frequency) <- synonym
+
+        return(frequency)
+    }
+
+    # 
+    # >> generateWordCloud <<
+    # Input: term / word frequency list and number of term / words to display
+    # Output: word cloud
+    #
+
+    generateWordCloud <- function(frequency, number) {
+
+        # Check if the number of terms to show in the word cloud is not bigger than the number of words to show
+        if (number > length(frequency)) {
+            number <- length(frequency)
+        }
+
+        # Sort the frequencies
+        frequency <- sort(frequency, decreasing = TRUE)
+
+        words <- names(frequency)
+        return(wordcloud(words[1:number], frequency[1:number], min.freq = 1, random.order = FALSE, rot.per = 0.35, use.r.layout = FALSE, colors = brewer.pal(4, "Paired")))
+    }
+
+    # 
+    # >> createTDM <<
+    # Input: text from pdf(s), longlist terms, scoring scheme and threshold
+    # Output: term document matrix
+    # 
     createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
         withProgress(message = 'Generating Table', value = 0, {
-        longlist.mode
-        # set topic and description column number.
-        topic_col_nr = 1
-        description_col_nr = 2
+            longlist.mode
+            # set topic and description column number.
+            # this was done to increase the readability of the code
+            topic_col_nr = 1
+            description_col_nr = 2
 
-        columns <- NULL
+            columns <- NULL
 
-        # optimalization to only generate the list once
-        optimized_descriptions = list()
+
+
+            # test optimalization effort
+            optimized_descriptions = list()
 
             for (row in 1:nrow(longlist)) {
 
                 if (longlist.mode == 1) {
+                    #current_topic_name_unfiltered = toString(longlist[row, language.column])
 
-         extracted.description <- longlist[[row, description_col_nr]]
-        if (extracted.description != "") {
-
-            # debug statement
-           # test_input = longlist[row, description_col_nr]
-
-            # new term list generation
-            terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
-            if (length(optimized_descriptions) == 0) {
-                optimized_descriptions = list(terms.list)
-            } else
-                optimized_descriptions = c(optimized_descriptions, list(terms.list))
-        }
-        else {
-            if (length(optimized_descriptions) == 0) {
-                optimized_descriptions = list("")
-            } else {
-                optimized_descriptions = c(optimized_descriptions, "")
-            }
-        }
-        } else {
-             extracted.description <- longlist[[row, description_col_nr]]
-        if (extracted.description != "") {
-        # Extract the synonyms per row
-        splitted.descriptions = str_split(extracted.description, ';')
+                    ## get the current topic
+                    #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
 
 
-        # Term list generation
-        terms.list <- splitted.descriptions[[1]]
-        stemmed.list <- list()
-        # Apply stemming to each keyword in the list
-        for (keyword in 1:length(terms.list)) {
-            stemmed.keyword = paste(SnowballC::wordStem(terms.list, language = "english"))
-            stemmed.list=c(stemmed.list,stemmed.keyword)
-        }
+                    # New extraction
 
-
-         terms.list=stemmed.list   
-        if (length(optimized_descriptions) == 0) {
-        optimized_descriptions = list(terms.list)
-        } else
-        optimized_descriptions = c(optimized_descriptions, list(terms.list))
-        }
-        else {
-        if (length(optimized_descriptions) == 0) {
-        optimized_descriptions = list("")
-        } else {
-        optimized_descriptions = c(optimized_descriptions, "")
-        }
-        }
-        }
-        }
-            
-        # Iterate over all categories
-        for (cat in 1:length(names(allpdfs.text))) {
-
-            catName <- names(allpdfs.text)[cat]
-
-            # If it is a category with PDFs underneath it add [Category] to the name
-            if (!grepl('.pdf', catName, fixed = TRUE)) {
-                catName <- paste("[Category]", catName, sep = " ")
-            }
-
-            # Remove '.pdf', dashes and hyphens from pdf name
-            catName <- gsub(".pdf", "", catName)
-            catName <- gsub("_", " ", catName)
-            catName <- gsub("-", " ", catName)
-            columns[cat] <- catName
-        }
-
-        # Create empty TermDocumentMatrix
-        tdm <- data.frame(matrix(ncol = length(columns) + 1, nrow = 0), stringsAsFactors = FALSE)
-        colnames(tdm) <- c("Longlist", columns)
-
-         # Store the longlist topics in the first column
-        for (row in 1:nrow(longlist)) {
-            terms <- toString(longlist[row, topic_col_nr])
-            #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
-            tdm[row, 1] <- terms
-        }
-
-            # Create an empty log file
-        sink("outfile.txt")
-
-            # Iterate over every category 
-        for (l in 1:length(columns)) {
-
-            # introduce loop here
-            pdfs.text <- allpdfs.text[[l]]
-            categoryName <- columns[l]
-            incProgress(1 / length(columns), detail = paste("Scanning: ", categoryName))
-
-            # Create category table
-            pdfNames <- names(pdfs.text)
-            catTDM <- data.frame(matrix(ncol = length(pdfNames) + 1, nrow = 0), stringsAsFactors = FALSE)
-            colnames(catTDM) <- c("Longlist", pdfNames)
-
-            # Iterate over every pdf in the category
-            for (pdf in 1:length(pdfs.text)) {
-                pdfName <- pdfNames[pdf]
-                pdfPages <- pdfs.text[[pdf]]
-
-                ## Determine langauge for the pdf by scanning the first 10 words of each page.
-                languages <- textcat(pdfPages[1:10])
-                language <- names(which.max(table(languages)))
-                #language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
-
-                ## If the detected language is not found in the longlist it will use the first row
-                #if(length(language.column) == 0){
-                language.column <- topic_col_nr
-                #}
-
-                # Iterate over every row in the longlist
-                for (row in 1:nrow(longlist)) {
-
-                    # extract the description.
                     extracted.description <- longlist[[row, description_col_nr]]
-
-                    # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
-                    terms.frequency <- 0
-
-                    # Check if row is not empty
                     if (extracted.description != "") {
                         # Extract the synonyms per row
-
-                        ## debug statement
-                        #test_input = longlist[row, description_col_nr]
-
-                        # optimization
-                        terms.list <- optimized_descriptions[[row]]
+                        # old term list generation
+                        # terms.list <- strsplit(tolower(terms), ";")
+                        # extracted.terms.list <- strsplit(tolower(terms))
 
 
-                        # Iterate over the synonyms
-                        if (length(terms.list) > 0) {
-                            for (synonym in 1:length(terms.list)) {
+                        # debug statement
+                        test_input = longlist[row, description_col_nr]
 
-                                # Get the frequency of the synonym
-                                term <- terms.list[[synonym]]
-                                term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
-                                terms.frequency <- terms.frequency + term.frequency
-                            }
+                        # new term list generation
+                        terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+                        if (length(optimized_descriptions) == 0) {
+                            optimized_descriptions = list(terms.list)
+                        } else
+                            optimized_descriptions = c(optimized_descriptions, list(terms.list))
+                    }
+                    else {
+                        if (length(optimized_descriptions) == 0) {
+                            optimized_descriptions = list("")
+                        } else {
+                            optimized_descriptions = c(optimized_descriptions, "")
                         }
                     }
+                } else {
+                    extracted.description <- longlist[[row, description_col_nr]]
+                    extracted.description <- tolower(extracted.description)
+                    if (extracted.description != "") {
+                        # Extract the synonyms per row
+                        # old term list generation
+                        splitted.descriptions = str_split(extracted.description, ';')
 
-                    # If the scoring scheme is 'relative', we use the frequency divided by pages
-                    if (scheme == 3) {
-                        npages <- length(pdfPages)
-                        score <- terms.frequency / npages
-                        score <- round(score, digits = 3)
-                        catTDM[row, pdf + 1] <- score
+
+
+
+
+
+                        # new term list generation
+                        terms.list <- splitted.descriptions[[1]]
+                        stemmed.list <- list()
+                        # apply stemming to each keyword in the list
+                        for (keyword in 1:length(terms.list)) {
+                            stemmed.keyword = paste(SnowballC::wordStem(terms.list, language = "english"))
+                            stemmed.list = c(stemmed.list, stemmed.keyword)
+                        }
+
+                        #for (keyword in 1:length(splitted.string.list)) {
+                        #stemmed.keyword = paste(SnowballC::wordStem(splitted.string.list[[keyword]], language = "english"))
+                        #stemmed.list=c(stemmed.list,stemmed.keyword)
+
+                        ##stemmed.list=c(stemmed.list,paste(SnowballC::wordStem(splitted.string.list[[keyword]],language = "english")))
+                        #}
+
+                        terms.list = stemmed.list
+                        if (length(optimized_descriptions) == 0) {
+                            optimized_descriptions = list(terms.list)
+                        } else
+                            optimized_descriptions = c(optimized_descriptions, list(terms.list))
                     }
-
-                    # If the scoring scheme is not 'relative', we can use the frequency
                     else {
-
-                        # Save frequency of synonyms to dataframe
-                        catTDM[row, pdf + 1] <- terms.frequency
+                        if (length(optimized_descriptions) == 0) {
+                            optimized_descriptions = list("")
+                        } else {
+                            optimized_descriptions = c(optimized_descriptions, "")
+                        }
                     }
                 }
             }
 
-            # After a category table is created (containing all the pdfs of that category), add the score column to it
-            catTDM <- addScore(catTDM, scheme, threshold, TRUE)
+            # Iterate over all categories
+            for (cat in 1:length(names(allpdfs.text))) {
 
-            # Add the score column of the category table to the main table
-            tdm[1:nrow(tdm), l + 1] <- catTDM[1:nrow(catTDM), 2]
-        }
+                catName <- names(allpdfs.text)[cat]
+
+                # If it is a category with PDFs underneath it add [Category] to the name
+                if (!grepl('.pdf', catName, fixed = TRUE)) {
+                    catName <- paste("[Category]", catName, sep = " ")
+                }
+
+                # Remove '.pdf', dashes and hyphens from pdf name
+                catName <- gsub(".pdf", "", catName)
+                catName <- gsub("_", " ", catName)
+                catName <- gsub("-", " ", catName)
+                columns[cat] <- catName
+            }
+
+            # Create empty TermDocumentMatrix
+            tdm <- data.frame(matrix(ncol = length(columns) + 1, nrow = 0), stringsAsFactors = FALSE)
+            colnames(tdm) <- c("Longlist", columns)
+
+            # Store the longlist topics in the first column
+            for (row in 1:nrow(longlist)) {
+                terms <- toString(longlist[row, topic_col_nr])
+                #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
+                tdm[row, 1] <- terms
+            }
+
+            # Create an empty log file
+            sink("outfile.txt")
+
+            # Iterate over every category 
+            for (l in 1:length(columns)) {
+
+                # introduce loop here
+                pdfs.text <- allpdfs.text[[l]]
+                categoryName <- columns[l]
+                incProgress(1 / length(columns), detail = paste("Scanning: ", categoryName))
+
+                # Create category table
+                pdfNames <- names(pdfs.text)
+                catTDM <- data.frame(matrix(ncol = length(pdfNames) + 1, nrow = 0), stringsAsFactors = FALSE)
+                colnames(catTDM) <- c("Longlist", pdfNames)
+
+                # Iterate over every pdf in the category
+                for (pdf in 1:length(pdfs.text)) {
+                    pdfName <- pdfNames[pdf]
+                    pdfPages <- pdfs.text[[pdf]]
+
+                    ## Determine langauge for the pdf by scanning the first 10 words of each page.
+                    languages <- textcat(pdfPages[1:10])
+                    language <- names(which.max(table(languages)))
+                    #language.column <- grep(language, colnames(longlist), ignore.case=TRUE)
+
+                    ## If the detected language is not found in the longlist it will use the first row
+                    #if(length(language.column) == 0){
+                    language.column <- topic_col_nr
+                    #}
+
+                    # Iterate over every row in the longlist
+                    for (row in 1:nrow(longlist)) {
+
+                        #current_topic_name_unfiltered = toString(longlist[row, language.column])
+
+                        ## get the current topic
+                        #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+
+
+                        # New extraction
+
+                        extracted.description <- longlist[[row, description_col_nr]]
+                        #ozp_generate_keywords(longlist[row,description_col_nr])
+
+
+                        # Extract the row
+
+
+                        # hier worden momenteel de descriptions geretrieved.
+                        # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
+                        terms.frequency <- 0
+
+                        # Check if row is not empty
+                        if (extracted.description != "") {
+                            # Extract the synonyms per row
+                            # old term list generation
+                            # terms.list <- strsplit(tolower(terms), ";")
+                            # extracted.terms.list <- strsplit(tolower(terms))
+
+
+                            # debug statement
+                            test_input = longlist[row, description_col_nr]
+
+
+                            # new term list generation
+                            #terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+
+                            # optimization test
+                            terms.list <- optimized_descriptions[[row]]
+
+                            # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
+                            # terms.list <- ozp_generate_keywords("this is a description")
+                            # Iterate over the synonyms
+                            if (length(terms.list) > 0) {
+                                for (synonym in 1:length(terms.list)) {
+
+                                    # Get the frequency of the synonym
+                                    term <- terms.list[[synonym]]
+                                    term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
+                                    terms.frequency <- terms.frequency + term.frequency
+                                }
+                            }
+                        }
+
+                        # If the scoring scheme is 'relative', we use the frequency divided by pages
+                        if (scheme == 3) {
+                            npages <- length(pdfPages)
+                            score <- terms.frequency / npages
+                            score <- round(score, digits = 3)
+                            catTDM[row, pdf + 1] <- score
+                        }
+
+                        # If the scoring scheme is not 'relative', we can use the frequency
+                        else {
+
+                            # Save frequency of synonyms to dataframe
+                            catTDM[row, pdf + 1] <- terms.frequency
+                        }
+                    }
+                }
+
+                # After a category table is created (containing all the pdfs of that category), add the score column to it
+                catTDM <- addScore(catTDM, scheme, threshold, TRUE)
+
+                # Add the score column of the category table to the main table
+                tdm[1:nrow(tdm), l + 1] <- catTDM[1:nrow(catTDM), 2]
+            }
 
             # After all the categories columns are added, add the score column to the main tdm
-        tdm <- addScore(tdm, scheme, threshold, FALSE)
+            tdm <- addScore(tdm, scheme, threshold, FALSE)
 
             # Set the correct names again
-        colnames(tdm) <- c("Longlist", "Score", columns)
+            colnames(tdm) <- c("Longlist", "Score", columns)
 
         })
         return(tdm)
     }
-  
-  # 
-  # >> addScore <<
-  # Input: term document matrix, scoring scheme, threshold and a boolean whether it is a category tdm or the main tdm
-  # Output: term document matrix with a score column
-  # 
-  
-  addScore <- function(tdm, scheme, threshold, category){
-    
-    # If the scoring scheme is 'count'
-    if(scheme == 1){
-      
-      # If the tdm has only one category/pdf
-      if(ncol(tdm) == 2){
-        
-        # Add a score column with a total of all the columns
-        tdm <- as.data.frame(append(tdm, list(Score = tdm[,2]), after = 1))
-        
-        # Iterate over each topic in the longlist
-        for(i in 1:nrow(tdm)){
-          
-          # If the topic occurs in at least ones, change it to 1 (so 0 stays 0)
-          if(tdm[i,2] > 0){
-            tdm[i,2] <- 1
-          }
-        }
-      }
-      
-      # If the tdm has more than one category/pdf
-      else{
-        
-        # Add a score column with 1 if at least one other column is bigger than 0
-        tdm <- as.data.frame(append(tdm, list(Score = rowSums(tdm[,2:ncol(tdm)] > 0)), after = 1))
-      }
-    }
-    
-    # If the scoring scheme is 'frequency' or if the scoring scheme is 'weighted' & it is a category table.
-    # We do not want to lower the frequency twice (we do this only for the main table)
-    else if(scheme == 2 || (scheme == 4 && category)){
-      
-      # If the tdm has only one category/pdf
-      if(ncol(tdm) == 2){
-        
-        # Add a score column that is equal to the one column
-        tdm <- as.data.frame(append(tdm, list(Score = tdm[,2]), after = 1))
-      }
-      
-      # If the tdm has more than one category/pdf
-      else{
-        
-        # Add a score column with a total of all the columns
-        tdm <- as.data.frame(append(tdm, list(Score = rowSums(tdm[,2:ncol(tdm)])), after = 1))
-      }
-    }
-    
-    # If the scoring scheme is 'relative'
-    else if (scheme == 3){
-      
-      # Add a score column with a total of all the columns
-      tdm <- as.data.frame(append(tdm, list(Score = tdm[,2]), after = 1))
-      
-      # Iterate over each row in the matrix
-      for(row in 1:nrow(tdm)){
-        score <- 0
-        
-        # Iterate over each pdf in the matrix
-        for(pdf in 3:ncol(tdm)){
-          
-          value <- tdm[row,pdf]
-          
-          # If it is a category table
-          if(category){
-            
-            # Count 1 if value is bigger or equal to the threshold
-            if(value >= threshold){
-              score <- score + 1
-            }
-          }
-          
-          # If it is the main table
-          else {
-            
-            # Count 1 if value is bigger than 0
-            # Because for each category we already did the bigger or equal to the threshold check
-            if(value > 0){
-              score <- score + 1
-            }
-          }
-        }
-        
-        # Save the score to the Score column
-        tdm[row,2] <- score
-      }
-    }
-    
-    # If the scoring scheme is 'weighted'
-    else{
-      
-      # If the tdm has only one category/pdf
-      if(ncol(tdm) == 2){
-        
-        # Add a score column that is equal to the one column
-        tdm <- as.data.frame(append(tdm, list(Score = tdm[,2]), after = 1))
-      }
-      
-      # If the tdm has more than one category/pdf
-      else{
-        
-        # Get the total frequency for each longlist topic
-        tdm.frequency <- list(rowSums(tdm[,2:ncol(tdm)]))
-        
-        # Get the number of categories/pdfs for each longlist topic for which the frequency is bigger than 0
-        tdm.count <- list(rowSums(tdm[,2:ncol(tdm)] > 0))
-        
-        # Divide the total frequency for each longlist topic by the total number of categories/pdfs
-        tdm.mixed <- mapply('/', tdm.frequency, (ncol(tdm) - 1))
-        
-        # Multiply the above by the number of categories/pdfs with a score higher than 0
-        tdm.mixed <- list(Score = unlist(tdm.mixed)*unlist(tdm.count))
-        
-        # Add the score column to the tdm
-        tdm <- as.data.frame(append(tdm, tdm.mixed, after = 1))
-      }
-    }
-    
-    return(tdm)
-  }
-  
-  
-  
-  # 
-  # documentsLoad: unzipping files and loading the text from the pdf file(s)
-  # Input: folder path
-  # Output: list with all the text in the pdf(s) per category
-  # 
-  
-  documentsLoad <- function(files){
-    withProgress(message = 'Reading documents', value = 0, {
-      
-      pdfs <- c() # create vector
-      categories <- c() #create vector
-      
-      # Iterate over all the uploaded files
-      number.files <- length(files[,1])
-      for(i in 1:number.files){
-        fileName <- files[[i, 'name']]
-        incProgress(0, detail = "Scanning documents")
-        
-        # If the file is a .zip, unzip it
-        if (grepl(".zip", fileName, fixed = TRUE)) {
 
-          zipFiles <- unzip(files[[i, 'datapath']], list = TRUE)
+    # 
+    # >> addScore <<
+    # Input: term document matrix, scoring scheme, threshold and a boolean whether it is a category tdm or the main tdm
+    # Output: term document matrix with a score column
+    # 
 
+    addScore <- function(tdm, scheme, threshold, category) {
 
-          # Iterate over each file in the zip
-          for(n in 1:nrow(zipFiles)){
-            zipContent <- zipFiles[n, "Name"]
-            #observe(print(zipContent))
-            zipName <- gsub('.zip','',fileName)
-            mainFolder <- paste(zipName,"/",sep="")
-            
-            # Only check the file in the zip if it is valid
-            if(str_count(zipContent, "__MACOSX") == 0 && str_count(zipContent, ".DS_Store")== 0 && mainFolder != zipContent){
-              
-              # If the file is a pdf, read the pdf #bad comment
-              if(grepl(".pdf", zipContent)){
-                if(str_count(zipContent, "/") == 1){ # possible category stuff # oftewel er is een folder structure aanwezig # >=1
-                  categories[length(categories) + 1] <- zipContent # insert value into vector.
+        # If the scoring scheme is 'count'
+        if (scheme == 1) {
+
+            # If the tdm has only one category/pdf
+            if (ncol(tdm) == 2) {
+
+                # Add a score column with a total of all the columns
+                tdm <- as.data.frame(append(tdm, list(Score = tdm[, 2]), after = 1))
+
+                # Iterate over each topic in the longlist
+                for (i in 1:nrow(tdm)) {
+
+                    # If the topic occurs in at least ones, change it to 1 (so 0 stays 0)
+                    if (tdm[i, 2] > 0) {
+                        tdm[i, 2] <- 1
+                    }
                 }
-                pdfs[length(pdfs) + 1] <- zipContent
-              }
-              # If the file within the zip is an invalid format, ignore it
-              else if (grepl(".xls", zipContent, fixed=TRUE) || grepl(".xlsx", zipContent, fixed=TRUE) || grepl(".doc", zipContent, fixed=TRUE) || grepl(".docx", zipContent, fixed=TRUE) || grepl(".jpg", zipContent, fixed=TRUE) || grepl(".png", zipContent, fixed=TRUE) || grepl(".iso", zipContent, fixed=TRUE) || grepl(".txt", zipContent, fixed=TRUE)) {
-                # Do nothing
-              }
-              # If the file is a folder, add as category
-              else{
-                zipContent <- gsub('/','',gsub(zipName,'',zipContent))
-                categories[length(categories) + 1] <- zipContent
-              }
             }
-          }
-          unzip(files[[i, 'datapath']], exdir = "unzip", overwrite = TRUE)
-        }
-        # If the file is a .pdf add it as an own category and read the pdf
-        else if(grepl(".pdf", fileName)){
-          categories[length(categories) + 1] <- paste(fileName)
-          pdfs[length(pdfs) + 1] <- paste(fileName)
-        }
-        # Documents other than pdf or zip are ignored
-      }
-      
-      allpdfs.text = list()
 
-      #observe(print(typeof(categories)))
-      
-      # Iterate over each category
-      for(number in 1:length(categories)) {
-        category <- categories[number]
-        pdfs.text <- NULL
-        
-        incProgress(1/length(categories), detail = category)
-        # If it is a pdf that is directly uploaded
-        if(str_count(category, "/") == 0  && str_count(category, ".pdf") == 1) {
-          path <- files[[which(grepl(category, files$name, fixed=TRUE)),'datapath']]
+            # If the tdm has more than one category/pdf
+            else {
 
-          # stem the PDF
-          pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
-
-          # Clean text
-          # Save pdf text as category
-          allpdfs.text[[category]] <- pdfs.text
+                # Add a score column with 1 if at least one other column is bigger than 0
+                tdm <- as.data.frame(append(tdm, list(Score = rowSums(tdm[, 2:ncol(tdm)] > 0)), after = 1))
+            }
         }
-        # If it is a pdf that is uploaded in a zip
-        else if (str_count(category, "/") == 1) {
 
-          # update this stuff.
-          path <- paste("unzip/",category,sep="")
-          pos = regexpr('/', category)
-          category <- substr(category, pos+1, nchar(category))
-          pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
-          
-          # Clean text
-          #pdfs.text <- cleanText(pdfs.text)
+        # If the scoring scheme is 'frequency' or if the scoring scheme is 'weighted' & it is a category table.
+        # We do not want to lower the frequency twice (we do this only for the main table)
+        else if (scheme == 2 || (scheme == 4 && category)) {
 
-          # New stemming here:
-          pdfs.text <- ozp_pdf_stemming(pdfs.text)
-          # Save pdf text as category
-          allpdfs.text[[category]] <- pdfs.text
+            # If the tdm has only one category/pdf
+            if (ncol(tdm) == 2) {
+
+                # Add a score column that is equal to the one column
+                tdm <- as.data.frame(append(tdm, list(Score = tdm[, 2]), after = 1))
+            }
+
+            # If the tdm has more than one category/pdf
+            else {
+
+                # Add a score column with a total of all the columns
+                tdm <- as.data.frame(append(tdm, list(Score = rowSums(tdm[, 2:ncol(tdm)])), after = 1))
+            }
         }
-        # If it is a category with pdfs underneath it
-        else{
-          positions <- which(grepl(paste("/",category,"/",sep=""), pdfs, fixed=TRUE))
-          
-          # Iterate over each pdf file of this category
-          for(k in 1:length(positions)){
-            category.pdf <- pdfs[positions[k]]
-            path <- paste("unzip/",category.pdf,sep="")
-            pos <- gregexpr('/', category.pdf)
-            pos <- pos[[1]][length(pos[[1]])]
-            category.pdf <- substr(category.pdf, pos+1, nchar(category.pdf))
-            pdfs.text[[category.pdf]] <- pdf_text(path)
-          }
-          
-          # Clean text old version
-          pdfs.text <- cleanText(pdfs.text)
-          # stemming
-          pdfs.text<-ozp_pdf_stemming(pdfs.text)
-          # Save text of all pdfs to category
-          allpdfs.text[[category]] <- pdfs.text
+
+        # If the scoring scheme is 'relative'
+        else if (scheme == 3) {
+
+            # Add a score column with a total of all the columns
+            tdm <- as.data.frame(append(tdm, list(Score = tdm[, 2]), after = 1))
+
+            # Iterate over each row in the matrix
+            for (row in 1:nrow(tdm)) {
+                score <- 0
+
+                # Iterate over each pdf in the matrix
+                for (pdf in 3:ncol(tdm)) {
+
+                    value <- tdm[row, pdf]
+
+                    # If it is a category table
+                    if (category) {
+
+                        # Count 1 if value is bigger or equal to the threshold
+                        if (value >= threshold) {
+                            score <- score + 1
+                        }
+                    }
+
+                    # If it is the main table
+                    else {
+
+                        # Count 1 if value is bigger than 0
+                        # Because for each category we already did the bigger or equal to the threshold check
+                        if (value > 0) {
+                            score <- score + 1
+                        }
+                    }
+                }
+
+                # Save the score to the Score column
+                tdm[row, 2] <- score
+            }
         }
-      }
+
+        # If the scoring scheme is 'weighted'
+        else {
+
+            # If the tdm has only one category/pdf
+            if (ncol(tdm) == 2) {
+
+                # Add a score column that is equal to the one column
+                tdm <- as.data.frame(append(tdm, list(Score = tdm[, 2]), after = 1))
+            }
+
+            # If the tdm has more than one category/pdf
+            else {
+
+                # Get the total frequency for each longlist topic
+                tdm.frequency <- list(rowSums(tdm[, 2:ncol(tdm)]))
+
+                # Get the number of categories/pdfs for each longlist topic for which the frequency is bigger than 0
+                tdm.count <- list(rowSums(tdm[, 2:ncol(tdm)] > 0))
+
+                # Divide the total frequency for each longlist topic by the total number of categories/pdfs
+                tdm.mixed <- mapply('/', tdm.frequency, (ncol(tdm) - 1))
+
+                # Multiply the above by the number of categories/pdfs with a score higher than 0
+                tdm.mixed <- list(Score = unlist(tdm.mixed) * unlist(tdm.count))
+
+                # Add the score column to the tdm
+                tdm <- as.data.frame(append(tdm, tdm.mixed, after = 1))
+            }
+        }
+
+        return(tdm)
+    }
+
+
+
+    # 
+    # documentsLoad: unzipping files and loading the text from the pdf file(s)
+    # Input: folder path
+    # Output: list with all the text in the pdf(s) per category
+    # 
+
+    documentsLoad <- function(files) {
+        withProgress(message = 'Reading documents', value = 0, {
+
+            pdfs <- c() # create vector
+            categories <- c() #create vector
+
+            # Iterate over all the uploaded files
+            number.files <- length(files[, 1])
+            for (i in 1:number.files) {
+                fileName <- files[[i, 'name']]
+                incProgress(0, detail = "Scanning documents")
+
+                # If the file is a .zip, unzip it
+                if (grepl(".zip", fileName, fixed = TRUE)) {
+
+                    zipFiles <- unzip(files[[i, 'datapath']], list = TRUE)
+
+
+                    # Iterate over each file in the zip
+                    for (n in 1:nrow(zipFiles)) {
+                        zipContent <- zipFiles[n, "Name"]
+                        #observe(print(zipContent))
+                        zipName <- gsub('.zip', '', fileName)
+                        mainFolder <- paste(zipName, "/", sep = "")
+
+                        # Only check the file in the zip if it is valid
+                        if (str_count(zipContent, "__MACOSX") == 0 && str_count(zipContent, ".DS_Store") == 0 && mainFolder != zipContent) {
+
+                            # If the file is a pdf, read the pdf #bad comment
+                            if (grepl(".pdf", zipContent)) {
+                                if (str_count(zipContent, "/") == 1) {
+                                    # possible category stuff # oftewel er is een folder structure aanwezig # >=1
+                                    categories[length(categories) + 1] <- zipContent # insert value into vector.
+                                }
+                                pdfs[length(pdfs) + 1] <- zipContent
+                            }
+                            # If the file within the zip is an invalid format, ignore it
+                            else if (grepl(".xls", zipContent, fixed = TRUE) || grepl(".xlsx", zipContent, fixed = TRUE) || grepl(".doc", zipContent, fixed = TRUE) || grepl(".docx", zipContent, fixed = TRUE) || grepl(".jpg", zipContent, fixed = TRUE) || grepl(".png", zipContent, fixed = TRUE) || grepl(".iso", zipContent, fixed = TRUE) || grepl(".txt", zipContent, fixed = TRUE)) {
+                                # Do nothing
+                            }
+                            # If the file is a folder, add as category
+                            else {
+                                zipContent <- gsub('/', '', gsub(zipName, '', zipContent))
+                                categories[length(categories) + 1] <- zipContent
+                            }
+                        }
+                    }
+                    unzip(files[[i, 'datapath']], exdir = "unzip", overwrite = TRUE)
+                }
+                # If the file is a .pdf add it as an own category and read the pdf
+                else if (grepl(".pdf", fileName)) {
+                    categories[length(categories) + 1] <- paste(fileName)
+                    pdfs[length(pdfs) + 1] <- paste(fileName)
+                }
+                # Documents other than pdf or zip are ignored
+            }
+
+            allpdfs.text = list()
+
+            #observe(print(typeof(categories)))
+
+            # Iterate over each category
+            for (number in 1:length(categories)) {
+                category <- categories[number]
+                pdfs.text <- NULL
+
+                incProgress(1 / length(categories), detail = category)
+                # If it is a pdf that is directly uploaded
+                if (str_count(category, "/") == 0 && str_count(category, ".pdf") == 1) {
+                    path <- files[[which(grepl(category, files$name, fixed = TRUE)), 'datapath']]
+
+                    # stem the PDF
+                    pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
+
+                    # Clean text
+                    # Save pdf text as category
+                    allpdfs.text[[category]] <- pdfs.text
+                }
+                # If it is a pdf that is uploaded in a zip
+                else if (str_count(category, "/") == 1) {
+
+                    # update this stuff.
+                    path <- paste("unzip/", category, sep = "")
+                    pos = regexpr('/', category)
+                    category <- substr(category, pos + 1, nchar(category))
+                    pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
+
+                    # Clean text
+                    pdfs.text <- cleanText(pdfs.text)
+
+                    # New stemming here:
+                    pdfs.text <- ozp_pdf_stemming(pdfs.text)
+                    # Save pdf text as category
+                    allpdfs.text[[category]] <- pdfs.text
+                }
+                # If it is a category with pdfs underneath it
+                else {
+                    positions <- which(grepl(paste("/", category, "/", sep = ""), pdfs, fixed = TRUE))
+
+                    # Iterate over each pdf file of this category
+                    for (k in 1:length(positions)) {
+                        category.pdf <- pdfs[positions[k]]
+                        path <- paste("unzip/", category.pdf, sep = "")
+                        pos <- gregexpr('/', category.pdf)
+                        pos <- pos[[1]][length(pos[[1]])]
+                        category.pdf <- substr(category.pdf, pos + 1, nchar(category.pdf))
+                        pdfs.text[[category.pdf]] <- pdf_text(path)
+                    }
+
+                    # Clean text old version
+                    pdfs.text <- cleanText(pdfs.text)
+                    # stemming
+                    pdfs.text <- ozp_pdf_stemming(pdfs.text)
+                    # Save text of all pdfs to category
+                    allpdfs.text[[category]] <- pdfs.text
+                }
+            }
+        })
+        return(allpdfs.text)
+    }
+
+
+    #documents load wordcloud
+    # input fodler path
+    # output list with all the text in the pdf(s) per category
+    # this function should only be used with the word clouds.
+    documentsLoadwordcloud <- function(files) {
+        withProgress(message = 'Reading documents', value = 0, {
+
+            pdfs <- c()
+        categories <- c()
+
+            # Iterate over all the uploaded files
+        number.files <- length(files[, 1])
+        for (i in 1:number.files) {
+            fileName <- files[[i, 'name']]
+            incProgress(0, detail = "Scanning documents")
+
+            # If the file is a .zip, unzip it
+            if (grepl(".zip", fileName, fixed = TRUE)) {
+                zipFiles <- unzip(files[[i, 'datapath']], list = TRUE)
+
+                # Iterate over each file in the zip
+                for (n in 1:nrow(zipFiles)) {
+                    zipContent <- zipFiles[n, "Name"]
+                    zipName <- gsub('.zip', '', fileName)
+                    mainFolder <- paste(zipName, "/", sep = "")
+
+                    # Only check the file in the zip if it is valid
+                    if (str_count(zipContent, "__MACOSX") == 0 && str_count(zipContent, ".DS_Store") == 0 && mainFolder != zipContent) {
+
+                        # If the file is a pdf, read the pdf
+                        if (grepl(".pdf", zipContent)) {
+                            if (str_count(zipContent, "/") == 1) {
+                                categories[length(categories) + 1] <- zipContent
+                            }
+                            pdfs[length(pdfs) + 1] <- zipContent
+                        }
+                        # If the file within the zip is an invalid format, ignore it
+                        else if (grepl(".xls", zipContent, fixed = TRUE) || grepl(".xlsx", zipContent, fixed = TRUE) || grepl(".doc", zipContent, fixed = TRUE) || grepl(".docx", zipContent, fixed = TRUE) || grepl(".jpg", zipContent, fixed = TRUE) || grepl(".png", zipContent, fixed = TRUE) || grepl(".iso", zipContent, fixed = TRUE) || grepl(".txt", zipContent, fixed = TRUE)) {
+                            # Do nothing
+                        }
+                        # If the file is a folder, add as category
+                        else {
+                            zipContent <- gsub('/', '', gsub(zipName, '', zipContent))
+                            categories[length(categories) + 1] <- zipContent
+                        }
+                    }
+                }
+                unzip(files[[i, 'datapath']], exdir = "unzip", overwrite = TRUE)
+            }
+            # If the file is a .pdf add it as an own category and read the pdf
+            else if (grepl(".pdf", fileName)) {
+                categories[length(categories) + 1] <- paste(fileName)
+                pdfs[length(pdfs) + 1] <- paste(fileName)
+            }
+            # Documents other than pdf or zip are ignored
+        }
+
+            allpdfs.text = NULL
+
+            # Iterate over each category
+        for (number in 1:length(categories)) {
+            category <- categories[number]
+            pdfs.text <- NULL
+
+            incProgress(1 / length(categories), detail = category)
+
+            # If it is a pdf that is directly uploaded
+            if (str_count(category, "/") == 0 && str_count(category, ".pdf") == 1) {
+                path <- files[[which(grepl(category, files$name, fixed = TRUE)), 'datapath']]
+                pdfs.text[[category]] <- pdf_text(path)
+
+                # Clean text
+                pdfs.text <- cleanText(pdfs.text)
+
+                # Save pdf text as category
+                allpdfs.text[[category]] <- pdfs.text
+            }
+            # If it is a pdf that is uploaded in a zip
+            else if (str_count(category, "/") == 1) {
+                path <- paste("unzip/", category, sep = "")
+                pos = regexpr('/', category)
+                category <- substr(category, pos + 1, nchar(category))
+                pdfs.text[[category]] <- pdf_text(path)
+
+                # Clean text
+                pdfs.text <- cleanText(pdfs.text)
+
+                # Save pdf text as category
+                allpdfs.text[[category]] <- pdfs.text
+            }
+            # If it is a category with pdfs underneath it
+            else {
+                positions <- which(grepl(paste("/", category, "/", sep = ""), pdfs, fixed = TRUE))
+
+                # Iterate over each pdf file of this category
+                for (k in 1:length(positions)) {
+                    category.pdf <- pdfs[positions[k]]
+                    path <- paste("unzip/", category.pdf, sep = "")
+                    pos <- gregexpr('/', category.pdf)
+                    pos <- pos[[1]][length(pos[[1]])]
+                    category.pdf <- substr(category.pdf, pos + 1, nchar(category.pdf))
+                    pdfs.text[[category.pdf]] <- pdf_text(path)
+                }
+
+                # Clean text
+                pdfs.text <- cleanText(pdfs.text)
+
+                # Save text of all pdfs to category
+                allpdfs.text[[category]] <- pdfs.text
+            }
+        }
     })
-    return(allpdfs.text)
-  }
-  
-  
+        return(allpdfs.text)
+    }
+
+
+
   # 
   # longlistLoad: loading the longlist from the excel sheet(s)
   # Input: folder path
@@ -1024,9 +1201,10 @@ shinyServer(function(input, output) {
     tdm$Synonym <- NULL
     
     # Iterate over each topic in the tdm and store the first synonym in the newly created column
-    for(row in 1:nrow(tdm)){
-      split <- strsplit(toString(tdm[row,1]), " / ")
-      split <- split[[1]][1]
+      for (row in 1:nrow(tdm)) {
+          
+      split <- strsplit(toString(tdm[row, 1]), " / ")
+      split = sapply(strsplit(split[[1]], ";", fixed = TRUE), tail, 1)
       tdm[row,5] <- split
     }
     
