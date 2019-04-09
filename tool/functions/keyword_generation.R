@@ -9,7 +9,6 @@ require(corpus)
 require(SnowballC)
 
 
-
 # input: a sentence string that describes a topic
 # output: a list with keywords
 
@@ -46,8 +45,8 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
     chunk.noun.adj = vector()
 
     # Iterate through each word and assign each one to a group
-    # if the word doesn’t belong to NN|JJ tags (i.e. tags_mod flag is 0) assign it to the default group (0)
-    # If the ith tag is in “NN|JJ” (i.e. tags_mod flag is 1) assign it to group i-1 if the (i-1)th tag_mod flag is also 1; else assign it to a new group
+    # if the word doesn?t belong to NN|JJ tags (i.e. tags_mod flag is 0) assign it to the default group (0)
+    # If the ith tag is in ?NN|JJ? (i.e. tags_mod flag is 1) assign it to group i-1 if the (i-1)th tag_mod flag is also 1; else assign it to a new group
     if (length(tokenizedAndTagged.noun.adj$Tags_mod) > 1) {
         chunk.noun.adj[1] = as.numeric(tokenizedAndTagged.noun.adj$Tags_mod[1])
         for (i in 2:nrow(tokenizedAndTagged.noun.adj)) {

@@ -32,7 +32,6 @@ source("functions/keyword_generation.R")
 shinyServer(function(input, output) {
 
 
-
     output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
         table <- data.frame(matrix(ncol = 1, nrow = 0))
         colnames(table) <- "No document(s) uploaded yet"
@@ -68,6 +67,37 @@ shinyServer(function(input, output) {
             return(table)
         }
     })
+    
+    
+    output$table.media <- renderTable(width='100%', hover = TRUE, {
+      table <- data.frame(matrix(ncol = 1, nrow = 0))
+      colnames(table) <- "No media files uploaded yet"
+      
+      if (is.null(input$media)){
+        return(table)
+      }
+      else {
+        enable('WordcloudButtonMedia')
+        removeClass('media1', 'missing')
+        if (!is.null(input$media)) {
+          removeClass("not-allowed", "not-allowed")
+          enable("wordCloudButtonMedia")
+        }
+        removeClass("not-allowed", "not-allowed")
+        if (length(input$pdfs$name) == 1) {
+          colnames(table) <- "Uploaded document"
+        }
+        else {
+          colnames(table) <- "Uploaded documents"
+        }
+        # list document names in the documents section of the HTML.
+        for (pdf in 1:length(input$pdfs$name)) {
+          table[pdf, 1] <- input$pdfs$name[pdf]
+        }
+        return(table)
+      }
+    }
+                                               )
 
     output$table.longlists <- renderTable(width = "100%", hover = TRUE, {
         table <- data.frame(matrix(ncol = 1, nrow = 0))
@@ -147,6 +177,16 @@ shinyServer(function(input, output) {
         })
         shinyjs::show("wordCloudPlotPDF")
     })
+    
+    observeEvent(input$wordCloudButtonMedia, {
+      shinyjs::hide("iconWordCloudMediaEmpty")
+      shinyjs::show("iconWordCloudMediaLoad")
+      output$wordCloudPlotMedia <- renderPlot({
+        printWordCloudMedia()
+        shinyjs::hide("placeholderWordCloudMedia")
+      })
+      shinyjs::show("wordCloudPlotMedia")
+    })
 
     observeEvent(input$wordCloudButtonLonglist, {
         shinyjs::hide("iconWordCloudLonglistEmpty")
@@ -200,6 +240,11 @@ shinyServer(function(input, output) {
     readDocuments <- reactive({
         documentsLoad(input$pdfs)
     })
+    
+    readMedia <- reactive({
+        loadMedia(input$media)
+    })
+    
     readDocumentscloud <- reactive({
         documentsLoadwordcloud(input$pdfs)
     })
@@ -211,6 +256,10 @@ shinyServer(function(input, output) {
     wordCloudPDF <- reactive({
         prepareWordCloudPDF(readDocumentscloud())
     })
+    
+    wordCloudMedia <- reactive({
+        prepareWordCloudMedia(readMedia())
+    })
 
     wordCloudLonglist <- reactive({
         prepareWordCloudLonglist(getTDM())
@@ -218,6 +267,10 @@ shinyServer(function(input, output) {
 
     printWordCloudPDF <- reactive({
         generateWordCloud(wordCloudPDF(), input$wordCloudPDFNumber)
+    })
+    
+    printWordCloudMedia <- reactive({
+        generateWordCloud(wordCloudMedia(), input$wordCloudMediaNumber)
     })
 
     printWordCloudLonglist <- reactive({
@@ -266,6 +319,29 @@ shinyServer(function(input, output) {
             result <- rowSums(result)
         })
         return(result)
+    }
+    
+    #
+    # Plain text file
+    # output: term frequency list
+    #
+    
+    prepareWordCloudMedia <- function(media_text) {
+      
+      withProgress(message = 'Generating Word Cloud', value = 0, {
+        
+        # Create corpus
+        corpus <- Corpus(VectorSource(media_text))
+        
+        # Create TermDocumentMatrix
+        tdm <- TermDocumentMatrix(corpus, control = list(bounds = list(global = c(1, Inf))))
+        incProgress(1 / 2)
+        
+        # Create the table with the correct names
+        result <- as.matrix(tdm)
+        result <- rowSums(result)
+      })
+      return(result)
     }
 
 
@@ -564,6 +640,24 @@ shinyServer(function(input, output) {
         return(tdm)
     }
 
+    #
+    # Input: Articles from the Python file
+    # Output: Same articles as preprocessing is already done
+    #
+    
+    loadMedia <- function(articles) {
+      withProgress(message = 'loading news', value = 0, {
+
+        articles.text <- read_lines(articles$datapath)
+        
+        articles_clean <- gsub('\'','',articles.text)
+        articles_clean <- gsub('[','',articles_clean, fixed = TRUE)
+        articles_clean <- gsub(']','',articles_clean, fixed = TRUE)
+        articles_clean <- gsub('\"','',articles_clean, fixed = TRUE)
+      })
+      return(articles_clean)
+    }
+    
     # 
     # >> addScore <<
     # Input: term document matrix, scoring scheme, threshold and a boolean whether it is a category tdm or the main tdm
@@ -822,7 +916,7 @@ shinyServer(function(input, output) {
 
 
     #documents load wordcloud
-    # input fodler path
+    # input folder path
     # output list with all the text in the pdf(s) per category
     # this function should only be used with the word clouds.
     documentsLoadwordcloud <- function(files) {

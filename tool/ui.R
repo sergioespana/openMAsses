@@ -44,6 +44,7 @@ dashboardPage(title="Openmasses",
                 h3("Input", align = "center"),
                 textInput('title', 'Title',placeholder = "Give a title for the analysis..."),
                 fileInput('pdfs', 'Upload document(s) as PDF or Zip', multiple = 'TRUE', accept = c('application/x-rar-compressed, application/octet-stream', 'application/zip, application/octet-stream', 'application/pdf')),
+                fileInput('media', 'Upload Python script output', multiple = 'TRUE'), #Use as accept a pickle dump, use reticulate to properly open it
                 fileInput('longlists', 'Upload longlist(s) as Excel', multiple = 'TRUE', accept = c('application/vnd.ms-excel', 'application/x-excel', 'application/x-msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')),
                 radioButtons("scoring", "Scoring scheme",
                              c("Count" = "1",
@@ -60,6 +61,7 @@ dashboardPage(title="Openmasses",
                   numericInput("threshold", "Threshold:", min = 0, max = 10, value = 0.05, step = 0.01)
                 ),
                 tableOutput("table.pdfs"),
+                tableOutput('table.media'), 
                 tableOutput("table.longlists")
               ),
               dashboardBody(
@@ -341,45 +343,102 @@ dashboardPage(title="Openmasses",
                              )
                            )
                   ),
+                  
                   tabPanel("Matrix",
+                     fluidRow(
+                       br(),
+                       align = "center",
+                       box(width = 12,
+                           title = "Matrix", status = "primary",
+                           align = "center",
                            fluidRow(
+                             h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
+                             disabled(
+                               actionButton("plotButton", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
+                             ),
                              br(),
-                             align = "center",
-                             box(width = 12,
-                                 title = "Matrix", status = "primary",
-                                 align = "center",
-                                 fluidRow(
-                                   h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
-                                   disabled(
-                                     actionButton("plotButton", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
-                                   ),
-                                   br(),
-                                   br(),
-                                   div(span(shiny::icon("line-chart"), id = "iconPlotEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconPlotLoad")), class = "well well-sm", id = "placeholderPlot"),
-                                   plotlyOutput(outputId = "plot", height = "700px", width = "700px"),
-                                   br(),
-                                   br()
-                                 ),
-                                 fluidRow(
-                                   hidden(
-                                     div(
-                                       id = "scoreBox",
-                                       box(width = 12,
-                                           title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
-                                           align = "left",
-                                           rHandsontableOutput("table.plot", height="auto")
-                                       )
-                                     )
-                                   )
+                             br(),
+                             div(span(shiny::icon("line-chart"), id = "iconPlotEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconPlotLoad")), class = "well well-sm", id = "placeholderPlot"),
+                             plotlyOutput(outputId = "plot", height = "700px", width = "700px"),
+                             br(),
+                             br()
+                           ),
+                           fluidRow(
+                             hidden(
+                               div(
+                                 id = "scoreBox",
+                                 box(width = 12,
+                                     title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
+                                     align = "left",
+                                     rHandsontableOutput("table.plot", height="auto")
                                  )
+                               )
                              )
                            )
+                       )
+                     )
                   ),
+                  
+                  tabPanel('Media',
+                    fluidRow(
+                      br(),
+                      column(width = 6, align = "center",
+                             box(width = 12, 
+                                 title = "News Word Cloud", status = "primary",
+                                 align = "center",
+                                 h1(span(shiny::icon("file-pdf-o"), id = "media1", class = "missing")),
+                                 disabled(
+                                   actionButton("wordCloudButtonMedia", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+                                 ),
+                                 br(),
+                                 br(),
+                                 div(span(shiny::icon("cloud"), id="iconWordCloudMediaEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudMediaLoad")), class = "well well-sm", id = "placeholderWordCloudMedia"),
+                                 hidden(
+                                   plotOutput(outputId = "wordCloudPlotMedia")
+                                 ),
+                                 box(width = 12,
+                                     title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
+                                     sliderInput(inputId = "wordCloudMediaNumber",
+                                                 label = "Number of words in cloud:",
+                                                 min = 80, max = 150, value = 150, step = 1)
+                                 )
+                             )
+                      )#, WATCH THIS COMMA, RECOMMENT THIS COMMA BECAUSE IT WILL BLOW UP YYAAAAAAAAY
+                      # column(width = 6, align = "center",
+                      #        box(width = 12,
+                      #            title = "Media Word Cloud", status = "primary",
+                      #            align = "center",
+                      #            h1(span(shiny::icon("file-pdf-o"), id="pdf2", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id="excel1", class = "missing")),
+                      #            disabled(
+                      #              actionButton("wordCloudButtonMedia", "Create Social Media Word Cloud", icon("cloud"), status = "primary", class="blue")
+                      #            ),
+                      #            br(),
+                      #            br(),
+                      #            div(span(shiny::icon("cloud"), id = "iconWordCloudLonglistEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudLonglistLoad")), class = "well well-sm", id = "placeholderWordCloudLonglist"),
+                      #            hidden(
+                      #              plotOutput(outputId = "wordCloudPlotLonglist")
+                      #            ),
+                      #            box(width = 12,
+                      #                title = "Settings", status = "warning", collapsible = TRUE, collapsed = TRUE,
+                      #                sliderInput(inputId = "wordCloudLonglistNumber",
+                      #                            label = "Number of words in cloud:",
+                      #                            min = 30, max = 80, value = 55, step = 1)
+                      # 
+                      #            )
+                      #        )
+                      # )
+                    )
+                  
+                  ),
+                  
                   tabPanel("Manual",
 
                   p("an example longlist can be downloaded here"),
                   downloadButton("exampleLongListDownload", "Download Example Longlist", class = "btn-success", icon = "cloud"))
                   ),
+                
+                
+                
 
                 
                 # Set tooltips
@@ -388,6 +447,7 @@ dashboardPage(title="Openmasses",
                 bsTooltip(id = "pdf3", title = "PDF file(s) required", placement = "top", trigger = "hover"),
                 bsTooltip(id = "pdf4", title = "PDF file(s) required", placement = "top", trigger = "hover"),
                 bsTooltip(id = "pdf5", title = "PDF file(s) required", placement = "top", trigger = "hover"),
+                bsTooltip(id = 'media1', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
                 bsTooltip(id = "excel1", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
                 bsTooltip(id = "excel2", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
                 bsTooltip(id = "excel3", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
