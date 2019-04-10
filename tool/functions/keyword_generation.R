@@ -8,9 +8,12 @@ require(tidyverse)
 require(corpus)
 require(SnowballC)
 
-
+#
+# >> ozp_generate_keywords_nounds_adjectives
+# Description: This would have been nice to have
 # input: a sentence string that describes a topic
 # output: a list with keywords
+#
 
 ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
     #input.noun.adj = "sustainability research"
@@ -81,7 +84,7 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
 
     outputs.noun.adj = list()
 
-
+    #Que de la fuck?
     i = 1
     j = length(result.noun.adj)
     while (i <= j) {
@@ -118,9 +121,13 @@ ozp_generate_keywords_nouns_adjectives <- function(input.noun.adj, mode) {
     return(result.noun.adj)
 }
 
-
+#
+# >> ozp_generate_keywords <<
+# description: Idk man? generating something
 # input: a list of descriptions
 # output: a list of keywords
+#
+
 ozp_generate_keywords <- function(input) {
 
     output.ozp.generate.keywords <- list()

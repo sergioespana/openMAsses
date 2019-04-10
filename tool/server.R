@@ -27,7 +27,10 @@ library(plotly) # Interactive plots
 source("functions/parse longlist.R")
 source("functions/keyword_generation.R")
 source("functions/function_dump.R")
-
+source("functions/wordclouds.R")
+source("functions/tdm.R")
+source("functions/matrix.R")
+source("functions/data_loaders.R")
 
 
 shinyServer(function(input, output) {
@@ -299,7 +302,7 @@ shinyServer(function(input, output) {
   })
 
   # aanmaken term document matrix # ralph
-  # CreateTDM is messy and broken, Will fix later, but cannot do right now
+  # CreateTDM is messy and broken
   getTDM <- reactive({
     createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
