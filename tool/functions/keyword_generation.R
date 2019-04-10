@@ -162,6 +162,6 @@ ozp_generate_keywords <- function(input) {
     output.ozp.generate.keywords.distinct = distinct(as.data.frame(unlist(output.ozp.generate.keywords)))
     # get all the unique values from the distinct output.
     output.ozp.generate.keywords = paste(output.ozp.generate.keywords.distinct$`unlist(output.ozp.generate.keywords)`)
-
+    
     return(output.ozp.generate.keywords)
 }
