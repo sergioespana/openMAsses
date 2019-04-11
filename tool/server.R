@@ -26,7 +26,6 @@ library(plotly) # Interactive plots
 
 source("functions/parse longlist.R")
 source("functions/keyword_generation.R")
-source("functions/function_dump.R")
 source("functions/wordclouds.R")
 source("functions/tdm.R")
 source("functions/matrix.R")

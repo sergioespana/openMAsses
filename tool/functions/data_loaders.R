@@ -138,6 +138,7 @@ documentsLoad <- function(files) {
 loadMedia <- function(articles) {
   withProgress(message = 'loading news', value = 0, {
     
+    print('load media test')
     articles_text <- read_lines(articles$datapath)
     articles_clean <- articles_text
     
@@ -184,6 +185,7 @@ longlistLoad <- function(files){
 documentsLoadwordcloud <- function(files) {
   withProgress(message = 'Reading documents', value = 0, {
     
+    print('function documentsloadwordcloud is called')
     pdfs <- c()
     categories <- c()
     
@@ -299,6 +301,8 @@ documentsLoadwordcloud <- function(files) {
 #
 
 cleanText <- function(pdfs.text){
+  
+  print('function cleantext is called')
   
   # Replace line breaks, page breaks and tabs with a space
   pdfs.text <- lapply(pdfs.text, function(x)gsub("[\r\n\t]"," ",x))

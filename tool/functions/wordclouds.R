@@ -47,7 +47,7 @@ prepareWordCloudMedia <- function(media_text) {
     corpus <- Corpus(VectorSource(media_text))
     
     # Create TermDocumentMatrix
-    tdm <- TermDocumentMatrix(corpus, control = list(bounds = list(global = c(1, Inf))))
+    tdm <- TermDocumentMatrix(corpus, control = list(bounds = list(global = c(1, Inf)), wordLengths = c(0,Inf)))
     incProgress(1 / 2)
     
     # Create the table with the correct names
@@ -58,7 +58,7 @@ prepareWordCloudMedia <- function(media_text) {
 }
 
 # 
-# >> prepareWordCloudLonglist << BROKEN
+# >> prepareWordCloudLonglist <<
 # Description: Creates a term frequency list from a tdm? This seems broken too
 # Input: term document matrix
 # Output: term frequency list
@@ -79,9 +79,7 @@ prepareWordCloudLonglist <- function(tdm) {
     value=synonym[[element]]
     synonym[[element]] = sapply(strsplit(value, ";", fixed = TRUE), tail, 1)
   }
-  
   names(frequency) <- synonym
-  print(frequency)
   return(frequency)
 }
 

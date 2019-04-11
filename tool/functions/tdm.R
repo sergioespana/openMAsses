@@ -1,5 +1,5 @@
 # 
-# >> createTDM << BROKEN INTO OBLIVION
+# >> createTDM <<
 # Input: text from pdf(s), longlist terms, scoring scheme and threshold
 # Output: term document matrix
 # 
@@ -7,17 +7,11 @@
 createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
   withProgress(message = 'Generating Table', value = 0, {
     
-    print('starting function')
-    print(allpdfs.text) 
-    print(longlist)
-    print(scheme)
-    print(threshold) 
-    print(longlist.mode)
     #longlist.mode #what is this supposed to do?
     
     # set topic and description column number.
-    # this was done to increase the readability of the code, w
-    #wait, wwhat readibility?
+    # this was done to increase the readability of the code
+    #wait, what readibility?
     topic_col_nr = 1
     description_col_nr = 2
     columns <- NULL
@@ -33,7 +27,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
         #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
         
         # New extraction
-        print('plug here, work?')
+
         
         extracted.description <- longlist[[row, description_col_nr]]
         if (extracted.description != "") {
@@ -106,7 +100,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
         }
       }
     }
-    print('arrive 1')
+
     # Iterate over all categories
     for (cat in 1:length(names(allpdfs.text))) {
       
@@ -134,12 +128,13 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
       #terms <- toString(str_extract(toString(longlist[row, topic_col_nr]), "[^;]*$"))
       tdm[row, 1] <- terms
     }
-    print('arrive 2')
+
     
     # Create an empty log file
-    print('It never gets here')
-    sink("outfile.txt") 
-    
+
+    #sink("outfile.txt") #Crashes the file
+
+
     # Iterate over every category 
     for (l in 1:length(columns)) {
       
@@ -167,6 +162,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
         #if(length(language.column) == 0){
         language.column <- topic_col_nr
         #}
+
         
         # Iterate over every row in the longlist
         for (row in 1:nrow(longlist)) {
@@ -176,7 +172,6 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
           ## get the current topic
           #current_descriptionsterms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
           
-          
           # New extraction
           
           extracted.description <- longlist[[row, description_col_nr]]
@@ -184,7 +179,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
           
           
           # Extract the row
-          print('arrive here 3')
+
           
           # hier worden momenteel de descriptions geretrieved.
           # terms <- toString(str_extract(toString(longlist[row, description_col_nr]), "[^;]*$"))
@@ -211,7 +206,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
             # terms.list <- ozp_generate_keywords(longlist[row, description_col_nr])
             # terms.list <- ozp_generate_keywords("this is a description")
             # Iterate over the synonyms
-            print('arrives number 4')
+
             if (length(terms.list) > 0) {
               for (synonym in 1:length(terms.list)) {
                 
@@ -254,6 +249,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
     colnames(tdm) <- c("Longlist", "Score", columns)
     
   })
+  print(tdm)
   return(tdm)
 }
 
@@ -362,7 +358,6 @@ generatePlot <- function(tdm, number){
 
 addScore <- function(tdm, scheme, threshold, category) {
   
-  print('this is called')
   # If the scoring scheme is 'count'
   if (scheme == 1) {
     
