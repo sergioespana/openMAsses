@@ -137,8 +137,7 @@ documentsLoad <- function(files) {
 
 loadMedia <- function(articles) {
   withProgress(message = 'loading news', value = 0, {
-    
-    print('load media test')
+
     articles_text <- read_lines(articles$datapath)
     articles_clean <- articles_text
     

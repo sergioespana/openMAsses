@@ -82,11 +82,17 @@ shinyServer(function(input, output) {
       return(table)
     }
     else {
-      enable('WordcloudButtonMedia')
+      enable('wordCloudButtonSocial')
+      enable('wordCloudButtonNews')
       removeClass('media1', 'missing')
-      if (!is.null(input$media)) {
+      removeClass('media2', 'missing')
+      removeClass('media3', 'missing')
+      removeClass('media4', 'missing')
+      if (!is.null(input$longlists)) {
         removeClass("not-allowed", "not-allowed")
-        enable("wordCloudButtonMedia")
+        enable("tdmMediaButton")
+        enable("tdmMediaDownload")
+        enable("plotButton") #TODO later, this is the button for the tab matrix
       }
       removeClass("not-allowed", "not-allowed")
       if (length(input$pdfs$name) == 1) {
@@ -118,6 +124,8 @@ shinyServer(function(input, output) {
       removeClass("excel2", "missing")
       removeClass("excel3", "missing")
       removeClass("excel4", "missing")
+      removeClass("excel5", "missing")
+      removeClass("excel6", "missing")
       if (length(input$longlists$name) == 1) {
           colnames(table) <- "Uploaded longlist file"
       }
@@ -190,15 +198,26 @@ shinyServer(function(input, output) {
     shinyjs::show("wordCloudPlotPDF")
   })
   
-  #For media word clouds
-  observeEvent(input$wordCloudButtonMedia, {
-    shinyjs::hide("iconWordCloudMediaEmpty")
-    shinyjs::show("iconWordCloudMediaLoad")
-    output$wordCloudPlotMedia <- renderPlot({
-      printWordCloudMedia()
-      shinyjs::hide("placeholderWordCloudMedia")
+  #For News word clouds
+  observeEvent(input$wordCloudButtonNews, {
+    shinyjs::hide("iconWordCloudNewsEmpty")
+    shinyjs::show("iconWordCloudNewsLoad")
+    output$wordCloudPlotNews <- renderPlot({
+      printWordCloudNews()
+      shinyjs::hide("placeholderWordCloudNews")
     })
-    shinyjs::show("wordCloudPlotMedia")
+    shinyjs::show("wordCloudPlotNews")
+  })
+  
+  #For Social media word clouds
+  observeEvent(input$wordCloudButtonSocial, {
+    shinyjs::hide("iconWordCloudSocialEmpty")
+    shinyjs::show("iconWordCloudSocialLoad")
+    output$wordCloudPlotSocial <- renderPlot({
+      printWordCloudSocial()
+      shinyjs::hide("placeholderWordCloudSocial")
+    })
+    shinyjs::show("wordCloudPlotSocial")
   })
   
   #For longlist word clouds
@@ -213,7 +232,7 @@ shinyServer(function(input, output) {
     shinyjs::show("logDownload")
   })
   
-  #For the TDM, Idk where this button is?
+  #For the TDM, in tab Term Document Matrix
   observeEvent(input$tdmButton, {
     shinyjs::hide("iconTDMEmpty")
     shinyjs::show("iconTDMLoad")
@@ -227,7 +246,21 @@ shinyServer(function(input, output) {
       shinyjs::show("logDownload")
     })
   
-  #For a plot of something?
+  #For the TDM Media, in tab Media analysis
+  observeEvent(input$tdmMediaButton, {
+    shinyjs::hide("iconTDMMediaEmpty")
+    shinyjs::show("iconTDMMediaLoad")
+    output$tdmMedia <- renderDataTable({
+      getTDMMedia()
+    },
+    options = list(pageLength = 10, scrollX = TRUE),
+    list(shinyjs::hide("placeholderTDMMedia"))
+    )
+    shinyjs::show("tdmMedia")
+    shinyjs::show("logMediaDownload")
+  })
+  
+  #Event handler for the button of the matrix in tab matrix
   observeEvent(input$plotButton, {
     shinyjs::show("plot")
     shinyjs::hide("iconPlotEmpty")
@@ -292,8 +325,12 @@ shinyServer(function(input, output) {
     generateWordCloud(wordCloudPDF(), input$wordCloudPDFNumber)
   })
   
-  printWordCloudMedia <- reactive({
-    generateWordCloud(wordCloudMedia(), input$wordCloudMediaNumber)
+  printWordCloudNews <- reactive({
+    generateWordCloud(wordCloudMedia(), input$wordCloudNewsNumber)
+  })
+  
+  printWordCloudSocial<- reactive({
+    generateWordCloud(wordCloudMedia(), input$wordCloudSocialNumber)
   })
 
   printWordCloudLonglist <- reactive({
@@ -301,15 +338,20 @@ shinyServer(function(input, output) {
   })
 
   # aanmaken term document matrix # ralph
-  # CreateTDM is messy and broken
+  # CreateTDM is messy
   getTDM <- reactive({
     createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
-
-  getPlotTDM <- reactive({
-    preparePlotTDM(getTDM())
+  
+  getTDMMedia <- reactive({
+    media <- transformMedia(readMedia())
+    createTDM(media, readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
 
+  getPlotTDM <- reactive({
+    preparePlotTDM(getTDM(), getTDMMedia())
+  })
+  
   printPlot <- reactive({
     generatePlot(input$table.plot, 20)
   })

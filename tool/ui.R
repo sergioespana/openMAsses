@@ -384,7 +384,7 @@ dashboardPage(title="Openmasses",
       )
     ),
     
-    tabPanel('Media',
+    tabPanel('Media analysis',
       fluidRow(
         br(),
         column(width = 6, align = "center",
@@ -393,21 +393,84 @@ dashboardPage(title="Openmasses",
             align = "center",
             h1(span(shiny::icon("file-pdf-o"), id = "media1", class = "missing")),
             disabled(
-              actionButton("wordCloudButtonMedia", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+              actionButton("wordCloudButtonNews", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
             ),
             br(),
             br(),
-            div(span(shiny::icon("cloud"), id="iconWordCloudMediaEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudMediaLoad")), class = "well well-sm", id = "placeholderWordCloudMedia"),
+            div(span(shiny::icon("cloud"), id="iconWordCloudNewsEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudNewsLoad")), class = "well well-sm", id = "placeholderWordCloudNews"),
             hidden(
-              plotOutput(outputId = "wordCloudPlotMedia")
+              plotOutput(outputId = "wordCloudPlotNews")
             ),
             box(width = 12,
                title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
-               sliderInput(inputId = "wordCloudMediaNumber",
+               sliderInput(inputId = "wordCloudNewsNumber",
                            label = "Number of words in cloud:",
                            min = 80, max = 150, value = 150, step = 1)
             )
           )
+        ),
+        column(width = 6, align = "center",
+          box(width = 12, 
+            title = "Social Media Word Cloud", status = "primary",
+            align = "center",
+            h1(span(shiny::icon("file-pdf-o"), id = "media2", class = "missing")),
+            disabled(
+              actionButton("wordCloudButtonSocial", "Create Social Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+            ),
+            br(),
+            br(),
+            div(span(shiny::icon("cloud"), id="iconWordCloudSocialEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudSocialLoad")), class = "well well-sm", id = "placeholderWordCloudSocial"),
+            hidden(
+              plotOutput(outputId = "wordCloudPlotSocial")
+            ),
+            box(width = 12,
+               title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
+               sliderInput(inputId = "wordCloudSocialNumber",
+                           label = "Number of words in cloud:",
+                           min = 80, max = 150, value = 150, step = 1)
+            )
+          )
+        )
+      ),
+      fluidRow(
+        br(),
+        align = "center",
+        box(width = 12,
+            title = "Term Document Media Table", status = "primary",
+            align = "center",
+            fluidRow(
+              column(width = 6,
+                     align = "center",
+                     h1(span(shiny::icon("file-pdf-o"), id = "media3", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel5", class = "missing")),
+                     disabled(
+                       actionButton("tdmMediaButton", "Create Term Document Media Table", icon("table"), status = "primary", class="blue")
+                     )
+              ),
+              'Download function to be implemented later'
+              # column(width = 6,
+              #         align = "center",
+              #         h1(span(shiny::icon("file-pdf-o"), id = "media4", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel6", class = "missing")),
+              #         div(class="not-allowed", id="not-allowed",
+              #             disabled(
+              #               downloadButton("tdmMediaDownload", "Download Term Document Media Table", class = "btn-success")
+              #            )
+              #         ),
+              #         br(),
+              #         hidden(
+              #           downloadButton("logDownloadMedia", "Download log Media", class = "btn-success", icon="cloud")
+              #         )
+              # )
+            ),
+            fluidRow(
+              br(),
+              div(span(shiny::icon("table"), id = "iconTDMMediaEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconTDMMediaLoad")), class = "well well-sm ", id = "placeholderTDMMedia"),
+              hidden(
+                column(width = 12, id = "tdmMedia",
+                       title = "Term Document Media Table", status = "primary",
+                       dataTableOutput(outputId = "tdmMedia")
+                )
+              )
+            )
         )
       )
     ),
@@ -424,9 +487,14 @@ dashboardPage(title="Openmasses",
   bsTooltip(id = "pdf4", title = "PDF file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = "pdf5", title = "PDF file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = 'media1', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
+  bsTooltip(id = 'media2', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
+  bsTooltip(id = 'media3', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
+  bsTooltip(id = 'media4', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
   bsTooltip(id = "excel1", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = "excel2", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = "excel3", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
-  bsTooltip(id = "excel4", title = "Longlist file(s) required", placement = "top", trigger = "hover")
+  bsTooltip(id = "excel4", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
+  bsTooltip(id = "excel5", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
+  bsTooltip(id = "excel6", title = "Longlist file(s) required", placement = "top", trigger = "hover")
   )
 )

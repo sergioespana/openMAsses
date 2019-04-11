@@ -1,19 +1,25 @@
 #
 # >> preparePlotTDM <<
 # Input: term document matrix
-# Output: matrix with topics, external score, internal scofre and show columns
+# Output: matrix with topics, external score, internal score and show columns
 #
 
-preparePlotTDM <- function(tdm){
+preparePlotTDM <- function(tdm, tdmMedia){
+  
+  print(tdm)
+  print(tdmMedia)
   
   # Only take the topics and the score column
   tdm <- tdm[,1:2]
   
   # The score column is for the external axis
-  colnames(tdm)[2] <- "External"
+  colnames(tdm)[2] <- 'Peer reports'
   
   # Add the internal axis column
   tdm$Internal <- rep(0,nrow(tdm))
+  tdm$News <- tdmMedia[3]
+  #tdm$Social <- tdmMedia[2]
+  #colnames(tdm)[5] <- 'Social media'
   
   # Order the tdm on the external axis score
   tdm <- tdm[order(tdm$External, decreasing=TRUE), ]

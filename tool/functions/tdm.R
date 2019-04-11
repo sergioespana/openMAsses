@@ -8,7 +8,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
   withProgress(message = 'Generating Table', value = 0, {
     
     #longlist.mode #what is this supposed to do?
-    
+
     # set topic and description column number.
     # this was done to increase the readability of the code
     #wait, what readibility?
@@ -249,7 +249,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
     colnames(tdm) <- c("Longlist", "Score", columns)
     
   })
-  print(tdm)
+
   return(tdm)
 }
 
@@ -473,6 +473,19 @@ addScore <- function(tdm, scheme, threshold, category) {
       tdm <- as.data.frame(append(tdm, tdm.mixed, after = 1))
     }
   }
-  
+
   return(tdm)
+}
+
+transformMedia <- function (media_text) {
+  media_text = gsub(',','',media_text)
+  media_text <- strsplit(media_text,'[', fixed = TRUE) #Can we append this to a matrix somehow?
+
+  results <- data.frame(matrix(ncol = 1, nrow = 0))
+  colnames(results) <- 'News articles'
+  for (i in (1:length(media_text))) {
+    results[i,1] <- media_text[[i]]
+  }
+
+  return(results)
 }
