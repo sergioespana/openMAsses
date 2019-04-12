@@ -23,6 +23,7 @@ library(stringr) # Count substring in string
 library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
+library(FactoMineR) #PCA for dimension reduction
 
 source("functions/parse longlist.R")
 source("functions/keyword_generation.R")
@@ -279,13 +280,13 @@ shinyServer(function(input, output) {
     shinyjs::show("logDownload")
   })
   
-  #For more plots?
+  #Eventhandler for below the materiality matrix to the manage matrix
   observeEvent(input$table.plot, {
       shinyjs::show("plot")
       shinyjs::hide("placeholderPlot")
       
       output$plot <- renderPlotly({
-          generatePlot(input$table.plot, 20)
+          generatePlot(input$table.plot, 20, input$dimensions)
       })
   })
   
@@ -353,6 +354,7 @@ shinyServer(function(input, output) {
   })
   
   printPlot <- reactive({
-    generatePlot(input$table.plot, 20)
+    print(input$dimensions)
+    generatePlot(input$table.plot, 20, input$dimensions)
   })
 })

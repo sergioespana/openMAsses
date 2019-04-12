@@ -48,7 +48,7 @@ dashboardPage(title="Openmasses",
                  c("Count" = "1",
                    "Frequency" = "2",
                    "Relative" = "3",
-                   "Weighted" = "4"), selected = 3, inline = T),
+                   "Weighted" = "4"), selected = 2, inline = T),
     radioButtons("longlistoption", "Longlist Option",
                  c("Automated keywords" = "1",
                    "Predefined keywords" = "2"),
@@ -375,6 +375,9 @@ dashboardPage(title="Openmasses",
                 box(width = 12,
                   title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
                   align = "left",
+                  checkboxGroupInput('dimensions','Dimensions to use in matrix',
+                                     c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                     inline = TRUE, selected = c(1,3)),
                   rHandsontableOutput("table.plot", height="auto")
                 )
               )

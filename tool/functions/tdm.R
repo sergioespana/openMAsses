@@ -289,67 +289,6 @@ getFrequency <- function(term, pdf, categoryName, pdfName, language){
   return(frequency)
 }
 
-#
-# >> generatePlot <<
-# Input: term frequency list and number to display
-# Output: plot
-#
-
-generatePlot <- function(tdm, number){
-  # Translate the table in the user interface to a R data frame
-  tdm <- hot_to_r(tdm)
-  
-  # Add a column to the tdm
-  tdm$Synonym <- NULL
-  
-  # Iterate over each topic in the tdm and store the first synonym in the newly created column
-  for (row in 1:nrow(tdm)) {
-    
-    split <- strsplit(toString(tdm[row, 1]), " / ")
-    split = sapply(strsplit(split[[1]], ";", fixed = TRUE), tail, 1)
-    tdm[row,5] <- split
-  }
-  
-  # Create a scatter plot for the tdm
-  # Use only the first synonym of a topic to show in the plot, but show all synoynms of a topic when the users hovers over it
-  plot <- plot_ly(x = tdm[tdm[,4] == TRUE,3], y = tdm[tdm[,4] == TRUE,2], type = 'scatter', mode = 'markers', text = tdm[tdm[,4] == TRUE,5], hovertext = tdm[tdm[,4] == TRUE,1],
-                  hoverinfo = 'x+y+text', showlegend = FALSE, marker = list(size = 10,
-                                                                            color = 'rgba(184, 230, 255, .9)',
-                                                                            line = list(color = 'rgba(0, 77, 153, .8)',
-                                                                                        width = 2))) %>%
-    add_text(textfont = list(
-      family = "sans serif",
-      size = 14,
-      color = toRGB("grey50")),
-      textposition = "bottom center") %>%
-    
-    layout(title = 'Materiality Matrix',
-           xaxis = list(
-             nticks = 10,
-             range = c(-1, 11),
-             title = "Importance internal stakeholders",
-             titlefont = list(
-               family = 'Arial, sans-serif',
-               size = 15,
-               color = 'black'
-             ),
-             showexponent = 'All'
-           ),
-           yaxis = list(
-             nticks = 10,
-             range = c(-1, 11),
-             title = "Importance external stakeholders",
-             titlefont = list(
-               family = 'Arial, sans-serif',
-               size = 15,
-               color = 'black'
-             ),
-             showexponent = 'All'
-           )
-    )
-  return(plot)
-}
-
 # 
 # >> addScore <<
 # Input: term document matrix, scoring scheme, threshold and a boolean whether it is a category tdm or the main tdm

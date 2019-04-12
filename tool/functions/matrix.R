@@ -5,10 +5,7 @@
 #
 
 preparePlotTDM <- function(tdm, tdmMedia){
-  
-  print(tdm)
-  print(tdmMedia)
-  
+
   # Only take the topics and the score column
   tdm <- tdm[,1:2]
   
@@ -17,29 +14,108 @@ preparePlotTDM <- function(tdm, tdmMedia){
   
   # Add the internal axis column
   tdm$Internal <- rep(0,nrow(tdm))
-  tdm$News <- tdmMedia[3]
+  tdm$News <- tdmMedia[,3]
   #tdm$Social <- tdmMedia[2]
   #colnames(tdm)[5] <- 'Social media'
   
+  tdm[,4] <- sapply(tdm[,4], as.numeric)
+  #tdm[,5] <- sapply(tdm[,5], as.numeric)
+
   # Order the tdm on the external axis score
-  tdm <- tdm[order(tdm$External, decreasing=TRUE), ]
+  #tdm <- tdm[order(tdm$External, decreasing=TRUE), ]
   
   # Add a column to store whether to show a topic in the matrix or not -> default is FALSE
   tdm$Show <- rep(FALSE,nrow(tdm))
   
-  # Normalize the values to a range between 10 and 0. Highest score gets a 10
-  highestvalue <- tdm[1,2]
-  for(row in 1:nrow(tdm)){
-    score <- tdm[row,2]/highestvalue*10
-    tdm[row,2] <- score
-    
-    # Only set topics to show is TRUE when the external axis score is higher than 1
-    if(score > 1){
-      tdm[row,4] <- TRUE
-    }
-  }
+  #Normalize the values to a range between 10 and 0. Highest score gets a 10
+  highestvalues <- as.vector(sapply(tdm[,2:4], max))
+  
+  #Set divisions by 0 to 0
+  highestvalues[highestvalues == 0] <- 1
+  
+  #Divide all columns by highest value of respective column
+  tdm[,2:4] <- sweep(tdm[,2:4], 2, highestvalues, '/')
+  tdm[,2:4] <- apply(tdm[,2:4], c(1,2), function(x) x*10)
+  
+  #Only set topics that have a score higher than 1 to show on the matrix
+  show_column <- apply(tdm[,2:4], 1, function(x) any(x > 0))
+  tdm[,5] <- show_column
+  print(show_column)
+  
+  print(tdm)
   
   return(tdm)
+}
+
+#
+# >> generatePlot <<
+# Input: term frequency list and number to display
+# Output: plot
+#
+
+generatePlot <- function(tdm, number, dimensions){
+  # Translate the table in the user interface to a R data frame
+  tdm <- hot_to_r(tdm)
+  
+  # Add a column to the tdm
+  tdm$Synonym <- NULL
+  
+  # Iterate over each topic in the tdm and store the first synonym in the newly created column
+  for (row in 1:nrow(tdm)) {
+    
+    split <- strsplit(toString(tdm[row, 1]), " / ")
+    split = sapply(strsplit(split[[1]], ";", fixed = TRUE), tail, 1)
+    tdm$Synonym[row] <- split
+  }
+  
+  #get the location of the column 'Show'
+  show_column <- grep('Show', colnames(tdm))
+  print(tdm)
+  print(dimensions)
+  dimensions <- as.integer(dimensions) + 1
+  if (length(dimensions) > 2){
+    #If there are more than 2 dimensions, we need to do some reduction
+    
+  }
+  
+  # Create a scatter plot for the tdm
+  # Use only the first synonym of a topic to show in the plot, but show all synoynms of a topic when the users hovers over it
+  plot <- plot_ly(x = tdm[tdm[,show_column] == TRUE,dimensions[1]], y = tdm[tdm[,show_column] == TRUE,dimensions[2]], type = 'scatter', mode = 'markers', text = tdm[tdm[,show_column] == TRUE,which(colnames(tdm) == 'Synonym')], hovertext = tdm[tdm[,show_column] == TRUE,1],
+                  hoverinfo = 'x+y+text',  showlegend = FALSE, marker = list(size = 10,
+                                                                             color = 'rgba(184, 230, 255, .9)',
+                                                                             line = list(color = 'rgba(0, 77, 153, .8)',
+                                                                                         width = 2))) %>%
+    add_text(textfont = list(
+      family = "sans serif",
+      size = 14,
+      color = toRGB("grey50")),
+      textposition = "bottom center") %>%
+    
+    layout(title = 'Materiality Matrix',
+           xaxis = list(
+             nticks = 10,
+             range = c(-1, 11),
+             title = "Importance internal stakeholders",
+             titlefont = list(
+               family = 'Arial, sans-serif',
+               size = 15,
+               color = 'black'
+             ),
+             showexponent = 'All'
+           ),
+           yaxis = list(
+             nticks = 10,
+             range = c(-1, 11),
+             title = "Importance external stakeholders",
+             titlefont = list(
+               family = 'Arial, sans-serif',
+               size = 15,
+               color = 'black'
+             ),
+             showexponent = 'All'
+           )
+    )
+  return(plot)
 }
 
 #
