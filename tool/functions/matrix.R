@@ -71,23 +71,69 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
   #get the location of the column 'Show'
   show_column <- grep('Show', colnames(tdm))
   print(tdm)
-  print(show_column)
-  
-  
+
   X_dimension <- as.integer(X_dimension)
   Y_dimension <- as.integer(Y_dimension)
+  
+  x_vector <- tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1]
+  y_vector <- tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1]
   
   #If dimensionreduction is manual and there are more than 2 dimensions
   #per axes, we need to do some reduciton
   #Extract the X and Y vector from plot_ly to do magic
-  if (dimensionreduction == 2) {
-    
+  if (dimensionreduction == 1) {
+    print('automatic reduction')
   }
+  
+  if (dimensionreduction == 2) {
+    print('manual reduction')
+    tdm[,2:4] <- sweep(tdm[,2:4],2, weights_source,'*')
+    
+    if (length(X_dimension) > 1) {
+      x_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1])
+    }
+    else {
+      x_vector <- tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1]
+    }
+    if (length(Y_dimension) > 1) {
+      y_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1])
+    }
+    else {
+      y_vector <- tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1]
+    }
+    
+    print(x_vector)
+    print(y_vector)
+    
+    ### This code normalizes the matrix always towards 10, which means the highest
+    ### score always receives 10,10 if the score is higher than 10.
+    #Normalize the values to a range between 10 and 0. Highest score gets a 10
+    highestvalue_x <- max(x_vector)
+    highestvalue_y <- max(y_vector)
+
+    #Set divisions by 0 to 1 only happens when everyting is 0. 
+    #So prevents breaking
+    highestvalue_x[highestvalue_x == 0] <- 1
+    highestvalue_y[highestvalue_y == 0] <- 1
+  
+    ### As an alternative, remove the if statements to always normalize to 10.
+    #Divide all columns by highest value of respective column
+    if (any(x_vector > 10)) {
+      x_vector <- x_vector/highestvalue_x * 10
+    }
+    if (any(y_vector > 10)) {
+      y_vector <- y_vector/highestvalue_y * 10
+    }
+    
+    print(x_vector)
+    print(y_vector)
+  }
+  
   
   # Create a scatter plot for the tdm
   # + 1 to dimension because first column is the longlist term
   # Use only the first synonym of a topic to show in the plot, but show all synoynms of a topic when the users hovers over it
-  plot <- plot_ly(x = tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1], y = tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) +1], type = 'scatter', mode = 'markers', text = tdm[tdm[,show_column] == TRUE,which(colnames(tdm) == 'Synonym')], hovertext = tdm[tdm[,show_column] == TRUE,1],
+  plot <- plot_ly(x = x_vector, y = y_vector, type = 'scatter', mode = 'markers', text = tdm[tdm[,show_column] == TRUE,which(colnames(tdm) == 'Synonym')], hovertext = tdm[tdm[,show_column] == TRUE,1],
                   hoverinfo = 'x+y+text',  showlegend = FALSE, marker = list(size = 10,
                                                                              color = 'rgba(184, 230, 255, .9)',
                                                                              line = list(color = 'rgba(0, 77, 153, .8)',

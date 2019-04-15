@@ -1,14 +1,13 @@
 plot <- function(){
-  a <- sample(1:15, 5)
-  b <- sample(1:15, 5)
-  c <- sample(c(0,1))
-  mt <- (cbind(a,b,c))
-  
-  print(mean(mt[1,]))
+  a <- sample(1:15, 3)
+  b <- sample(1:15, 3)
+  c <- sample(c(0,1,4))
+  mt <- cbind(a,b,c)
   
   print(mt)
-  plot <- plot_ly(x= mt[mt[,3] == TRUE,1], y = mt[mt[,3] == TRUE,2])
-  print(plot)
+  vec <- c(2,0,1)
+  mt<- sweep(mt, 2, vec, '*')
+  print(mt)
 }
 plot()
 rm(plot)

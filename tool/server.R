@@ -284,9 +284,9 @@ shinyServer(function(input, output) {
   observeEvent(input$table.plot, {
       shinyjs::show("plot")
       shinyjs::hide("placeholderPlot")
-      weights_source <- c(input$weightPeers, input$weightInternal, input$weightNews)
       
       output$plot <- renderPlotly({
+        weights_source <- c(input$weightPeers, input$weightInternal, input$weightNews)
         generatePlot(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionreduction, weights_source)
       })
   })
@@ -356,7 +356,6 @@ shinyServer(function(input, output) {
   
   printPlot <- reactive({
     weights_source <- c(input$weightPeers, input$weightInternal, input$weightNews)
-    
     generatePlot(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionreduction, weights_source)
   })
 })
