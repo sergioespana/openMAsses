@@ -53,6 +53,10 @@ dashboardPage(title="Openmasses",
                  c("Automated keywords" = "1",
                    "Predefined keywords" = "2"),
                    selected = 1, inline = T),
+    radioButtons("dimensionreduction", "Weigh the matrix axes?",
+                 c("Automated" = "1",
+                   "Manual" = "2"),
+                 selected = 1, inline = T),
     conditionalPanel(
       id = "threshold",
       condition = "input.scoring == 3",
@@ -375,9 +379,20 @@ dashboardPage(title="Openmasses",
                 box(width = 12,
                   title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
                   align = "left",
-                  checkboxGroupInput('dimensions','Dimensions to use in matrix',
+                  checkboxGroupInput('X_dimension','Select sources for X-axis',
                                      c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
-                                     inline = TRUE, selected = c(1,3)),
+                                     inline = TRUE, selected = c(1)),
+                  br(),
+                  checkboxGroupInput('Y_dimension','Select sources for Y-axis',
+                                     c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                     inline = TRUE, selected = c(3)),
+                  conditionalPanel(
+                    id = 'weightconditioner',
+                    condition = 'input.dimensionreduction == 2',
+                    numericInput('weightPeers','Peer report weight', value = 1, step = 0.01),
+                    numericInput('weightInternal','Internal weight', value = 1, step = 0.01),
+                    numericInput('weightNews','News weight', value = 1, step = 0.01)
+                  ),
                   rHandsontableOutput("table.plot", height="auto")
                 )
               )

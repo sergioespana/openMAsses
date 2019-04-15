@@ -6,7 +6,6 @@
 
 createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
   withProgress(message = 'Generating Table', value = 0, {
-    
     #longlist.mode #what is this supposed to do?
 
     # set topic and description column number.

@@ -5,7 +5,7 @@
 #
 
 preparePlotTDM <- function(tdm, tdmMedia){
-
+  
   # Only take the topics and the score column
   tdm <- tdm[,1:2]
   
@@ -53,7 +53,7 @@ preparePlotTDM <- function(tdm, tdmMedia){
 # Output: plot
 #
 
-generatePlot <- function(tdm, number, dimensions){
+generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreduction, weights_source){
   # Translate the table in the user interface to a R data frame
   tdm <- hot_to_r(tdm)
   
@@ -71,16 +71,23 @@ generatePlot <- function(tdm, number, dimensions){
   #get the location of the column 'Show'
   show_column <- grep('Show', colnames(tdm))
   print(tdm)
-  print(dimensions)
-  dimensions <- as.integer(dimensions) + 1
-  if (length(dimensions) > 2){
-    #If there are more than 2 dimensions, we need to do some reduction
+  print(show_column)
+  
+  
+  X_dimension <- as.integer(X_dimension)
+  Y_dimension <- as.integer(Y_dimension)
+  
+  #If dimensionreduction is manual and there are more than 2 dimensions
+  #per axes, we need to do some reduciton
+  #Extract the X and Y vector from plot_ly to do magic
+  if (dimensionreduction == 2) {
     
   }
   
   # Create a scatter plot for the tdm
+  # + 1 to dimension because first column is the longlist term
   # Use only the first synonym of a topic to show in the plot, but show all synoynms of a topic when the users hovers over it
-  plot <- plot_ly(x = tdm[tdm[,show_column] == TRUE,dimensions[1]], y = tdm[tdm[,show_column] == TRUE,dimensions[2]], type = 'scatter', mode = 'markers', text = tdm[tdm[,show_column] == TRUE,which(colnames(tdm) == 'Synonym')], hovertext = tdm[tdm[,show_column] == TRUE,1],
+  plot <- plot_ly(x = tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1], y = tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) +1], type = 'scatter', mode = 'markers', text = tdm[tdm[,show_column] == TRUE,which(colnames(tdm) == 'Synonym')], hovertext = tdm[tdm[,show_column] == TRUE,1],
                   hoverinfo = 'x+y+text',  showlegend = FALSE, marker = list(size = 10,
                                                                              color = 'rgba(184, 230, 255, .9)',
                                                                              line = list(color = 'rgba(0, 77, 153, .8)',
