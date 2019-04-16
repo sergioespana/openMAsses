@@ -72,17 +72,28 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
   show_column <- grep('Show', colnames(tdm))
   print(tdm)
 
-  X_dimension <- as.integer(X_dimension)
-  Y_dimension <- as.integer(Y_dimension)
+  X_dimension <- as.integer(X_dimension) + 1
+  Y_dimension <- as.integer(Y_dimension) + 1
   
-  x_vector <- tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1]
-  y_vector <- tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1]
+  x_vector <- tdm[tdm[,show_column] == TRUE, X_dimension]
+  y_vector <- tdm[tdm[,show_column] == TRUE, Y_dimension]
   
+  ### PCA does not work, we need to come up with a new plan
   #If dimensionreduction is manual and there are more than 2 dimensions
   #per axes, we need to do some reduciton
   #Extract the X and Y vector from plot_ly to do magic
   if (dimensionreduction == 1) {
     print('automatic reduction')
+    
+    if (length(X_dimension) > 1) {
+      print('jij bent hier helemaal niet!?')
+      x_vector <- rowMeans(tdm[tdm[,show_column] == TRUE,X_dimension])
+    }
+    if (length(Y_dimension) > 1) {
+      y_vector <- rowMeans(tdm[tdm[,show_column] == TRUE,Y_dimension])
+    }
+    print(x_vector)
+    print(y_vector)
   }
   
   if (dimensionreduction == 2) {
@@ -90,23 +101,20 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
     tdm[,2:4] <- sweep(tdm[,2:4],2, weights_source,'*')
     
     if (length(X_dimension) > 1) {
-      x_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1])
+      x_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, X_dimension])
     }
     else {
-      x_vector <- tdm[tdm[,show_column] == TRUE, as.integer(X_dimension) + 1]
+      x_vector <- tdm[tdm[,show_column] == TRUE, X_dimension]
     }
     if (length(Y_dimension) > 1) {
-      y_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1])
+      y_vector <- rowMeans(tdm[tdm[,show_column] == TRUE, Y_dimension])
     }
     else {
-      y_vector <- tdm[tdm[,show_column] == TRUE, as.integer(Y_dimension) + 1]
+      y_vector <- tdm[tdm[,show_column] == TRUE, Y_dimension]
     }
     
-    print(x_vector)
-    print(y_vector)
-    
-    ### This code normalizes the matrix always towards 10, which means the highest
-    ### score always receives 10,10 if the score is higher than 10.
+    ### This code normalizes the matrix towards 10, which means the highest
+    ### score receives 10,10 if the score is higher than 10.
     #Normalize the values to a range between 10 and 0. Highest score gets a 10
     highestvalue_x <- max(x_vector)
     highestvalue_y <- max(y_vector)
@@ -124,7 +132,6 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
     if (any(y_vector > 10)) {
       y_vector <- y_vector/highestvalue_y * 10
     }
-    
     print(x_vector)
     print(y_vector)
   }
