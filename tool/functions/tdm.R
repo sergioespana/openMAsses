@@ -418,12 +418,12 @@ addScore <- function(tdm, scheme, threshold, category) {
 transformMedia <- function (media_text) {
   media_text = gsub(',','',media_text)
   media_text <- strsplit(media_text,'[', fixed = TRUE) #Can we append this to a matrix somehow?
-
+  
   results <- data.frame(matrix(ncol = 1, nrow = 0))
   colnames(results) <- 'News articles'
   for (i in (1:length(media_text))) {
     results[i,1] <- media_text[[i]]
   }
-
+  
   return(results)
 }

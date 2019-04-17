@@ -259,7 +259,7 @@ dashboardPage(title="Openmasses",
   #Creates a tabbox with many panels, for every type of analysis
   tabBox(
     id = "tabset", width = "100%",
-    tabPanel("Word Clouds", 
+    tabPanel("Peer analysis", 
       fluidRow(
         br(),
         column(
@@ -307,97 +307,45 @@ dashboardPage(title="Openmasses",
             )
           )
         )
-      )
-    ),
-    
-    tabPanel("Term Document Table",
+      ),
       fluidRow(
         br(),
         align = "center",
         box(width = 12,
-          title = "Term Document Table", status = "primary",
-          align = "center",
-          fluidRow(
-            column(width = 6,
-              align = "center",
-              h1(span(shiny::icon("file-pdf-o"), id = "pdf3", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel2", class = "missing")),
-              disabled(
-                actionButton("tdmButton", "Create Term Document Table", icon("table"), status = "primary", class="blue")
-              )
-            ),
-            column(width = 6,
-              align = "center",
-              h1(span(shiny::icon("file-pdf-o"), id = "pdf4", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel3", class = "missing")),
-              div(class="not-allowed", id="not-allowed",
-                disabled(
-                  downloadButton("tdmDownload", "Download Term Document Table", class = "btn-success")
-                )
+            title = "Term Document Table", status = "primary",
+            align = "center",
+            fluidRow(
+              column(width = 6,
+                     align = "center",
+                     h1(span(shiny::icon("file-pdf-o"), id = "pdf3", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel2", class = "missing")),
+                     disabled(
+                       actionButton("tdmButton", "Create Term Document Table", icon("table"), status = "primary", class="blue")
+                     )
               ),
-              br(),
-              hidden(
-                downloadButton("logDownload", "Download log", class = "btn-success", icon="cloud")
+              column(width = 6,
+                     align = "center",
+                     h1(span(shiny::icon("file-pdf-o"), id = "pdf4", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel3", class = "missing")),
+                     div(class="not-allowed", id="not-allowed",
+                         disabled(
+                           downloadButton("tdmDownload", "Download Term Document Table", class = "btn-success")
+                         )
+                     ),
+                     br(),
+                     hidden(
+                       downloadButton("logDownload", "Download log", class = "btn-success", icon="cloud")
+                     )
               )
-            )
-          ),
-          fluidRow(
-            br(),
-            div(span(shiny::icon("table"), id = "iconTDMEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconTDMLoad")), class = "well well-sm ", id = "placeholderTDM"),
-            hidden(
-              column(width = 12, id = "tdm",
-              title = "Term Document Table", status = "primary",
-              dataTableOutput(outputId = "tdm")
-              )
-            )
-          )
-        )
-      )
-    ),
-    
-    tabPanel("Matrix",
-      fluidRow(
-        br(),
-        align = "center",
-        box(width = 12,
-          title = "Matrix", status = "primary",
-          align = "center",
-          fluidRow(
-            h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
-            disabled(
-              actionButton("plotButton", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
             ),
-           br(),
-           br(),
-           div(span(shiny::icon("line-chart"), id = "iconPlotEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconPlotLoad")), class = "well well-sm", id = "placeholderPlot"),
-           plotlyOutput(outputId = "plot", height = "700px", width = "700px"),
-           br(),
-           br()
-          ),
-          fluidRow(
-            hidden(
-              div(
-                id = "scoreBox",
-                box(width = 12,
-                  title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
-                  align = "left",
-                  checkboxGroupInput('X_dimension','Select sources for X-axis',
-                                     c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
-                                     inline = TRUE, selected = c(1)),
-                  br(),
-                  checkboxGroupInput('Y_dimension','Select sources for Y-axis',
-                                     c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
-                                     inline = TRUE, selected = c(3)),
-                  conditionalPanel(
-                    id = 'weightconditioner',
-                    condition = 'input.dimensionreduction == 2',
-                    numericInput('weightPeers','Peer report weight', value = 1, step = 0.01),
-                    numericInput('weightInternal','Internal weight', value = 1, step = 0.01),
-                    numericInput('weightNews','News weight', value = 1, step = 0.01)
-                  ),
-                  rHandsontableOutput("table.plot", height="auto")
+            fluidRow(
+              br(),
+              div(span(shiny::icon("table"), id = "iconTDMEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconTDMLoad")), class = "well well-sm ", id = "placeholderTDM"),
+              hidden(
+                column(width = 12, id = "tdm",
+                       title = "Term Document Table", status = "primary",
+                       dataTableOutput(outputId = "tdm")
                 )
               )
             )
-          )
         )
       )
     ),
@@ -491,6 +439,55 @@ dashboardPage(title="Openmasses",
             )
         )
       )
+    ),
+    
+    tabPanel("Matrix",
+             fluidRow(
+               br(),
+               align = "center",
+               box(width = 12,
+                   title = "Matrix", status = "primary",
+                   align = "center",
+                   fluidRow(
+                     h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
+                     disabled(
+                       actionButton("plotButton", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
+                     ),
+                     br(),
+                     br(),
+                     div(span(shiny::icon("line-chart"), id = "iconPlotEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconPlotLoad")), class = "well well-sm", id = "placeholderPlot"),
+                     plotlyOutput(outputId = "plot", height = "700px", width = "700px"),
+                     br(),
+                     br()
+                   ),
+                   fluidRow(
+                     hidden(
+                       div(
+                         id = "scoreBox",
+                         box(width = 12,
+                             title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
+                             align = "left",
+                             checkboxGroupInput('X_dimension','Select sources for X-axis',
+                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                                inline = TRUE, selected = c(1)),
+                             br(),
+                             checkboxGroupInput('Y_dimension','Select sources for Y-axis',
+                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                                inline = TRUE, selected = c(3)),
+                             conditionalPanel(
+                               id = 'weightconditioner',
+                               condition = 'input.dimensionreduction == 2',
+                               numericInput('weightPeers','Peer report weight', value = 1, step = 0.01),
+                               numericInput('weightInternal','Internal weight', value = 1, step = 0.01),
+                               numericInput('weightNews','News weight', value = 1, step = 0.01)
+                             ),
+                             rHandsontableOutput("table.plot", height="auto")
+                         )
+                       )
+                     )
+                   )
+               )
+             )
     ),
       
     tabPanel("Manual",

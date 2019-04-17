@@ -138,6 +138,7 @@ documentsLoad <- function(files) {
 loadMedia <- function(articles) {
   withProgress(message = 'loading news', value = 0, {
 
+    number.files <- 
     articles_text <- read_lines(articles$datapath)
     articles_clean <- articles_text
     
@@ -184,7 +185,6 @@ longlistLoad <- function(files){
 documentsLoadwordcloud <- function(files) {
   withProgress(message = 'Reading documents', value = 0, {
     
-    print('function documentsloadwordcloud is called')
     pdfs <- c()
     categories <- c()
     

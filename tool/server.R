@@ -298,6 +298,7 @@ shinyServer(function(input, output) {
   })
   
   readMedia <- reactive({
+    print(input$media)
     loadMedia(input$media)
   })
   
@@ -314,8 +315,14 @@ shinyServer(function(input, output) {
     prepareWordCloudPDF(readDocumentscloud())
   })
   
-  wordCloudMedia <- reactive({
-    prepareWordCloudMedia(readMedia())
+  wordCloudNews <- reactive({
+    mediaNews <- readMedia()
+    prepareWordCloudMedia(mediaNews)
+  })
+  
+  wordCloudSocial <- reactive({
+    mediaSocial <- readMedia()
+    prepareWordCloudMedia(mediaSocial)
   })
 
   wordCloudLonglist <- reactive({
@@ -328,11 +335,11 @@ shinyServer(function(input, output) {
   })
   
   printWordCloudNews <- reactive({
-    generateWordCloud(wordCloudMedia(), input$wordCloudNewsNumber)
+    generateWordCloud(wordCloudNews(), input$wordCloudNewsNumber)
   })
   
   printWordCloudSocial<- reactive({
-    generateWordCloud(wordCloudMedia(), input$wordCloudSocialNumber)
+    generateWordCloud(wordCloudSocial(), input$wordCloudSocialNumber)
   })
 
   printWordCloudLonglist <- reactive({
@@ -347,6 +354,7 @@ shinyServer(function(input, output) {
   
   getTDMMedia <- reactive({
     media <- transformMedia(readMedia())
+    print(media)
     createTDM(media, readLonglists(), input$scoring, input$threshold, input$longlistoption)
   })
 
