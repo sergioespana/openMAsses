@@ -1,8 +1,10 @@
 plot <- function(){
-  a <- ('this is a quick - string to see how the function works')
-  b <- strsplit(a, '-', fixed = TRUE)[[1]][2]
-  print(b)
-  print(b[[1]][2])
+  all_media <- c()
+  all_media$'News' <- 'this is a string'
+  all_media$'Social Media' <- 'also a string'
+  all_media$'Reddit' <- 'more strings'
+  
+  print(all_media)
 }
 plot()
 rm(plot)

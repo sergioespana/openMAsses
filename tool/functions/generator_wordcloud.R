@@ -1,5 +1,5 @@
 # 
-# >> prepareWordCloudPDF <<
+# >> prepareWordCloud <<
 # Description: Creates a word frequency list from the imported pdfs
 # Input: text from pdf(s)
 # Output: word frequency list
@@ -7,12 +7,12 @@
 
 source("functions/data_loaders.R")
 
-prepareWordCloudPDF <- function(pdfs.text) {
-  
+prepare_wordCloud <- function(input_text) {
+  print(input_text)
   withProgress(message = 'Generating Word Cloud', value = 0, {
     
     # Create corpus
-    corpus <- Corpus(VectorSource(pdfs.text))
+    corpus <- Corpus(VectorSource(input_text))
     incProgress(1 / 2)
     
     # Create TermDocumentMatrix
@@ -32,31 +32,6 @@ prepareWordCloudPDF <- function(pdfs.text) {
   return(result)
 }
 
-#
-# >> PrepareWordCloudMedia <<
-# Creates a term frequency list from the imported python output
-# Input: Plain text file, !should be updated into a combined media file later!
-# output: term frequency list
-#
-
-prepareWordCloudMedia <- function(media_text) {
-  
-  withProgress(message = 'Generating Word Cloud', value = 0, {
-    
-    # Create corpus
-    corpus <- Corpus(VectorSource(media_text))
-    
-    # Create TermDocumentMatrix
-    tdm <- TermDocumentMatrix(corpus, control = list(bounds = list(global = c(1, Inf)), wordLengths = c(0,Inf)))
-    incProgress(1 / 2)
-    
-    # Create the table with the correct names
-    result <- as.matrix(tdm)
-    result <- rowSums(result)
-  })
-  return(result)
-}
-
 # 
 # >> prepareWordCloudLonglist <<
 # Description: Creates a term frequency list from a tdm? This seems broken too
@@ -64,7 +39,7 @@ prepareWordCloudMedia <- function(media_text) {
 # Output: term frequency list
 # 
 
-prepareWordCloudLonglist <- function(tdm) {
+prepare_wordCloudLonglist <- function(tdm) {
   frequency <- c(tdm[, 2])
   synonym = list()
   
@@ -91,7 +66,7 @@ prepareWordCloudLonglist <- function(tdm) {
 # Output: word cloud
 #
 
-generateWordCloud <- function(frequency, number) {
+generate_wordCloud <- function(frequency, number) {
   
   # Check if the number of terms to show in the word cloud is not bigger than the number of words to show
   if (number > length(frequency)) {

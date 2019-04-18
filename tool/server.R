@@ -26,12 +26,11 @@ library(plotly) # Interactive plots
 library(FactoMineR) #PCA for dimension reduction
 
 source("functions/parse longlist.R")
-source("functions/keyword_generation.R")
-source("functions/wordclouds.R")
-source("functions/tdm.R")
-source("functions/matrix.R")
+source("functions/generator_keywords.R")
+source("functions/generator_wordcloud.R")
+source("functions/generator_tdm.R")
+source("functions/generator_matrix.R")
 source("functions/data_loaders.R")
-
 
 shinyServer(function(input, output) {
   
@@ -54,9 +53,11 @@ shinyServer(function(input, output) {
       if (!is.null(input$longlists)) {
           enable("tdmButton")
           enable("tdmDownload")
-          enable("plotButton")
           removeClass("not-allowed", "not-allowed")
           enable("wordCloudButtonLonglist")
+          if (!is.null(input$media)){
+            enable("plotButton")
+          }
       }
       # set Header name for uploaded documents based on if 1 or n documents
       if (length(input$pdfs$name) == 1) {
@@ -93,10 +94,12 @@ shinyServer(function(input, output) {
         removeClass("not-allowed", "not-allowed")
         enable("tdmMediaButton")
         enable("tdmMediaDownload")
-        enable("plotButton") #TODO later, this is the button for the tab matrix
+        if (!is.null(input$pdfs)){
+          enable('plotButton')
+        }
       }
       removeClass("not-allowed", "not-allowed")
-      if (length(input$pdfs$name) == 1) {
+      if (length(input$media$name) == 1) {
         colnames(table) <- "Uploaded document"
       }
       else {
@@ -168,7 +171,7 @@ shinyServer(function(input, output) {
     },
     #Idk what this does yet, save the TDM for download I guess
     content = function(path) {
-      saveTDM(getTDM(), path, readLonglists())
+      saveTDM(get_TDM(), path, read_longlists())
     }
   )
   
@@ -190,10 +193,10 @@ shinyServer(function(input, output) {
   #A set of button event handlers
   #This one is for PDF word clouds
   observeEvent(input$wordCloudButtonPDF, {
-    shinyjs::hide("iconWordCloudPDFEmpty")
+    shinyjs::hide("iconWordCloudPDFEmpty") ##We mean wordcloudpeers, but due to old version it pdf is still used
     shinyjs::show("iconWordCloudPDFLoad")
     output$wordCloudPlotPDF <- renderPlot({
-      printWordCloudPDF()
+      print_wordCloudPeers()
       shinyjs::hide("placeholderWordCloudPDF")
     })
     shinyjs::show("wordCloudPlotPDF")
@@ -204,7 +207,7 @@ shinyServer(function(input, output) {
     shinyjs::hide("iconWordCloudNewsEmpty")
     shinyjs::show("iconWordCloudNewsLoad")
     output$wordCloudPlotNews <- renderPlot({
-      printWordCloudNews()
+      print_wordCloudNews()
       shinyjs::hide("placeholderWordCloudNews")
     })
     shinyjs::show("wordCloudPlotNews")
@@ -215,7 +218,7 @@ shinyServer(function(input, output) {
     shinyjs::hide("iconWordCloudSocialEmpty")
     shinyjs::show("iconWordCloudSocialLoad")
     output$wordCloudPlotSocial <- renderPlot({
-      printWordCloudSocial()
+      print_wordCloudSocial()
       shinyjs::hide("placeholderWordCloudSocial")
     })
     shinyjs::show("wordCloudPlotSocial")
@@ -226,7 +229,7 @@ shinyServer(function(input, output) {
     shinyjs::hide("iconWordCloudLonglistEmpty")
     shinyjs::show("iconWordCloudLonglistLoad")
     output$wordCloudPlotLonglist <- renderPlot({
-      printWordCloudLonglist()
+      print_wordCloudLonglist()
       shinyjs::hide("placeholderWordCloudLonglist")
     })
     shinyjs::show("wordCloudPlotLonglist")
@@ -238,7 +241,7 @@ shinyServer(function(input, output) {
     shinyjs::hide("iconTDMEmpty")
     shinyjs::show("iconTDMLoad")
     output$tdm <- renderDataTable({
-      getTDM()
+      get_TDM()
       },
       options = list(pageLength = 10, scrollX = TRUE),
       list(shinyjs::hide("placeholderTDM"))
@@ -252,7 +255,7 @@ shinyServer(function(input, output) {
     shinyjs::hide("iconTDMMediaEmpty")
     shinyjs::show("iconTDMMediaLoad")
     output$tdmMedia <- renderDataTable({
-      getTDMMedia()
+      get_TDMMedia()
     },
     options = list(pageLength = 10, scrollX = TRUE),
     list(shinyjs::hide("placeholderTDMMedia"))
@@ -268,7 +271,7 @@ shinyServer(function(input, output) {
     shinyjs::show("iconPlotLoad")
     shinyjs::show("scoreBox")
     output$table.plot <- renderRHandsontable({
-      rhandsontable(getPlotTDM(), rowHeaders = TRUE) %>%
+      rhandsontable(get_plotTDM(), rowHeaders = TRUE) %>%
       hot_validate_numeric(col = 2, min = 0, max = 10, allowInvalid = TRUE) %>%
       hot_validate_numeric(col = 3, min = 0, max = 10, allowInvalid = TRUE) %>%
       hot_col(col = 1, readOnly = TRUE, colWidths = 600) %>%
@@ -293,77 +296,77 @@ shinyServer(function(input, output) {
   
   #Below there is some set of wrappers to react to events in the app.
   #A set of wrappers to get the input from the inputFile commands in ui.R
-  readDocuments <- reactive({
-    documentsLoad(input$pdfs)
+  #Better solution would be to give stemming as an argument to read_documents, did not figure out how yet.
+  read_documents <- reactive({
+    load_documents(input$pdfs, stemming = FALSE)
   })
   
-  readMedia <- reactive({
-    print(input$media)
-    loadMedia(input$media)
+  read_stemmedDocuments <- reactive({
+    load_documents(input$pdfs, stemming = TRUE)
   })
   
-  readDocumentscloud <- reactive({
-      documentsLoadwordcloud(input$pdfs)
+  read_media <- reactive({
+    load_documents(input$media, stemming = FALSE)
+  })
+  
+  read_stemmedMedia <- reactive ({
+    load_documents(input$media, stemming = TRUE)
   })
 
-  readLonglists <- reactive({
-    longlistLoad(input$longlists)
+  read_longlists <- reactive({
+    load_longlist(input$longlists)
   })
   
   #Set of wrappers to prepare/cleam word cloud input data
-  wordCloudPDF <- reactive({
-    prepareWordCloudPDF(readDocumentscloud())
+  wordCloudPeers <- reactive({
+    prepare_wordCloud(read_documents())
   })
   
   wordCloudNews <- reactive({
-    mediaNews <- readMedia()
-    prepareWordCloudMedia(mediaNews)
+    prepare_wordCloud(read_media())
   })
   
   wordCloudSocial <- reactive({
-    mediaSocial <- readMedia()
-    prepareWordCloudMedia(mediaSocial)
+    prepare_wordCloud(read_media())
   })
 
   wordCloudLonglist <- reactive({
-    prepareWordCloudLonglist(getTDM())
+    prepare_wordCloudLonglist(get_TDM())
   })
   
   #Set of wrappers to plot a word cloud
-  printWordCloudPDF <- reactive({
-    generateWordCloud(wordCloudPDF(), input$wordCloudPDFNumber)
+  print_wordCloudPeers <- reactive({
+    generate_wordCloud(wordCloudPeers(), input$wordCloudPeersNumber)
   })
   
-  printWordCloudNews <- reactive({
-    generateWordCloud(wordCloudNews(), input$wordCloudNewsNumber)
+  print_wordCloudNews <- reactive({
+    generate_wordCloud(wordCloudNews(), input$wordCloudNewsNumber)
   })
   
-  printWordCloudSocial<- reactive({
-    generateWordCloud(wordCloudSocial(), input$wordCloudSocialNumber)
+  print_wordCloudSocial<- reactive({
+    generate_wordCloud(wordCloudSocial(), input$wordCloudSocialNumber)
   })
 
-  printWordCloudLonglist <- reactive({
-    generateWordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
+  print_wordCloudLonglist <- reactive({
+    generate_wordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
   })
 
   # aanmaken term document matrix # ralph
   # CreateTDM is messy
-  getTDM <- reactive({
-    createTDM(readDocuments(), readLonglists(), input$scoring, input$threshold, input$longlistoption)
+  get_TDM <- reactive({
+    create_TDM(read_stemmedDocuments(), read_longlists(), input$scoring, input$threshold, input$longlistoption)
   })
   
-  getTDMMedia <- reactive({
-    media <- transformMedia(readMedia())
-    print(media)
-    createTDM(media, readLonglists(), input$scoring, input$threshold, input$longlistoption)
+  get_TDMMedia <- reactive({
+    create_TDM(read_stemmedMedia(), read_longlists(), input$scoring, input$threshold, input$longlistoption)
   })
 
-  getPlotTDM <- reactive({
-    preparePlotTDM(getTDM(), getTDMMedia())
+  get_plotTDM <- reactive({
+    prepare_PlotTDM(get_TDM(), get_TDMMedia())
   })
   
-  printPlot <- reactive({
-    weights_source <- c(input$weightPeers, input$weightInternal, input$weightNews)
-    generatePlot(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionreduction, weights_source)
+  print_plot <- reactive({
+    weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews)
+    generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
   })
 })

@@ -24,7 +24,7 @@ library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 
-options(shiny.maxRequestSize = 800 * 1024 ^ 5)
+options(shiny.maxRequestSize = 768 * 1366 ^ 5)
 
 dashboardPage(title="Openmasses",
   
@@ -49,11 +49,13 @@ dashboardPage(title="Openmasses",
                    "Frequency" = "2",
                    "Relative" = "3",
                    "Weighted" = "4"), selected = 2, inline = T),
-    radioButtons("longlistoption", "Longlist Option",
-                 c("Automated keywords" = "1",
-                   "Predefined keywords" = "2"),
-                   selected = 1, inline = T),
-    radioButtons("dimensionreduction", "Weigh the matrix axes?",
+    hidden(
+      radioButtons("longlistoption", "Longlist Option",
+                   c("Automated keywords" = "1",
+                     "Predefined keywords" = "2"),
+                     selected = 1, inline = T)
+    ),
+    radioButtons("dimensionReduction", "Weigh the matrix axes?",
                  c("Automated" = "1",
                    "Manual" = "2"),
                  selected = 1, inline = T),
@@ -279,7 +281,7 @@ dashboardPage(title="Openmasses",
             ),
             box(width = 12,
               title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
-                sliderInput(inputId = "wordCloudPDFNumber",
+                sliderInput(inputId = "wordCloudPeersNumber",
                             label = "Number of words in cloud:",
                             min = 80, max = 150, value = 150, step = 1)
             )
@@ -476,7 +478,7 @@ dashboardPage(title="Openmasses",
                                                 inline = TRUE, selected = c(3)),
                              conditionalPanel(
                                id = 'weightconditioner',
-                               condition = 'input.dimensionreduction == 2',
+                               condition = 'input.dimensionReduction == 2',
                                numericInput('weightPeers','Peer report weight', value = 1, step = 0.01),
                                numericInput('weightInternal','Internal weight', value = 1, step = 0.01),
                                numericInput('weightNews','News weight', value = 1, step = 0.01)

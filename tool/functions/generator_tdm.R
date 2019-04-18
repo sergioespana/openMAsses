@@ -4,10 +4,10 @@
 # Output: term document matrix
 # 
 
-createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) {
+create_TDM <- function(input.text, longlist, scheme, threshold, longlist.mode) {
   withProgress(message = 'Generating Table', value = 0, {
     #longlist.mode #what is this supposed to do?
-
+    print(input.text)
     # set topic and description column number.
     # this was done to increase the readability of the code
     #wait, what readibility?
@@ -101,9 +101,9 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
     }
 
     # Iterate over all categories
-    for (cat in 1:length(names(allpdfs.text))) {
+    for (cat in 1:length(names(input.text))) {
       
-      catName <- names(allpdfs.text)[cat]
+      catName <- names(input.text)[cat]
       
       # If it is a category with PDFs underneath it add [Category] to the name
       if (!grepl('.pdf', catName, fixed = TRUE)) {
@@ -138,7 +138,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
     for (l in 1:length(columns)) {
       
       # introduce loop here
-      pdfs.text <- allpdfs.text[[l]]
+      pdfs.text <- input.text[[l]]
       categoryName <- columns[l]
       incProgress(1 / length(columns), detail = paste("Scanning: ", categoryName))
       
@@ -211,7 +211,7 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
                 
                 # Get the frequency of the synonym
                 term <- terms.list[[synonym]]
-                term.frequency <- getFrequency(term, pdfPages, categoryName, pdfName, language)
+                term.frequency <- get_frequency(term, pdfPages, categoryName, pdfName, language)
                 terms.frequency <- terms.frequency + term.frequency
               }
             }
@@ -235,14 +235,14 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
       }
       
       # After a category table is created (containing all the pdfs of that category), add the score column to it
-      catTDM <- addScore(catTDM, scheme, threshold, TRUE)
+      catTDM <- add_score(catTDM, scheme, threshold, TRUE)
       
       # Add the score column of the category table to the main table
       tdm[1:nrow(tdm), l + 1] <- catTDM[1:nrow(catTDM), 2]
     }
     
     # After all the categories columns are added, add the score column to the main tdm
-    tdm <- addScore(tdm, scheme, threshold, FALSE)
+    tdm <- add_score(tdm, scheme, threshold, FALSE)
     
     # Set the correct names again
     colnames(tdm) <- c("Longlist", "Score", columns)
@@ -253,12 +253,12 @@ createTDM <- function(allpdfs.text, longlist, scheme, threshold, longlist.mode) 
 }
 
 #
-# >> getFrequency <<
+# >> get_frequency <<
 # Input: term, pdf text, category name, pdf name, language
 # Output: the number of times the term occures in the pdf 
 #
 
-getFrequency <- function(term, pdf, categoryName, pdfName, language){
+get_frequency <- function(term, pdf, categoryName, pdfName, language){
   frequency <- 0
   
   # Add a space before and after the term to avoid counting terms that are part of a bigger term
@@ -294,7 +294,7 @@ getFrequency <- function(term, pdf, categoryName, pdfName, language){
 # Output: term document matrix with a score column
 # 
 
-addScore <- function(tdm, scheme, threshold, category) {
+add_score <- function(tdm, scheme, threshold, category) {
   
   # If the scoring scheme is 'count'
   if (scheme == 1) {
@@ -413,17 +413,4 @@ addScore <- function(tdm, scheme, threshold, category) {
   }
 
   return(tdm)
-}
-
-transformMedia <- function (media_text) {
-  media_text = gsub(',','',media_text)
-  media_text <- strsplit(media_text,'[', fixed = TRUE) #Can we append this to a matrix somehow?
-  
-  results <- data.frame(matrix(ncol = 1, nrow = 0))
-  colnames(results) <- 'News articles'
-  for (i in (1:length(media_text))) {
-    results[i,1] <- media_text[[i]]
-  }
-  
-  return(results)
 }

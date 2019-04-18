@@ -3,8 +3,9 @@
 # Input: term document matrix
 # Output: matrix with topics, external score, internal score and show columns
 #
+# Note: Rename the tdm here, it is super confusing wiht the other tdm
 
-preparePlotTDM <- function(tdm, tdmMedia){
+prepare_plotTDM <- function(tdm, tdmMedia){
   
   # Only take the topics and the score column
   tdm <- tdm[,1:2]
@@ -53,7 +54,7 @@ preparePlotTDM <- function(tdm, tdmMedia){
 # Output: plot
 #
 
-generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreduction, weights_source){
+generate_plotMatrix <- function(tdm, number, X_dimension, Y_dimension, dimensionreduction, weights_source){
   # Translate the table in the user interface to a R data frame
   tdm <- hot_to_r(tdm)
   
@@ -86,7 +87,6 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
     print('automatic reduction')
     
     if (length(X_dimension) > 1) {
-      print('jij bent hier helemaal niet!?')
       x_vector <- rowMeans(tdm[tdm[,show_column] == TRUE,X_dimension])
     }
     if (length(Y_dimension) > 1) {
@@ -184,7 +184,7 @@ generatePlot <- function(tdm, number, X_dimension, Y_dimension, dimensionreducti
 # Output: save excel file to path
 #
 
-saveTDM <- function(tdm, path, longlist){
+save_TDM <- function(tdm, path, longlist){
   withProgress(message = 'Saving Matrix', value = 0, {
     
     # Create empty excel file
