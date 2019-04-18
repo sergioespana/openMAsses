@@ -1,10 +1,12 @@
 plot <- function(){
-  all_media <- c()
-  all_media$'News' <- 'this is a string'
-  all_media$'Social Media' <- 'also a string'
-  all_media$'Reddit' <- 'more strings'
+  a <- c(1,2,3,6)
+  b <- c(2,3,5,7)
+  c <- c(2,4,6,8)
   
-  print(all_media)
+  mat <- data.frame(cbind(a,b,c))
+  
+  colnames(mat) <- c('a','b','c')
+  print(mat)
 }
 plot()
 rm(plot)

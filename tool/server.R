@@ -84,8 +84,9 @@ shinyServer(function(input, output) {
       return(table)
     }
     else {
-      enable('wordCloudButtonSocial')
+      enable('wordCloudButtonTwitter')
       enable('wordCloudButtonNews')
+      enable('wordCloudButtonReddit')
       removeClass('media1', 'missing')
       removeClass('media2', 'missing')
       removeClass('media3', 'missing')
@@ -213,15 +214,26 @@ shinyServer(function(input, output) {
     shinyjs::show("wordCloudPlotNews")
   })
   
-  #For Social media word clouds
-  observeEvent(input$wordCloudButtonSocial, {
-    shinyjs::hide("iconWordCloudSocialEmpty")
-    shinyjs::show("iconWordCloudSocialLoad")
-    output$wordCloudPlotSocial <- renderPlot({
-      print_wordCloudSocial()
-      shinyjs::hide("placeholderWordCloudSocial")
+  #For News word clouds
+  observeEvent(input$wordCloudButtonReddit, {
+    shinyjs::hide("iconWordCloudRedditEmpty")
+    shinyjs::show("iconWordCloudRedditLoad")
+    output$wordCloudPlotReddit <- renderPlot({
+      print_wordCloudReddit()
+      shinyjs::hide("placeholderWordCloudReddit")
     })
-    shinyjs::show("wordCloudPlotSocial")
+    shinyjs::show("wordCloudPlotReddit")
+  })
+  
+  #For Twitter media word clouds
+  observeEvent(input$wordCloudButtonTwitter, {
+    shinyjs::hide("iconWordCloudTwitterEmpty")
+    shinyjs::show("iconWordCloudTwitterLoad")
+    output$wordCloudPlotTwitter <- renderPlot({
+      print_wordCloudTwitter()
+      shinyjs::hide("placeholderWordCloudTwitter")
+    })
+    shinyjs::show("wordCloudPlotTwitter")
   })
   
   #For longlist word clouds
@@ -289,8 +301,8 @@ shinyServer(function(input, output) {
       shinyjs::hide("placeholderPlot")
       
       output$plot <- renderPlotly({
-        weights_source <- c(input$weightPeers, input$weightInternal, input$weightNews)
-        generatePlot(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionreduction, weights_source)
+        weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews)
+        generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
       })
   })
   
@@ -319,15 +331,19 @@ shinyServer(function(input, output) {
   
   #Set of wrappers to prepare/cleam word cloud input data
   wordCloudPeers <- reactive({
-    prepare_wordCloud(read_documents())
+    prepare_wordCloud(read_documents(), 'peers')
   })
   
   wordCloudNews <- reactive({
-    prepare_wordCloud(read_media())
+    prepare_wordCloud(read_media(), 'news')
   })
   
-  wordCloudSocial <- reactive({
-    prepare_wordCloud(read_media())
+  wordCloudTwitter <- reactive({
+    prepare_wordCloud(read_media(), 'twitter')
+  })
+  
+  wordCloudReddit <- reactive({
+    prepare_wordCloud(read_media(), 'reddit')
   })
 
   wordCloudLonglist <- reactive({
@@ -343,8 +359,12 @@ shinyServer(function(input, output) {
     generate_wordCloud(wordCloudNews(), input$wordCloudNewsNumber)
   })
   
-  print_wordCloudSocial<- reactive({
-    generate_wordCloud(wordCloudSocial(), input$wordCloudSocialNumber)
+  print_wordCloudTwitter<- reactive({
+    generate_wordCloud(wordCloudTwitter(), input$wordCloudTwitterNumber)
+  })
+  
+  print_wordCloudReddit<- reactive({
+    generate_wordCloud(wordCloudReddit(), input$wordCloudRedditNumber)
   })
 
   print_wordCloudLonglist <- reactive({
@@ -362,9 +382,10 @@ shinyServer(function(input, output) {
   })
 
   get_plotTDM <- reactive({
-    prepare_PlotTDM(get_TDM(), get_TDMMedia())
+    prepare_plotTDM(get_TDM(), get_TDMMedia())
   })
   
+  #I don't know why this is there twice, bad practice blablabla
   print_plot <- reactive({
     weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews)
     generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)

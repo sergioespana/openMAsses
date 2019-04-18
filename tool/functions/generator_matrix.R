@@ -7,20 +7,26 @@
 
 prepare_plotTDM <- function(tdm, tdmMedia){
   
+  print(tdmMedia)
+  #temp hard override, remove when tdm generator is fixed
+  colnames(tdmMedia)<- c('topic', 'score', 'news','twitter','reddit')
+  
+  print(tdm)
+  print(tdmMedia)
+  
   # Only take the topics and the score column
   tdm <- tdm[,1:2]
+  tdm$Internal <- rep(0,nrow(tdm))
+  tdm$News <- tdmMedia[,'news']
+  tdm$Twitter <- tdmMedia[,'twitter']
+  tdm$Reddit <- tdmMedia[,'reddit']
   
   # The score column is for the external axis
   colnames(tdm)[2] <- 'Peer reports'
   
-  # Add the internal axis column
-  tdm$Internal <- rep(0,nrow(tdm))
-  tdm$News <- tdmMedia[,3]
-  #tdm$Social <- tdmMedia[2]
-  #colnames(tdm)[5] <- 'Social media'
   
   tdm[,4] <- sapply(tdm[,4], as.numeric)
-  #tdm[,5] <- sapply(tdm[,5], as.numeric)
+  tdm[,5] <- sapply(tdm[,5], as.numeric)
 
   # Order the tdm on the external axis score
   #tdm <- tdm[order(tdm$External, decreasing=TRUE), ]
@@ -29,18 +35,18 @@ prepare_plotTDM <- function(tdm, tdmMedia){
   tdm$Show <- rep(FALSE,nrow(tdm))
   
   #Normalize the values to a range between 10 and 0. Highest score gets a 10
-  highestvalues <- as.vector(sapply(tdm[,2:4], max))
+  highestvalues <- as.vector(sapply(tdm[,2:5], max))
   
   #Set divisions by 0 to 0
   highestvalues[highestvalues == 0] <- 1
   
   #Divide all columns by highest value of respective column
-  tdm[,2:4] <- sweep(tdm[,2:4], 2, highestvalues, '/')
-  tdm[,2:4] <- apply(tdm[,2:4], c(1,2), function(x) x*10)
+  tdm[,2:5] <- sweep(tdm[,2:5], 2, highestvalues, '/')
+  tdm[,2:5] <- apply(tdm[,2:5], c(1,2), function(x) x*10)
   
   #Only set topics that have a score higher than 1 to show on the matrix
-  show_column <- apply(tdm[,2:4], 1, function(x) any(x > 0))
-  tdm[,5] <- show_column
+  show_column <- apply(tdm[,2:5], 1, function(x) any(x > 0))
+  tdm[,6] <- show_column
   print(show_column)
   
   print(tdm)

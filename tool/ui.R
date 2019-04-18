@@ -351,27 +351,53 @@ dashboardPage(title="Openmasses",
         )
       )
     ),
-    
+    tabPanel('News analysis',
+      fluidRow(
+        br(),
+        column(width = 6, align = "center",
+               box(width = 12, 
+                   title = "News Word Cloud", status = "primary",
+                   align = "center",
+                   h1(span(shiny::icon("file-pdf-o"), id = "media1", class = "missing")),
+                   disabled(
+                     actionButton("wordCloudButtonNews", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+                   ),
+                   br(),
+                   br(),
+                   div(span(shiny::icon("cloud"), id="iconWordCloudNewsEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudNewsLoad")), class = "well well-sm", id = "placeholderWordCloudNews"),
+                   hidden(
+                     plotOutput(outputId = "wordCloudPlotNews")
+                   ),
+                   box(width = 12,
+                       title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
+                       sliderInput(inputId = "wordCloudNewsNumber",
+                                   label = "Number of words in cloud:",
+                                   min = 80, max = 150, value = 150, step = 1)
+                   )
+               )
+        )
+      )
+    ),
     tabPanel('Media analysis',
       fluidRow(
         br(),
         column(width = 6, align = "center",
           box(width = 12, 
-            title = "News Word Cloud", status = "primary",
+            title = "Reddit Word Cloud", status = "primary",
             align = "center",
             h1(span(shiny::icon("file-pdf-o"), id = "media1", class = "missing")),
             disabled(
-              actionButton("wordCloudButtonNews", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+              actionButton("wordCloudButtonReddit", "Create Reddit Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
             ),
             br(),
             br(),
-            div(span(shiny::icon("cloud"), id="iconWordCloudNewsEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudNewsLoad")), class = "well well-sm", id = "placeholderWordCloudNews"),
+            div(span(shiny::icon("cloud"), id="iconWordCloudRedditEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudRedditLoad")), class = "well well-sm", id = "placeholderWordCloudReddit"),
             hidden(
-              plotOutput(outputId = "wordCloudPlotNews")
+              plotOutput(outputId = "wordCloudPlotReddit")
             ),
             box(width = 12,
                title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
-               sliderInput(inputId = "wordCloudNewsNumber",
+               sliderInput(inputId = "wordCloudRedditNumber",
                            label = "Number of words in cloud:",
                            min = 80, max = 150, value = 150, step = 1)
             )
@@ -379,21 +405,21 @@ dashboardPage(title="Openmasses",
         ),
         column(width = 6, align = "center",
           box(width = 12, 
-            title = "Social Media Word Cloud", status = "primary",
+            title = "Twitter Media Word Cloud", status = "primary",
             align = "center",
             h1(span(shiny::icon("file-pdf-o"), id = "media2", class = "missing")),
             disabled(
-              actionButton("wordCloudButtonSocial", "Create Social Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
+              actionButton("wordCloudButtonTwitter", "Create Twitter Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
             ),
             br(),
             br(),
-            div(span(shiny::icon("cloud"), id="iconWordCloudSocialEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudSocialLoad")), class = "well well-sm", id = "placeholderWordCloudSocial"),
+            div(span(shiny::icon("cloud"), id="iconWordCloudTwitterEmpty"), hidden(span(shiny::icon("circle-o-notch", class = "fa-spin fa-fw"), id="iconWordCloudTwitterLoad")), class = "well well-sm", id = "placeholderWordCloudTwitter"),
             hidden(
-              plotOutput(outputId = "wordCloudPlotSocial")
+              plotOutput(outputId = "wordCloudPlotTwitter")
             ),
             box(width = 12,
                title = "Settings", status = "warning", collapsible = TRUE, collapsed=TRUE,
-               sliderInput(inputId = "wordCloudSocialNumber",
+               sliderInput(inputId = "wordCloudTwitterNumber",
                            label = "Number of words in cloud:",
                            min = 80, max = 150, value = 150, step = 1)
             )

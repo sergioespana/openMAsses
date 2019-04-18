@@ -4,6 +4,8 @@
 # Output: term document matrix
 # 
 
+# REQUIRES SERIOUS REFACTORING AND OPTIMIZAITON
+
 create_TDM <- function(input.text, longlist, scheme, threshold, longlist.mode) {
   withProgress(message = 'Generating Table', value = 0, {
     #longlist.mode #what is this supposed to do?

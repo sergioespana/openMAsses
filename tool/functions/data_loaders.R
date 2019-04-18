@@ -3,8 +3,8 @@ source("functions/data_cleaners.R")
 
 # 
 # >> DocumentsLoad <<
-# Description: unzipping files and loading the text from the pdf file(s)
-# Input: folder path
+# Description: unzipping files and loading the text from the pdf and txt file(s)
+# Input: folder path, whether stemming is needed
 # Output: list with all the text in the pdf(s) per category
 # 
 
@@ -87,23 +87,24 @@ load_documents <- function(files, stemming) {
         }
       }
       # If it is a pdf that is uploaded in a zip
-      else if (str_count(category, "/") == 1) {
-        
-        # update this stuff.
-        path <- paste("unzip/", category, sep = "")
-        pos = regexpr('/', category)
-        category <- substr(category, pos + 1, nchar(category))
-        #pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
-        #pdfs.text[[category]] <- pdf_text(path)
-        
-        # Clean text
-        #pdfs.text <- clean_text(pdfs.text, stemming)
-        
-        # New stemming here:
-        #pdfs.text <- ozp_pdf_stemming(pdfs.text)
-        # Save pdf text as category
-        #allpdfs.text[[category]] <- pdfs.text
-      }
+      # To be re-implemented
+      # else if (str_count(category, "/") == 1) {
+      #   
+      #   # update this stuff.
+      #   path <- paste("unzip/", category, sep = "")
+      #   pos = regexpr('/', category)
+      #   category <- substr(category, pos + 1, nchar(category))
+      #   #pdfs.text[[category]] <- ozp_pdf_stemming(pdf_text(path))
+      #   #pdfs.text[[category]] <- pdf_text(path)
+      #   
+      #   # Clean text
+      #   #pdfs.text <- clean_text(pdfs.text, stemming)
+      #   
+      #   # New stemming here:
+      #   #pdfs.text <- ozp_pdf_stemming(pdfs.text)
+      #   # Save pdf text as category
+      #   #allpdfs.text[[category]] <- pdfs.text
+      #}
       ## RE-implement this feature later, when done cleaning up the original mess
       # If it is a category with pdfs or txt underneath it
       # else {
@@ -130,7 +131,6 @@ load_documents <- function(files, stemming) {
       allpdfs.text[[category]] <- clean_text(pdfs.text, stemming)
     }
   })
-  print(allpdfs.text)
   return(allpdfs.text)
 }
 
@@ -156,124 +156,3 @@ load_longlist <- function(files){
   })
   return(longlist)
 }
-
-#
-# >>DocumentsLoadWordCloud
-# Description: Gets data from the pdfs, then transforms them into word cloud useful data
-# Input: folder path to documents
-# Output: list with all text in the pdfs per category
-#
-# Note: This function should only be used with the word clouds
-# Breaking this baby, compress some functions
-
-# documentsLoadwordcloud <- function(files) {
-#   withProgress(message = 'Reading documents', value = 0, {
-#     
-#     pdfs <- c()
-#     categories <- c()
-#     
-#     # Iterate over all the uploaded files
-#     number.files <- length(files[, 1])
-#     for (i in 1:number.files) {
-#       fileName <- files[[i, 'name']]
-#       incProgress(0, detail = "Scanning documents")
-#       
-#       # If the file is a .zip, unzip it
-#       if (grepl(".zip", fileName, fixed = TRUE)) {
-#         zipFiles <- unzip(files[[i, 'datapath']], list = TRUE)
-#         
-#         # Iterate over each file in the zip
-#         for (n in 1:nrow(zipFiles)) {
-#           zipContent <- zipFiles[n, "Name"]
-#           zipName <- gsub('.zip', '', fileName)
-#           mainFolder <- paste(zipName, "/", sep = "")
-#           
-#           # Only check the file in the zip if it is valid
-#           if (str_count(zipContent, "__MACOSX") == 0 && str_count(zipContent, ".DS_Store") == 0 && mainFolder != zipContent) {
-#             
-#             # If the file is a pdf, read the pdf
-#             if (grepl(".pdf", zipContent)) {
-#               if (str_count(zipContent, "/") == 1) {
-#                 categories[length(categories) + 1] <- zipContent
-#               }
-#               pdfs[length(pdfs) + 1] <- zipContent
-#             }
-#             # If the file within the zip is an invalid format, ignore it
-#             else if (grepl(".xls", zipContent, fixed = TRUE) || grepl(".xlsx", zipContent, fixed = TRUE) || grepl(".doc", zipContent, fixed = TRUE) || grepl(".docx", zipContent, fixed = TRUE) || grepl(".jpg", zipContent, fixed = TRUE) || grepl(".png", zipContent, fixed = TRUE) || grepl(".iso", zipContent, fixed = TRUE) || grepl(".txt", zipContent, fixed = TRUE)) {
-#               # Do nothing
-#             }
-#             # If the file is a folder, add as category
-#             else {
-#               zipContent <- gsub('/', '', gsub(zipName, '', zipContent))
-#               categories[length(categories) + 1] <- zipContent
-#             }
-#           }
-#         }
-#         unzip(files[[i, 'datapath']], exdir = "unzip", overwrite = TRUE)
-#       }
-#       # If the file is a .pdf add it as an own category and read the pdf
-#       else if (grepl(".pdf", fileName)) {
-#         categories[length(categories) + 1] <- paste(fileName)
-#         pdfs[length(pdfs) + 1] <- paste(fileName)
-#       }
-#       # Documents other than pdf or zip are ignored
-#     }
-#     
-#     allpdfs.text = NULL
-#     
-#     # Iterate over each category
-#     for (number in 1:length(categories)) {
-#       category <- categories[number]
-#       pdfs.text <- NULL
-#       
-#       incProgress(1 / length(categories), detail = category)
-#       
-#       # If it is a pdf that is directly uploaded
-#       if (str_count(category, "/") == 0 && str_count(category, ".pdf") == 1) {
-#         path <- files[[which(grepl(category, files$name, fixed = TRUE)), 'datapath']]
-#         pdfs.text[[category]] <- pdf_text(path)
-#         
-#         # Clean text
-#         pdfs.text <- cleanText(pdfs.text)
-#         
-#         # Save pdf text as category
-#         allpdfs.text[[category]] <- pdfs.text
-#       }
-#       # If it is a pdf that is uploaded in a zip
-#       else if (str_count(category, "/") == 1) {
-#         path <- paste("unzip/", category, sep = "")
-#         pos = regexpr('/', category)
-#         category <- substr(category, pos + 1, nchar(category))
-#         pdfs.text[[category]] <- pdf_text(path)
-#         
-#         # Clean text
-#         pdfs.text <- cleanText(pdfs.text)
-#         
-#         # Save pdf text as category
-#         allpdfs.text[[category]] <- pdfs.text
-#       }
-#       # If it is a category with pdfs underneath it
-#       else {
-#         positions <- which(grepl(paste("/", category, "/", sep = ""), pdfs, fixed = TRUE))
-#         
-#         # Iterate over each pdf file of this category
-#         for (k in 1:length(positions)) {
-#           category.pdf <- pdfs[positions[k]]
-#           path <- paste("unzip/", category.pdf, sep = "")
-#           pos <- gregexpr('/', category.pdf)
-#           pos <- pos[[1]][length(pos[[1]])]
-#           category.pdf <- substr(category.pdf, pos + 1, nchar(category.pdf))
-#           pdfs.text[[category.pdf]] <- pdf_text(path)
-#         }
-#         
-#         # Clean text
-#         pdfs.text <- cleanText(pdfs.text)
-#         
-#         # Save text of all pdfs to category
-#         allpdfs.text[[category]] <- pdfs.text
-#       }
-#     }
-#   })
-#   print(allpdfs.text)
-#   return(allpdfs.text)
-# }

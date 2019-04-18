@@ -19,7 +19,6 @@ clean_text <- function(inputText, stemming) {
     outputCorpus <- tm_map(outputCorpus, content_transformer(gsub), pattern = '\n', replacement = ' ')
     outputCorpus <- tm_map(outputCorpus, removeWords, stopwords("english")) # remove stopwords
     outputCorpus <- tm_map(outputCorpus, stripWhitespace)
-
     
     #If stemming is needed, set boolean to true
     if (stemming == TRUE) {
@@ -28,7 +27,7 @@ clean_text <- function(inputText, stemming) {
     
     # convert the corpus back to a list.
     # this is done to avoid problems with the existing code. 
-    # Use a true term document matrix in the future.
+    # TODO Use a true term document matrix in the future.
     outputText = get("content", outputCorpus)
 
     return(outputText)

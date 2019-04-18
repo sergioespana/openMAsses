@@ -7,13 +7,24 @@
 
 source("functions/data_loaders.R")
 
-prepare_wordCloud <- function(input_text) {
-  print(input_text)
+prepare_wordCloud <- function(inputText, DocType) {
+  
   withProgress(message = 'Generating Word Cloud', value = 0, {
     
+    #If news or social is called, just provide a subset of the inputText
+    if (DocType == 'news') {
+      inputText <- inputText$'news'
+    }
+    if (DocType == 'twitter') {
+      inputText <- inputText$'twitter'
+    }
+    if (DocType == 'reddit') {
+      inputText <- inputText$'reddit'
+    }
+    
     # Create corpus
-    corpus <- Corpus(VectorSource(input_text))
-    incProgress(1 / 2)
+    corpus <- Corpus(VectorSource(inputText))
+    incProgress(1 / 3)
     
     # Create TermDocumentMatrix
     tdm <- TermDocumentMatrix(corpus, control = list(removePunctuation = TRUE,
@@ -23,7 +34,7 @@ prepare_wordCloud <- function(input_text) {
                                                      removeNumbers = TRUE,
                                                      bounds = list(global = c(1, Inf))))
     
-    incProgress(1 / 2)
+    incProgress(2 / 3)
     
     # Create the table with the correct names
     result <- as.matrix(tdm)
@@ -72,7 +83,8 @@ generate_wordCloud <- function(frequency, number) {
   if (number > length(frequency)) {
     number <- length(frequency)
   }
-  
+  print(number)
+  print(frequency)
   # Sort the frequencies
   frequency <- sort(frequency, decreasing = TRUE)
   
