@@ -40,6 +40,7 @@ prepare_wordCloud <- function(inputText, docType) {
     result <- as.matrix(tdm)
     result <- rowSums(result)
   })
+  print(result)
   return(result)
 }
 
@@ -50,23 +51,32 @@ prepare_wordCloud <- function(inputText, docType) {
 # Output: term frequency list
 # 
 
-prepare_wordCloudLonglist <- function(tdm) {
-  frequency <- c(tdm[, 2])
-  synonym = list()
-  
-  for (i in 1:nrow(tdm)) {
-    split <- strsplit(toString(tdm[i, 1]), " / ")
-    split <- split[[1]][1]
-    synonym <- c(synonym, split)
+prepare_wordCloudLonglist <- function(tdm, longListOption) {
+  if (longListOption == 2) {
+    result <- rowSums(tdm$Score)
   }
   
-  # only take the leaf element to display in the word cloud
-  for (element in 1:length(synonym)) {
-    value=synonym[[element]]
-    synonym[[element]] = sapply(strsplit(value, ";", fixed = TRUE), tail, 1)
+  #Old code, as optimization is not implemented for longlistV2
+  if (longListOption == 1) {
+    frequency <- c(tdm[, 2])
+    synonym = list()
+    
+    for (i in 1:nrow(tdm)) {
+      split <- strsplit(toString(tdm[i, 1]), " / ")
+      split <- split[[1]][1]
+      synonym <- c(synonym, split)
+    }
+    
+    # only take the leaf element to display in the word cloud
+    for (element in 1:length(synonym)) {
+      value=synonym[[element]]
+      synonym[[element]] = sapply(strsplit(value, ";", fixed = TRUE), tail, 1)
+    }
+    names(frequency) <- synonym
+    return(frequency)
   }
-  names(frequency) <- synonym
-  return(frequency)
+
+  return(result)
 }
 
 # 

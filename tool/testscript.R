@@ -3,9 +3,13 @@ plot <- function(){
   b <- c(2,3,5,7)
   c <- c(2,4,6,8)
   
-  mat <- data.frame(cbind(a,b,c))
+  print(a/b * 2)
   
-  colnames(mat) <- c('a','b','c')
+  mat <- cbind(a,b,c)
+  
+  print(which(mat > 2))
+  mat[which(mat > 2)] <- 100
+  
   print(mat)
 }
 plot()

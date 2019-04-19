@@ -1,3 +1,97 @@
+#
+# >> Create_TDM <<
+# Description: Creates the document term matrix based on the input
+# Input: text from pdf(s), longlist terms, scoring scheme and threshold
+# Output: term document matrix
+#
+
+create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
+  #Old function, heavy and slow, but left there because I didnt bother optimizing it
+  if (longlistMode == 1) {
+    tdm <- create_TDMOld(inputText, longlist, scheme, threshold, longlistMode)
+    return(tdm)
+  }
+  else if (longlistMode == 2)
+  {
+    #Clean longlist to get proper working material
+    longlist <- apply(longlist, c(1,2), function(x) tolower(x))
+    longlist[,'Descriptions'] <- sapply(longlist[,'Descriptions'], function(x) stemDocument(x))
+    
+    #Split all the descriptions into a single vector for tagging
+    allDescriptionsList <- strsplit(longlist[,'Descriptions'], ';',  fixed = TRUE)
+    allDescriptions <- unlist(allDescriptionsList)
+    
+    #Cycle through each text, tag all the words you can find
+    tdm <- matrix(nrow = length(longlist[,'Category']), ncol = length(inputText))
+    tdm <- rbind(sapply(inputText, function(x) count_terms(x, allDescriptions, allDescriptionsList)))
+    #rownames(tdm) <- longlist[,'Category']
+    
+    tdm <- data.frame(tdm)
+    
+    #add score and categories to table
+    tdm$Score <- add_scoreNew(tdm,scheme)
+    
+    
+    tdm$Category <- longlist[,'Category']
+    
+    #Reshuffle for readability of table
+    tdmFormatted <- cbind(tdm$Category,tdm$Score,tdm[,c(1:length(inputText))])
+    colnames(tdmFormatted)[c(1,2)] <- c('Category', 'Score')
+  }
+  return(tdmFormatted)
+}
+
+#
+# >> count_terms <<
+# Description: Counts the number of terms in the text for a topic
+# Input: textfile with words, longlist descriptions
+# Output: matrix with terms count for a topic
+# 
+
+count_terms <- function (inputText, descriptions, descriptionsList) {
+  hitsVector <- str_count(inputText, descriptions)
+  
+  topicVector <- c()
+  newstart <- 0
+  for (i in 1:length(descriptionsList)) {
+    lengthTopic <- length(descriptionsList[[i]])
+    topicVector <- append(topicVector, sum(hitsVector[1+newstart:lengthTopic]))
+    newstart <- newstart + lengthTopic
+  }
+  return (topicVector)
+}
+
+#
+# >> add_scoreNew <<
+# Description: Based on the scoring scheme, returns a vector with the scores
+# Input: tdm, scoring scheme
+# Output: Vector with scores
+# 
+
+add_scoreNew <- function(tdm, scheme) {
+
+  if (scheme == 1) {
+    tdm[tdm > 1] <- 1
+    ScoreVector <- rowSums(tdm)
+  }
+  else if (scheme == 2) {
+    ScoreVector <- rowSums(tdm) 
+  }
+  else if (scheme == 3) {
+    #Relative, check for implementaiton later
+    return(rep(0,nrow(tdm)))
+  }
+  else if (scheme == 4) {
+    #Look into this scheme later as well, it is odd
+    freq <- rowSums(tdm)
+    tdm[tdm > 1] <- 1
+    occurance <- rowSums(tdm)
+    occurance[occurance < 1] <- 1
+    ScoreVector <- freq/occurance/ncol(tdm)
+  }
+  return (ScoreVector)
+}
+
 # 
 # >> createTDM <<
 # Input: text from pdf(s), longlist terms, scoring scheme and threshold
@@ -6,7 +100,7 @@
 
 # REQUIRES SERIOUS REFACTORING AND OPTIMIZAITON
 
-create_TDM <- function(input.text, longlist, scheme, threshold, longlist.mode) {
+create_TDMOld <- function(input.text, longlist, scheme, threshold, longlist.mode) {
   withProgress(message = 'Generating Table', value = 0, {
     #longlist.mode #what is this supposed to do?
     print(input.text)
@@ -250,9 +344,12 @@ create_TDM <- function(input.text, longlist, scheme, threshold, longlist.mode) {
     colnames(tdm) <- c("Longlist", "Score", columns)
     
   })
-
+  print(tdm)
   return(tdm)
 }
+
+
+
 
 #
 # >> get_frequency <<
@@ -297,6 +394,8 @@ get_frequency <- function(term, pdf, categoryName, pdfName, language){
 # 
 
 add_score <- function(tdm, scheme, threshold, category) {
+  
+  print(tdm)
   
   # If the scoring scheme is 'count'
   if (scheme == 1) {

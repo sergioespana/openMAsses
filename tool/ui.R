@@ -49,12 +49,10 @@ dashboardPage(title="Openmasses",
                    "Frequency" = "2",
                    "Relative" = "3",
                    "Weighted" = "4"), selected = 2, inline = T),
-    hidden(
-      radioButtons("longlistoption", "Longlist Option",
-                   c("Automated keywords" = "1",
-                     "Predefined keywords" = "2"),
-                     selected = 1, inline = T)
-    ),
+    radioButtons("longlistoption", "Longlist Option",
+                 c("Automated keywords" = "1",
+                   "Predefined keywords" = "2"),
+                   selected = 2, inline = T),
     radioButtons("dimensionReduction", "Weigh the matrix axes?",
                  c("Automated" = "1",
                    "Manual" = "2"),
@@ -479,7 +477,7 @@ dashboardPage(title="Openmasses",
                    fluidRow(
                      h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
                      disabled(
-                       actionButton("plotButton", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
+                       actionButton("plotButtonMatrix", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
                      ),
                      br(),
                      br(),

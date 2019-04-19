@@ -5,7 +5,7 @@
 #
 # Note: Rename the tdm here, it is super confusing wiht the other tdm
 
-prepare_plotTDM <- function(tdm, tdmMedia){
+prepare_plotMatrix <- function(tdm, tdmMedia){
   
   print(tdmMedia)
   #temp hard override, remove when tdm generator is fixed

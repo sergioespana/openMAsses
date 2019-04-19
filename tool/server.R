@@ -56,7 +56,7 @@ shinyServer(function(input, output) {
           removeClass("not-allowed", "not-allowed")
           enable("wordCloudButtonLonglist")
           if (!is.null(input$media)){
-            enable("plotButton")
+            enable("plotButtonMatrix")
           }
       }
       # set Header name for uploaded documents based on if 1 or n documents
@@ -97,7 +97,7 @@ shinyServer(function(input, output) {
         enable("tdmMediaButton")
         enable("tdmMediaDownload")
         if (!is.null(input$pdfs)){
-          enable('plotButton')
+          enable('plotButtonMatrix')
         }
       }
       removeClass("not-allowed", "not-allowed")
@@ -278,13 +278,13 @@ shinyServer(function(input, output) {
   })
   
   #Event handler for the button of the matrix in tab matrix
-  observeEvent(input$plotButton, {
+  observeEvent(input$plotButtonMatrix, {
     shinyjs::show("plot")
     shinyjs::hide("iconPlotEmpty")
     shinyjs::show("iconPlotLoad")
     shinyjs::show("scoreBox")
     output$table.plot <- renderRHandsontable({
-      rhandsontable(get_plotTDM(), rowHeaders = TRUE) %>%
+      rhandsontable(get_plotMatrix(), rowHeaders = TRUE) %>%
       hot_validate_numeric(col = 2, min = 0, max = 10, allowInvalid = TRUE) %>%
       hot_validate_numeric(col = 3, min = 0, max = 10, allowInvalid = TRUE) %>%
       hot_col(col = 1, readOnly = TRUE, colWidths = 600) %>%
@@ -348,7 +348,7 @@ shinyServer(function(input, output) {
   })
 
   wordCloudLonglist <- reactive({
-    prepare_wordCloudLonglist(get_TDM())
+    prepare_wordCloudLonglist(get_TDM(), input$longlistoption)
   })
   
   #Set of wrappers to plot a word cloud
@@ -382,8 +382,8 @@ shinyServer(function(input, output) {
     create_TDM(read_stemmedMedia(), read_longlists(), input$scoring, input$threshold, input$longlistoption)
   })
 
-  get_plotTDM <- reactive({
-    prepare_plotTDM(get_TDM(), get_TDMMedia())
+  get_plotMatrix <- reactive({
+    prepare_plotMatrix(get_TDM(), get_TDMMedia())
   })
   
   #I don't know why this is there twice, bad practice blablabla
