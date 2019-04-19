@@ -53,10 +53,12 @@ prepare_wordCloud <- function(inputText, docType) {
 
 prepare_wordCloudLonglist <- function(tdm, longListOption) {
   if (longListOption == 2) {
-    result <- rowSums(tdm$Score)
+    freq <- unlist(tdm$Score)
+    names(freq) <- tdm$Category
+    return(freq)
   }
   
-  #Old code, as optimization is not implemented for longlistV2
+  #Old code, as optimization is not implemented for longlistV1
   if (longListOption == 1) {
     frequency <- c(tdm[, 2])
     synonym = list()
@@ -75,8 +77,6 @@ prepare_wordCloudLonglist <- function(tdm, longListOption) {
     names(frequency) <- synonym
     return(frequency)
   }
-
-  return(result)
 }
 
 # 

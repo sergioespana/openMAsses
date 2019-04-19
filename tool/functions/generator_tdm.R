@@ -36,6 +36,7 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
     
     #Reshuffle for readability of table
     tdmFormatted <- cbind(tdm$Category,tdm$Score,tdm[,c(1:length(inputText))])
+    print(tdmFormatted)
     colnames(tdmFormatted)[c(1,2)] <- c('Category', 'Score')
   }
   return(tdmFormatted)

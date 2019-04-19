@@ -494,18 +494,20 @@ dashboardPage(title="Openmasses",
                              title = "Adjust scores", status = "warning", collapsible = TRUE, collapsed = FALSE,
                              align = "left",
                              checkboxGroupInput('X_dimension','Select sources for X-axis',
-                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3', 'Twitter' = '4', 'Reddit' = '5'),
                                                 inline = TRUE, selected = c(1)),
                              br(),
                              checkboxGroupInput('Y_dimension','Select sources for Y-axis',
-                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3'),
+                                                c('Peer Reports' = '1', 'Internal' = '2', 'News' = '3', 'Twitter' = '4', 'Reddit' = '5'),
                                                 inline = TRUE, selected = c(3)),
                              conditionalPanel(
                                id = 'weightconditioner',
                                condition = 'input.dimensionReduction == 2',
-                               numericInput('weightPeers','Peer report weight', value = 1, step = 0.01),
-                               numericInput('weightInternal','Internal weight', value = 1, step = 0.01),
-                               numericInput('weightNews','News weight', value = 1, step = 0.01)
+                               numericInput('weightPeers','Peer report weight', value = 1, step = 0.1),
+                               numericInput('weightInternal','Internal weight', value = 1, step = 0.1),
+                               numericInput('weightNews','News weight', value = 1, step = 0.1),
+                               numericInput('weightTwitter','Twitter weight', value = 1, step = 0.1),
+                               numericInput('weightReddit','Reddit weight', value = 1, step = 0.1)
                              ),
                              rHandsontableOutput("table.plot", height="auto")
                          )

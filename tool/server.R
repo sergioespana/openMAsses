@@ -302,7 +302,7 @@ shinyServer(function(input, output) {
       shinyjs::hide("placeholderPlot")
       
       output$plot <- renderPlotly({
-        weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews)
+        weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews, input$weightTwitter, input$weightReddit)
         generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
       })
   })
@@ -388,7 +388,7 @@ shinyServer(function(input, output) {
   
   #I don't know why this is there twice, bad practice blablabla
   print_plot <- reactive({
-    weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews)
+    weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews, input$weightTwitter, input$weightReddit)
     generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
   })
 })
