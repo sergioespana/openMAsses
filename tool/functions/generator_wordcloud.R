@@ -7,18 +7,18 @@
 
 source("functions/data_loaders.R")
 
-prepare_wordCloud <- function(inputText, DocType) {
+prepare_wordCloud <- function(inputText, docType) {
   
   withProgress(message = 'Generating Word Cloud', value = 0, {
     
     #If news or social is called, just provide a subset of the inputText
-    if (DocType == 'news') {
+    if (docType == 'news') {
       inputText <- inputText$'news'
     }
-    if (DocType == 'twitter') {
+    if (docType == 'twitter') {
       inputText <- inputText$'twitter'
     }
-    if (DocType == 'reddit') {
+    if (docType == 'reddit') {
       inputText <- inputText$'reddit'
     }
     

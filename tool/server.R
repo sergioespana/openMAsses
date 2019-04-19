@@ -91,6 +91,7 @@ shinyServer(function(input, output) {
       removeClass('media2', 'missing')
       removeClass('media3', 'missing')
       removeClass('media4', 'missing')
+      removeClass('media5', 'missing')
       if (!is.null(input$longlists)) {
         removeClass("not-allowed", "not-allowed")
         enable("tdmMediaButton")
