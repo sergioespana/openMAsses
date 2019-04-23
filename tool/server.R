@@ -37,12 +37,22 @@ shinyServer(function(input, output) {
   
   #Creates a table of all pdf files that were uploaded, enables analysis buttons and writes name down
   #for overview
+  output$searchTermsTable <- renderTable(width = '100%', hover = TRUE, {
+    table <- data.frame(matrix(ncol = 1, nrow = 0))
+    colnames(table) <-'No entered searchterms, enter new ones seperated by a ;'
+    
+    table <- rbind(table, c(input$searchTermsInput))
+    
+    colnames(table) <- 'Search terms:'
+    return(table)
+  })
+  
   output$table.pdfs <- renderTable(width = "100%", hover = TRUE, {
     table <- data.frame(matrix(ncol = 1, nrow = 0))
     colnames(table) <- "No document(s) uploaded yet"
-
+    
     if (is.null(input$pdfs)) {
-        return(table)
+      return(table)
     }
     else {
       enable("wordCloudButtonPDF")
@@ -52,24 +62,24 @@ shinyServer(function(input, output) {
       removeClass("pdf4", "missing")
       removeClass("pdf5", "missing")
       if (!is.null(input$longlists)) {
-          enable("tdmButton")
-          enable("tdmDownload")
-          removeClass("not-allowed", "not-allowed")
-          enable("wordCloudButtonLonglist")
-          if ((!is.null(input$media)) || ((file.exists('twitter.txt')) && (file.exists('reddit.txt')) && (file.exists('news.txt')))) {
-            enable("plotButtonMatrix")
-          }
+        enable("tdmButton")
+        enable("tdmDownload")
+        removeClass("not-allowed", "not-allowed")
+        enable("wordCloudButtonLonglist")
+        if ((!is.null(input$media)) || ((file.exists('twitter.txt')) && (file.exists('reddit.txt')) && (file.exists('news.txt')))) {
+          enable("plotButtonMatrix")
+        }
       }
       # set Header name for uploaded documents based on if 1 or n documents
       if (length(input$pdfs$name) == 1) {
-          colnames(table) <- "Uploaded document"
+        colnames(table) <- "Uploaded document"
       }
       else {
-          colnames(table) <- "Uploaded documents"
+        colnames(table) <- "Uploaded documents"
       }
       # list document names in the documents section of the HTML.
       for (pdf in 1:length(input$pdfs$name)) {
-          table[pdf, 1] <- input$pdfs$name[pdf]
+        table[pdf, 1] <- input$pdfs$name[pdf]
       }
       return(table)
     }
@@ -143,7 +153,7 @@ shinyServer(function(input, output) {
     if ((file.exists('twitter.txt')) && (file.exists('reddit.txt')) && (file.exists('news.txt'))) {
       values <- c('news.txt', 'reddit.txt', 'twitter.txt')
       table <- matrix(values, nrow = 3, ncol = 1)
-      colnames(table) <- 'Uploaded documents'
+      colnames(table) <- 'Uploaded media files'
       return(table)
     }
     else {
@@ -156,9 +166,9 @@ shinyServer(function(input, output) {
   output$table.longlists <- renderTable(width = "100%", hover = TRUE, {
     table <- data.frame(matrix(ncol = 1, nrow = 0))
     colnames(table) <- "No Longlist file(s) uploaded yet"
-
+    
     if (is.null(input$longlists)) {
-        return(table)
+      return(table)
     }
     else {
       file.rename(input$longlists$datapath, paste(input$longlists$datapath, ".xlsx", sep = ""))
@@ -169,13 +179,13 @@ shinyServer(function(input, output) {
       removeClass("excel5", "missing")
       removeClass("excel6", "missing")
       if (length(input$longlists$name) == 1) {
-          colnames(table) <- "Uploaded longlist file"
+        colnames(table) <- "Uploaded longlist file"
       }
       else {
-          colnames(table) <- "Uploaded longlist files"
+        colnames(table) <- "Uploaded longlist files"
       }
       for (longlist in 1:length(input$longlists$name)) {
-          table[longlist, 1] <- input$longlists$name[longlist]
+        table[longlist, 1] <- input$longlists$name[longlist]
       }
       return(table)
     }
@@ -189,20 +199,20 @@ shinyServer(function(input, output) {
     filename = function() {
       score <- ""
       if (input$scoring == 1) {
-          score <- "[Count]"
+        score <- "[Count]"
       }
       else if (input$scoring == 2) {
-          score <- "[Frequency]"
+        score <- "[Frequency]"
       }
       else if (input$scoring == 3) {
-          score <- paste("[Relative - ", input$threshold, "]", sep = "")
+        score <- paste("[Relative - ", input$threshold, "]", sep = "")
       }
       else {
-          score <- "[Weighted]"
+        score <- "[Weighted]"
       }
       prefix <- ""
       if (input$title != "") {
-          prefix <- paste(input$title, " - ", sep = "")
+        prefix <- paste(input$title, " - ", sep = "")
       }
       exportName <- paste(prefix, "Matrix ", score, ".xlsx", sep = "")
       paste(exportName, sep = '')
@@ -215,17 +225,24 @@ shinyServer(function(input, output) {
   
   #Idk what this does either, creates some sort of downloadable file
   output$logDownload <- downloadHandler(
-  filename = function() {
-    prefix <- ""
-    if (input$title != "") {
+    filename = function() {
+      prefix <- ""
+      if (input$title != "") {
         prefix <- paste(input$title, " - ", sep = "")
-    }
-    exportName <- paste(prefix, "Log", ".txt", sep = "")
-    paste(exportName, sep = '')
-  },
-  #Idk what this does either, creates some sort of downloadable file
-  content = function(path) {
-    file.copy("outfile.txt", path)
+      }
+      exportName <- paste(prefix, "Log", ".txt", sep = "")
+      paste(exportName, sep = '')
+    },
+    #Idk what this does either, creates some sort of downloadable file
+    content = function(path) {
+      file.copy("outfile.txt", path)
+    })
+  
+  #When the search button is clicked, it writes all the search terms to the 
+  #a text file and starts the analysis
+  observeEvent(input$searchTermButton, {
+    write_file(input$searchTermsInput, 'search_terms.txt')
+    #Some call to the python.exe
   })
   
   #A set of button event handlers
@@ -291,13 +308,13 @@ shinyServer(function(input, output) {
     shinyjs::show("iconTDMLoad")
     output$tdm <- renderDataTable({
       get_TDM()
-      },
-      options = list(pageLength = 10, scrollX = TRUE),
-      list(shinyjs::hide("placeholderTDM"))
+    },
+    options = list(pageLength = 10, scrollX = TRUE),
+    list(shinyjs::hide("placeholderTDM"))
     )
-      shinyjs::show("tdm")
-      shinyjs::show("logDownload")
-    })
+    shinyjs::show("tdm")
+    shinyjs::show("logDownload")
+  })
   
   #For the TDM Media, in tab Media analysis
   observeEvent(input$tdmMediaButton, {
@@ -321,26 +338,26 @@ shinyServer(function(input, output) {
     shinyjs::show("scoreBox")
     output$table.plot <- renderRHandsontable({
       rhandsontable(get_plotMatrix(), rowHeaders = TRUE) %>%
-      hot_validate_numeric(col = 2, min = 0, max = 10, allowInvalid = TRUE) %>%
-      hot_validate_numeric(col = 3, min = 0, max = 10, allowInvalid = TRUE) %>%
-      hot_col(col = 1, readOnly = TRUE, colWidths = 600) %>%
-      hot_col(col = 2, halign = "htCenter", format = "0.0") %>%
-      hot_col(col = 3, halign = "htCenter", format = "0.0") %>%
-      hot_col(col = 4, halign = "htCenter") %>%
-      hot_cols(columnSorting = TRUE)
+        hot_validate_numeric(col = 2, min = 0, max = 10, allowInvalid = TRUE) %>%
+        hot_validate_numeric(col = 3, min = 0, max = 10, allowInvalid = TRUE) %>%
+        hot_col(col = 1, readOnly = TRUE, colWidths = 600) %>%
+        hot_col(col = 2, halign = "htCenter", format = "0.0") %>%
+        hot_col(col = 3, halign = "htCenter", format = "0.0") %>%
+        hot_col(col = 4, halign = "htCenter") %>%
+        hot_cols(columnSorting = TRUE)
     })
     shinyjs::show("logDownload")
   })
   
   #Eventhandler for below the materiality matrix to the manage matrix
   observeEvent(input$table.plot, {
-      shinyjs::show("plot")
-      shinyjs::hide("placeholderPlot")
-      
-      output$plot <- renderPlotly({
-        weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews, input$weightTwitter, input$weightReddit)
-        generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
-      })
+    shinyjs::show("plot")
+    shinyjs::hide("placeholderPlot")
+    
+    output$plot <- renderPlotly({
+      weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews, input$weightTwitter, input$weightReddit)
+      generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
+    })
   })
   
   #Below there is some set of wrappers to react to events in the app.
@@ -372,7 +389,7 @@ shinyServer(function(input, output) {
       load_documents(input$media, stemming = TRUE)
     }
   })
-
+  
   read_longlists <- reactive({
     load_longlist(input$longlists)
   })
@@ -393,7 +410,7 @@ shinyServer(function(input, output) {
   wordCloudReddit <- reactive({
     prepare_wordCloud(read_media(), 'reddit')
   })
-
+  
   wordCloudLonglist <- reactive({
     prepare_wordCloudLonglist(get_TDM(), input$longlistoption)
   })
@@ -414,11 +431,11 @@ shinyServer(function(input, output) {
   print_wordCloudReddit<- reactive({
     generate_wordCloud(wordCloudReddit(), input$wordCloudRedditNumber)
   })
-
+  
   print_wordCloudLonglist <- reactive({
     generate_wordCloud(wordCloudLonglist(), input$wordCloudLonglistNumber)
   })
-
+  
   # aanmaken term document matrix # ralph
   # CreateTDM is messy
   get_TDM <- reactive({
@@ -428,7 +445,7 @@ shinyServer(function(input, output) {
   get_TDMMedia <- reactive({
     create_TDM(read_stemmedMedia(), read_longlists(), input$scoring, input$threshold, input$longlistoption)
   })
-
+  
   get_plotMatrix <- reactive({
     prepare_plotMatrix(get_TDM(), get_TDMMedia())
   })

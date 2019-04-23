@@ -518,6 +518,14 @@ dashboardPage(title="Openmasses",
                )
              )
     ),
+    
+    tabPanel("Media collector",
+             p("Type in all the search terms"),
+             textInput('searchTermsInput', 'Search terms', width = '600px'),
+             actionButton('searchTermButton', 'Search'),
+             rHandsontableOutput('searchTerms', height = 'auto'),
+             tableOutput("searchTermsTable")
+    ),
       
     tabPanel("Manual",
       p("an example longlist can be downloaded here"),
