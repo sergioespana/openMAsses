@@ -11,6 +11,19 @@ source("functions/data_cleaners.R")
 load_documents <- function(files, stemming) {
   withProgress(message = 'Reading documents', value = 0, {
     
+    if (files == 'media') {
+      files <- data.frame(matrix(nrow=3, ncol=1))
+      colnames(files) <- 'name'
+      files[,1] <- c('twitter.txt', 'reddit.txt', 'news.txt')
+      print(files)
+      pathtwitter <- normalizePath('twitter.txt')
+      pathReddit <- normalizePath('reddit.txt')
+      pathNews <- normalizePath('news.txt')
+      files$datapath <- c(pathtwitter, pathReddit, pathNews)
+    }
+    
+    print(files)
+    
     pdfs <- c() # create vector
     categories <- c() #create vector
     

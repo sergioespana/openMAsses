@@ -42,7 +42,7 @@ dashboardPage(title="Openmasses",
     h3("Input", align = "center"),
     textInput('title', 'Title',placeholder = "Give a title for the analysis..."),
     fileInput('pdfs', 'Upload document(s) as PDF or Zip', multiple = 'TRUE', accept = c('application/x-rar-compressed, application/octet-stream', 'application/zip, application/octet-stream', 'application/pdf')),
-    fileInput('media', 'Upload Python script output', multiple = 'TRUE'), #Use as accept a pickle dump, use reticulate to properly open it
+    fileInput('media', 'Upload media data', multiple = 'TRUE'), #Use as accept a pickle dump, use reticulate to properly open it
     fileInput('longlists', 'Upload longlist(s) as Excel', multiple = 'TRUE', accept = c('application/vnd.ms-excel', 'application/x-excel', 'application/x-msexcel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')),
     radioButtons("scoring", "Scoring scheme",
                  c("Count" = "1",
@@ -356,7 +356,7 @@ dashboardPage(title="Openmasses",
                box(width = 12, 
                    title = "News Word Cloud", status = "primary",
                    align = "center",
-                   h1(span(shiny::icon("file-pdf-o"), id = "media1", class = "missing")),
+                   h1(span(shiny::icon("rss"), id = "media1", class = "missing")),
                    disabled(
                      actionButton("wordCloudButtonNews", "Create News Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
                    ),
@@ -383,7 +383,7 @@ dashboardPage(title="Openmasses",
           box(width = 12, 
             title = "Reddit Word Cloud", status = "primary",
             align = "center",
-            h1(span(shiny::icon("file-pdf-o"), id = "media5", class = "missing")),
+            h1(span(shiny::icon("reddit"), id = "media5", class = "missing")),
             disabled(
               actionButton("wordCloudButtonReddit", "Create Reddit Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
             ),
@@ -405,7 +405,7 @@ dashboardPage(title="Openmasses",
           box(width = 12, 
             title = "Twitter Media Word Cloud", status = "primary",
             align = "center",
-            h1(span(shiny::icon("file-pdf-o"), id = "media2", class = "missing")),
+            h1(span(shiny::icon("twitter-square"), id = "media2", class = "missing")),
             disabled(
               actionButton("wordCloudButtonTwitter", "Create Twitter Word Cloud", icon("basdfasdf"), status = "primary", class="blue")
             ),
@@ -433,7 +433,7 @@ dashboardPage(title="Openmasses",
             fluidRow(
               column(width = 6,
                      align = "center",
-                     h1(span(shiny::icon("file-pdf-o"), id = "media3", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel5", class = "missing")),
+                     h1(span(shiny::icon("file"), id = "media3", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel5", class = "missing")),
                      disabled(
                        actionButton("tdmMediaButton", "Create Term Document Media Table", icon("table"), status = "primary", class="blue")
                      )
@@ -475,7 +475,8 @@ dashboardPage(title="Openmasses",
                    title = "Matrix", status = "primary",
                    align = "center",
                    fluidRow(
-                     h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing")),
+                     h1(span(shiny::icon("file-pdf-o"), id = "pdf5", class = "missing"), " + ", span(shiny::icon("file-excel-o"), id = "excel4", class = "missing"),
+                        " + ", span(shiny::icon("rss"), id = "media6", class = "missing")),
                      disabled(
                        actionButton("plotButtonMatrix", "Create Matrix", icon("line-chart"), status = "primary", class="blue")
                      ),
@@ -534,6 +535,7 @@ dashboardPage(title="Openmasses",
   bsTooltip(id = 'media3', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
   bsTooltip(id = 'media4', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
   bsTooltip(id = 'media5', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
+  bsTooltip(id = 'media6', title = 'Upload media analysis', placement = 'top', trigger = 'hover'),
   bsTooltip(id = "excel1", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = "excel2", title = "Longlist file(s) required", placement = "top", trigger = "hover"),
   bsTooltip(id = "excel3", title = "Longlist file(s) required", placement = "top", trigger = "hover"),

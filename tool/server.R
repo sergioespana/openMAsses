@@ -32,6 +32,7 @@ source("functions/generator_tdm.R")
 source("functions/generator_matrix.R")
 source("functions/data_loaders.R")
 
+
 shinyServer(function(input, output) {
   
   #Creates a table of all pdf files that were uploaded, enables analysis buttons and writes name down
@@ -55,7 +56,7 @@ shinyServer(function(input, output) {
           enable("tdmDownload")
           removeClass("not-allowed", "not-allowed")
           enable("wordCloudButtonLonglist")
-          if (!is.null(input$media)){
+          if ((!is.null(input$media)) || ((file.exists('twitter.txt')) && (file.exists('reddit.txt')) && (file.exists('news.txt')))) {
             enable("plotButtonMatrix")
           }
       }
@@ -81,6 +82,27 @@ shinyServer(function(input, output) {
     colnames(table) <- "No media file(s) uploaded yet"
     
     if (is.null(input$media)){
+      table <- autoLoad_media()
+      if (!is.null(table)) {
+        enable('wordCloudButtonTwitter')
+        enable('wordCloudButtonNews')
+        enable('wordCloudButtonReddit')
+        removeClass('media1', 'missing')
+        removeClass('media2', 'missing')
+        removeClass('media3', 'missing')
+        removeClass('media4', 'missing')
+        removeClass('media5', 'missing')
+        removeClass('media6', 'missing')
+        if (!is.null(input$longlists)) {
+          removeClass("not-allowed", "not-allowed")
+          enable("tdmMediaButton")
+          enable("tdmMediaDownload")
+          if (!is.null(input$pdfs)){
+            enable('plotButtonMatrix')
+          }
+        }
+        removeClass("not-allowed", "not-allowed")
+      }
       return(table)
     }
     else {
@@ -92,6 +114,7 @@ shinyServer(function(input, output) {
       removeClass('media3', 'missing')
       removeClass('media4', 'missing')
       removeClass('media5', 'missing')
+      removeClass('media6', 'missing')
       if (!is.null(input$longlists)) {
         removeClass("not-allowed", "not-allowed")
         enable("tdmMediaButton")
@@ -111,7 +134,20 @@ shinyServer(function(input, output) {
       for (media in 1:length(input$media$name)) {
         table[media, 1] <- input$media$name[media]
       }
+      print(table)
       return(table)
+    }
+  })
+  
+  autoLoad_media <- reactive({
+    if ((file.exists('twitter.txt')) && (file.exists('reddit.txt')) && (file.exists('news.txt'))) {
+      values <- c('news.txt', 'reddit.txt', 'twitter.txt')
+      table <- matrix(values, nrow = 3, ncol = 1)
+      colnames(table) <- 'Uploaded documents'
+      return(table)
+    }
+    else {
+      return()
     }
   })
   
@@ -311,6 +347,7 @@ shinyServer(function(input, output) {
   #A set of wrappers to get the input from the inputFile commands in ui.R
   #Better solution would be to give stemming as an argument to read_documents, did not figure out how yet.
   read_documents <- reactive({
+    print(input$pdfs)
     load_documents(input$pdfs, stemming = FALSE)
   })
   
@@ -319,11 +356,21 @@ shinyServer(function(input, output) {
   })
   
   read_media <- reactive({
-    load_documents(input$media, stemming = FALSE)
+    if (is.null(input$media)){
+      load_documents('media', stemming = FALSE) #provide other argument to function to read media
+    }
+    else {
+      load_documents(input$media, stemming = FALSE)
+    }
   })
   
   read_stemmedMedia <- reactive ({
-    load_documents(input$media, stemming = TRUE)
+    if (is.null(input$media)) {
+      load_documents('media', stemming = TRUE)
+    }
+    else {
+      load_documents(input$media, stemming = TRUE)
+    }
   })
 
   read_longlists <- reactive({
@@ -386,7 +433,7 @@ shinyServer(function(input, output) {
     prepare_plotMatrix(get_TDM(), get_TDMMedia())
   })
   
-  #I don't know why this is there twice, bad practice blablabla
+  #I don't know why this is there twice, let's leave it anyway
   print_plot <- reactive({
     weightSource <- c(input$weightPeers, input$weightInternal, input$weightNews, input$weightTwitter, input$weightReddit)
     generate_plotMatrix(input$table.plot, 20, input$X_dimension, input$Y_dimension, input$dimensionReduction, weightSource)
