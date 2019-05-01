@@ -522,9 +522,11 @@ dashboardPage(title="Openmasses",
     tabPanel("Media collector",
              p("Type in all the search terms"),
              textInput('searchTermsInput', 'Search terms', width = '600px'),
-             actionButton('searchTermButton', 'Search'),
+             actionButton('collectButton', 'Collect data'),
+             actionButton('analyzeButton', 'Analyze'),
              rHandsontableOutput('searchTerms', height = 'auto'),
              tableOutput("searchTermsTable")
+             
     ),
       
     tabPanel("Manual",

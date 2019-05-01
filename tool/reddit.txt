@@ -1,8 +1,0 @@
-['pretty', 'sure', 'able', 'cut'] 
-['probs', 'cut', 'otherwise', 'get', 'another', 'badge']
-['link', 'please']
-['badge', 'looks', 'crisp', 'amazing']
-['hey', 'nice', 'piece', 'noticeable', 'flaws']
-['zipper', 'looks', 'cheap', 'way', 'shiny']
-['retail', 'zipper', 'looks', 'pretty', 'much']
-['compared', 'retail', 'differences']

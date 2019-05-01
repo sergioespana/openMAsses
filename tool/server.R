@@ -38,12 +38,10 @@ shinyServer(function(input, output) {
   #Creates a table of all pdf files that were uploaded, enables analysis buttons and writes name down
   #for overview
   output$searchTermsTable <- renderTable(width = '100%', hover = TRUE, {
-    table <- data.frame(matrix(ncol = 1, nrow = 0))
-    colnames(table) <-'No entered searchterms, enter new ones seperated by a ;'
     
-    table <- rbind(table, c(input$searchTermsInput))
+    table <- form_term_table(input$searchTermsInput)
     
-    colnames(table) <- 'Search terms:'
+    colnames(table) <- c('Category','Terms')
     return(table)
   })
   
@@ -240,9 +238,23 @@ shinyServer(function(input, output) {
   
   #When the search button is clicked, it writes all the search terms to the 
   #a text file and starts the analysis
-  observeEvent(input$searchTermButton, {
-    write_file(input$searchTermsInput, 'search_terms.txt')
-    #Some call to the python.exe
+  observeEvent(input$collectButton, {
+
+    #If an old search file still exists, remove it
+    if (file.exists('search_terms.csv')) {
+      unlink('search_terms.csv')
+      file.remove('search_terms.csv')
+    }
+
+    #before writing a new one
+    write.csv(form_term_table(input$searchTermsInput)[,2], file='search_terms.csv', row.names = FALSE)
+    
+    #call to pyton.exe
+    system2("C:/Users/Melchior/Desktop/off-line tool copy/Tool v1/tool/dist/main/main.exe", args = 'collect')
+  })
+  
+  observeEvent(input$runButton, {
+    system2("C:/Users/Melchior/Desktop/off-line tool copy/Tool v1/tool/dist/main/main.exe", args = 'analyze')
   })
   
   #A set of button event handlers
