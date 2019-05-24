@@ -24,6 +24,7 @@ library(textcat) # Detect language of text
 library(rhandsontable) # Interactive tables
 library(plotly) # Interactive plots
 library(FactoMineR) #PCA for dimension reduction
+library(reticulate)
 
 source("functions/parse longlist.R")
 source("functions/generator_keywords.R")
@@ -241,16 +242,22 @@ shinyServer(function(input, output) {
   observeEvent(input$collectButton, {
 
     #If an old search file still exists, remove it
-    if (file.exists('search_terms.csv')) {
-      unlink('search_terms.csv')
-      file.remove('search_terms.csv')
-    }
+    #if (file.exists('search_terms.csv')) {
+     # unlink('search_terms.csv')
+      #file.remove('search_terms.csv')
+    #}
 
     #before writing a new one
-    write.csv(form_term_table(input$searchTermsInput)[,2], file='search_terms.csv', row.names = FALSE)
+    write.csv(form_term_table(input$searchTermsInput)[,2], file='search_terms.csv', row.names = FALSE, col.names = FALSE)
+    print(input$searchTermsInput)
     
     #call to pyton.exe
-    system2("C:/Users/Melchior/Desktop/off-line tool copy/Tool v1/tool/dist/main/main.exe", args = 'collect')
+    use_python('C:/Python37/python')
+    use_virtualenv('C:/Users/Melchior/Pycharmprojects/Thesisv3/venv/')
+
+    #system("python C:/Users/Melchior/Pycharmprojects/Thesisv3/venv/main.py")
+    #system2("python C:/Users/Melchior/Pycharmprojects/Thesisv3/Venv/main.py", args = c("collect", '5'), stdout = TRUE, stderr = TRUE)
+    print('system is called')
   })
   
   observeEvent(input$runButton, {

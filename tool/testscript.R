@@ -1,5 +1,6 @@
-plot <- function(){
-  system2("C:/Users/Melchior/Desktop/off-line tool copy/Tool v1/tool/dist/main/main.exe", args = 'collect')
-}
-plot()
-rm(plot)
+library(reticulate)
+
+use_python('C:/Users/Melchior/Pycharmprojects/Thesisv3/venv/scripts/python')
+use_virtualenv('C:/Users/Melchior/Pycharmprojects/Thesisv3/venv/')
+py_run_file('C:/Users/Melchior/Pycharmprojects/Thesisv3/venv/main.py')
+py_config()

@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['C:\\Users\\Melchior\\PycharmProjects\\ThesisV3\\venv\\main.py'],
+a = Analysis(['c:\\users\\melchior\\pycharmcharmprojects\\thesisv3\\venv\\main.py'],
              pathex=['C:\\Users\\Melchior\\Desktop\\off-line tool copy\\Tool v1\\tool'],
              binaries=[],
              datas=[],
@@ -19,18 +19,14 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           [],
-          exclude_binaries=True,
           name='main',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
+          runtime_tmpdir=None,
           console=True )
-coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               name='main')

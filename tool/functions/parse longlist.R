@@ -12,11 +12,8 @@ require(tidyverse)
 #'
 #' @examples
 ozp_parse_longlist <- function(input) {
-
-    
    
     input = read_xlsx(input)
-
     data = as.tibble(input)
 
     # filter out columns that have all NA values

@@ -11,10 +11,10 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
     tdm <- create_TDMOld(inputText, longlist, scheme, threshold, longlistMode)
     return(tdm)
   }
-  else if (longlistMode == 2)
-  {
+  else if (longlistMode == 2) {
     #Clean longlist to get proper working material
     longlist <- apply(longlist, c(1,2), function(x) tolower(x))
+    
     longlist[,'Descriptions'] <- sapply(longlist[,'Descriptions'], function(x) stemDocument(x))
     
     #Split all the descriptions into a single vector for tagging
@@ -30,7 +30,6 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
     
     #add score and categories to table
     tdm$Score <- add_scoreNew(tdm,scheme)
-    
     
     tdm$Category <- longlist[,'Category']
     
@@ -50,8 +49,16 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
 # 
 
 count_terms <- function (inputText, descriptions, descriptionsList) {
-  hitsVector <- str_count(inputText, descriptions)
   
+  #First we just mash all the input text together in one giant string
+  alltext <- c()
+  for (i in 1:length(inputText)) {
+    alltext <- paste(alltext, inputText[[i]])
+  }
+  #Then we create a vector of descriptions and count for each hit
+  hitsVector <- str_count(alltext, descriptions)
+
+  #Combine all hitsvectors into a vector for each source, e.g. twitter, reddit
   topicVector <- c()
   newstart <- 0
   for (i in 1:length(descriptionsList)) {
@@ -59,6 +66,7 @@ count_terms <- function (inputText, descriptions, descriptionsList) {
     topicVector <- append(topicVector, sum(hitsVector[1+newstart:lengthTopic]))
     newstart <- newstart + lengthTopic
   }
+
   return (topicVector)
 }
 

@@ -21,9 +21,7 @@ load_documents <- function(files, stemming) {
       pathNews <- normalizePath('news.txt')
       files$datapath <- c(pathtwitter, pathReddit, pathNews)
     }
-    
-    print(files)
-    
+
     pdfs <- c() # create vector
     categories <- c() #create vector
     
