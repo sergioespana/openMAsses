@@ -143,7 +143,6 @@ shinyServer(function(input, output) {
       for (media in 1:length(input$media$name)) {
         table[media, 1] <- input$media$name[media]
       }
-      print(table)
       return(table)
     }
   })

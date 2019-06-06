@@ -35,6 +35,6 @@ ozp_parse_longlist <- function(input) {
 
     # remove all the trailing ; this makes the data inconsistent so there are no empty topics or descriptions later on
     output = sapply(output, function(x) {gsub(pattern = ";{1,10}$",replacement = "",x) })
-
+    
     return(output)
 }

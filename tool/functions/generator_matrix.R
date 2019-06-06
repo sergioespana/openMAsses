@@ -105,8 +105,11 @@ generate_plotMatrix <- function(tdm, number, X_dimension, Y_dimension, dimension
     if (length(Y_dimension) > 1) {
       y_vector <- rowMeans(tdm[tdm[,show_column] == TRUE,Y_dimension])
     }
-    print(x_vector)
-    print(y_vector)
+    max_x <- max(x_vector)
+    max_y <- max(y_vector)
+    x_vector <- (x_vector / max_x * 10)
+    y_vector <- (y_vector / max_y * 10)
+
   }
   
   if (dimensionreduction == 2) {
@@ -139,12 +142,9 @@ generate_plotMatrix <- function(tdm, number, X_dimension, Y_dimension, dimension
   
     ### As an alternative, remove the if statements to always normalize to 10.
     #Divide all columns by highest value of respective column
-    if (any(x_vector > 10)) {
-      x_vector <- x_vector/highestvalue_x * 10
-    }
-    if (any(y_vector > 10)) {
-      y_vector <- y_vector/highestvalue_y * 10
-    }
+    x_vector <- x_vector/highestvalue_x * 10
+    y_vector <- y_vector/highestvalue_y * 10
+    
     print(x_vector)
     print(y_vector)
   }

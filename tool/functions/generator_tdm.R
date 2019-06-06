@@ -22,23 +22,45 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
     allDescriptions <- unlist(allDescriptionsList)
     
     #Cycle through each text, tag all the words you can find
-    tdm <- matrix(nrow = length(longlist[,'Category']), ncol = length(inputText))
+    tdm <- matrix(nrow = length(longlist[,'Topics']), ncol = length(inputText))
     tdm <- rbind(sapply(inputText, function(x) count_terms(x, allDescriptions, allDescriptionsList)))
-    #rownames(tdm) <- longlist[,'Category']
-    
+    FileNames <- colnames(tdm)
+
     tdm <- data.frame(tdm)
+    tdm$Category <- longlist[,'Topics']
+    tdm <- combine_terms(tdm)
     
     #add score and categories to table
-    tdm$Score <- add_scoreNew(tdm,scheme)
-    
-    tdm$Category <- longlist[,'Category']
+    uniCats <- tdm$uniCats
+    tdm$Score <- add_scoreNew(tdm[,-1],scheme)
+    tdm$uniCats <- NULL
     
     #Reshuffle for readability of table
-    tdmFormatted <- cbind(tdm$Category,tdm$Score,tdm[,c(1:length(inputText))])
+    colnames(tdm)[-ncol(tdm)] <- FileNames
+    tdmFormatted <- cbind(uniCats,tdm$Score,tdm[,c(1:length(inputText))])
+    colnames(tdmFormatted)[c(1,2)] <- c('Topics', 'Score')
     print(tdmFormatted)
-    colnames(tdmFormatted)[c(1,2)] <- c('Category', 'Score')
   }
   return(tdmFormatted)
+}
+
+#
+# >> combine_terms <<
+# Description: combines all values in categories with same name
+# Input: tdm
+# output: tdm
+#
+
+combine_terms <- function(tdm) {
+  new_tdm <- tdm[0,]
+  uniCats <- unique(tdm$Category)
+  
+  for (i in 1:length(uniCats)) {
+    combine_rows <- which(tdm$Category == uniCats[i])
+    new_tdm <- rbind(new_tdm,colSums(tdm[combine_rows,-ncol(tdm)]))
+  }
+  new_tdm <- cbind(uniCats, new_tdm)
+  return(new_tdm)
 }
 
 #
@@ -55,16 +77,28 @@ count_terms <- function (inputText, descriptions, descriptionsList) {
   for (i in 1:length(inputText)) {
     alltext <- paste(alltext, inputText[[i]])
   }
+
   #Then we create a vector of descriptions and count for each hit
   hitsVector <- str_count(alltext, descriptions)
 
   #Combine all hitsvectors into a vector for each source, e.g. twitter, reddit
   topicVector <- c()
   newstart <- 0
-  for (i in 1:length(descriptionsList)) {
-    lengthTopic <- length(descriptionsList[[i]])
-    topicVector <- append(topicVector, sum(hitsVector[1+newstart:lengthTopic]))
-    newstart <- newstart + lengthTopic
+  
+  #Get the number of descriptions per topic
+  lengthTopicVector <- sapply(descriptionsList, function(x) length(x))
+  
+  #forloop selecting the start and end of each subselection of the hitsvector based on the 
+  #number of descriptions in topicvector
+  for (i in 1:length(lengthTopicVector)){
+    if(i == 1){
+      start <- 1
+    }
+    else{
+      start <- sum(lengthTopicVector[1:i-1])
+    }
+    end <- sum(lengthTopicVector[1:i])
+    topicVector <- append(topicVector, (sum(hitsVector[start:end])))
   }
 
   return (topicVector)
