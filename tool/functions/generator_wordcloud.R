@@ -40,13 +40,13 @@ prepare_wordCloud <- function(inputText, docType) {
     result <- as.matrix(tdm)
     result <- rowSums(result)
   })
-  print(result)
+
   return(result)
 }
 
 # 
 # >> prepareWordCloudLonglist <<
-# Description: Creates a term frequency list from a tdm? This seems broken too
+# Description: Creates a term frequency list from a tdm
 # Input: term document matrix
 # Output: term frequency list
 # 
@@ -54,7 +54,7 @@ prepare_wordCloud <- function(inputText, docType) {
 prepare_wordCloudLonglist <- function(tdm, longListOption) {
   if (longListOption == 2) {
     freq <- unlist(tdm$Score)
-    names(freq) <- tdm$Category
+    names(freq) <- tdm$Topic
     return(freq)
   }
   
@@ -93,8 +93,7 @@ generate_wordCloud <- function(frequency, number) {
   if (number > length(frequency)) {
     number <- length(frequency)
   }
-  print(number)
-  print(frequency)
+
   # Sort the frequencies
   frequency <- sort(frequency, decreasing = TRUE)
   
