@@ -32,7 +32,7 @@ create_TDM <- function(inputText, longlist, scheme, threshold, longlistMode) {
     
     #add score and categories to table
     uniCats <- tdm$uniCats
-    tdm$Score <- add_scoreNew(tdm[,-1],scheme)
+    tdm$Score <- add_scoreNew(tdm[,-1],scheme, threshold, inputText)
     tdm$uniCats <- NULL
     
     #Reshuffle for readability of table
@@ -111,7 +111,7 @@ count_terms <- function (inputText, descriptions, descriptionsList) {
 # Output: Vector with scores
 # 
 
-add_scoreNew <- function(tdm, scheme) {
+add_scoreNew <- function(tdm, scheme, threshold, inputText) {
 
   if (scheme == 1) {
     tdm[tdm > 1] <- 1
@@ -121,8 +121,19 @@ add_scoreNew <- function(tdm, scheme) {
     ScoreVector <- rowSums(tdm) 
   }
   else if (scheme == 3) {
-    #Relative, check for implementaiton later
-    return(rep(0,nrow(tdm)))
+    #Relative, check for implementation later
+    #print(length(inputText[]))
+    numberOfpdfs <- length(inputText[])
+    for (pdf in 1:numberOfpdfs){
+      numberOfPages <- length(inputText[[pdf]])
+      #print(numberOfPages)
+      colScores = tdm[pdf]
+      print(colScores)
+      colScores <- as.numeric(colScores/numberOfPages > threshold)
+      #print(colScores)
+      tdm[pdf] = colScores
+    #print (tdm)
+    ScoreVector <- rowSums(tdm) 
   }
   else if (scheme == 4) {
     #Look into this scheme later as well, it is odd
