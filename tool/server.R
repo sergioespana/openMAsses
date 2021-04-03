@@ -26,6 +26,9 @@ library(plotly) # Interactive plots
 library(FactoMineR) #PCA for dimension reduction
 library(reticulate)
 
+# needed to replace renderDataTable function
+library(DT) 
+
 source("functions/parse longlist.R")
 source("functions/generator_keywords.R")
 source("functions/generator_wordcloud.R")
@@ -324,12 +327,16 @@ shinyServer(function(input, output) {
   observeEvent(input$tdmButton, {
     shinyjs::hide("iconTDMEmpty")
     shinyjs::show("iconTDMLoad")
-    output$tdm <- renderDataTable({
+    
+    # The commented lines used to be the way to render the DT, but does not work with newer versions
+    #output$tdm <- renderDataTable({
+    output$tdm <- DT::renderDT({
       get_TDM()
     },
-    options = list(pageLength = 10, scrollX = TRUE),
-    list(shinyjs::hide("placeholderTDM"))
+    options = list(pageLength = 10, scrollX = TRUE)#,
+    #list(shinyjs::hide("placeholderTDM"))
     )
+    shinyjs::hide("placeholderTDM")
     shinyjs::show("tdm")
     shinyjs::show("logDownload")
   })
@@ -338,12 +345,16 @@ shinyServer(function(input, output) {
   observeEvent(input$tdmMediaButton, {
     shinyjs::hide("iconTDMMediaEmpty")
     shinyjs::show("iconTDMMediaLoad")
-    output$tdmMedia <- renderDataTable({
+    
+    # Following line is the older code
+    #output$tdmMedia <- renderDataTable({
+    output$tdmMedia <- DT::renderDT({
       get_TDMMedia()
     },
-    options = list(pageLength = 10, scrollX = TRUE),
-    list(shinyjs::hide("placeholderTDMMedia"))
+    options = list(pageLength = 10, scrollX = TRUE)#,
+    #list(shinyjs::hide("placeholderTDMMedia"))
     )
+    shinyjs::hide("placeholderTDMMedia")
     shinyjs::show("tdmMedia")
     shinyjs::show("logMediaDownload")
   })
