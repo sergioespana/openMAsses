@@ -332,7 +332,7 @@ dashboardPage(title="Openmasses",
                      ),
                      br(),
                      hidden(
-                       downloadButton("logDownload", "Download log", class = "btn-success", icon="cloud")
+                       downloadButton("logDownload", "Download log", class = "btn-success") # , icon="cloud")
                      )
               )
             ),
@@ -531,7 +531,7 @@ dashboardPage(title="Openmasses",
       
     tabPanel("Manual",
       p("an example longlist can be downloaded here"),
-      downloadButton("exampleLongListDownload", "Download Example Longlist", class = "btn-success", icon = "cloud"))
+      downloadButton("exampleLongListDownload", "Download Example Longlist", class = "btn-success")) #, icon = "cloud"))
     ),
   
   # Set tooltips
