@@ -111,8 +111,7 @@ count_terms <- function (inputText, descriptions, descriptionsList) {
 # Output: Vector with scores
 # 
 
-add_scoreNew <- function(tdm, scheme, threshold, inputText) {
-
+add_scoreNew <- function(tdm, scheme, threshold, inputText){
   if (scheme == 1) {
     tdm[tdm > 1] <- 1
     ScoreVector <- rowSums(tdm)
@@ -134,7 +133,7 @@ add_scoreNew <- function(tdm, scheme, threshold, inputText) {
       tdm[pdf] = colScores
     #print (tdm)
     ScoreVector <- rowSums(tdm) 
-  }
+  }}
   else if (scheme == 4) {
     #Look into this scheme later as well, it is odd
     freq <- rowSums(tdm)
